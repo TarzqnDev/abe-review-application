@@ -1,10 +1,11 @@
 "use client";
 
-import { Squares2X2Icon, UserCircleIcon, Cog6ToothIcon, MagnifyingGlassIcon, PlusIcon, BookOpenIcon } from "@heroicons/react/24/outline";
+import { Squares2X2Icon, UserCircleIcon, Cog6ToothIcon, MagnifyingGlassIcon, PlusIcon, BookOpenIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export default function AdminDashboardPage() {
-    const [openAccountMenu, setOpenAccountMenu] = useState(false);    
+    const [openAccountMenu, setOpenAccountMenu] = useState(false);
+    const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
     return (
         <div className="py-2 pl-2 pr-8 bg-stone-100 h-screen flex gap-8">
@@ -70,7 +71,54 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div>
-                        <button className="bg-teal-800 text-white font-semibold py-3 px-4 rounded-md cursor-pointer flex items-center"><PlusIcon className="h-5 w-5 mr-2" /> Register User</button>
+                        <button onClick={() => setOpenRegisterModal(true)} className="bg-teal-800 text-white font-semibold py-3 px-4 rounded-md cursor-pointer flex items-center"><PlusIcon className="h-5 w-5 mr-2" /> Register User</button>
+                    
+                        {openRegisterModal && (
+                        
+                        <div className="fixed inset-0 flex items-center justify-center z-50">
+
+                            <div className="absolute inset-0 bg-black/50" onClick={() => setOpenRegisterModal(false)}></div>
+
+                            <div className="relative bg-white rounded-lg w-125 p-6">
+
+                                <div>
+                                    <button onClick={() => setOpenRegisterModal(false)} className="absolute top-3 right-3 cursor-pointer">
+                                        <XMarkIcon className="h-5 w-5 text-gray-500"/>
+                                    </button>
+                                </div>
+
+                                <div className="flex flex-col gap-4">
+
+                                    <h1 className="font-semibold text-xl">Register User</h1>
+
+                                    <form className="flex flex-col gap-4">
+
+                                        <div className="flex flex-col gap-2">
+                                            <label htmlFor="email" className="font-medium">Full Name</label>
+                                            <input type="text" placeholder="FullName" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label htmlFor="email" className="font-medium">Email Address</label>
+                                            <input type="text" placeholder="Email Address" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label htmlFor="email" className="font-medium">End Date</label>
+                                            <input type="text" placeholder="End Date" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
+                                        </div>
+
+                                        <button type="submit" className="bg-teal-800 text-white font-semibold py-3 px-4 rounded-md cursor-pointer">Register User</button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                            
+                        )}
                     </div>
 
                 </div>

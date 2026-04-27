@@ -26,24 +26,26 @@ export default function LoginPage() {
                         <p>Login your account to start your review.</p>
                     </div>
                     
-                    <div className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="email" className="font-medium">Email Address</label>
-                            <input type="text" placeholder="Email Address" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
-                        </div>
+                    <div>
+                        <form className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="email" className="font-medium">Email Address</label>
+                                <input type="text" placeholder="Email Address" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
+                            </div>
 
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="password" className="font-medium ">Password</label>
-                            <input type="password" placeholder="Password" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
-                        </div>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="password" className="font-medium ">Password</label>
+                                <input type="password" placeholder="Password" className="border border-gray-300 w-full py-3 px-4 rounded-md"/>
+                            </div>
 
-                        <div className="flex justify-end">
-                            <p className="text-teal-600 font-medium">Forgot Password?</p>
-                        </div>
+                            <div className="flex justify-end">
+                                <p className="text-teal-600 font-medium">Forgot Password?</p>
+                            </div>
 
-                        <div>
-                            <button className="bg-teal-800 text-white font-semibold w-full py-3 rounded-md cursor-pointer">Login</button>
-                        </div>
+                            <div>
+                                <button className="bg-teal-800 text-white font-semibold w-full py-3 rounded-md cursor-pointer">Login</button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
