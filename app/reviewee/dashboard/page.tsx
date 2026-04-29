@@ -1,6 +1,11 @@
+'use client';
+
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 export default function RevieweeDashboardPage() {
+    const router = useRouter();
+
     return (
         <div>
 
@@ -47,7 +52,9 @@ export default function RevieweeDashboardPage() {
                             </div>
                             <div className="p-6 border border-gray-300 rounded-b-2xl h-60 flex flex-col justify-between">
                                 <p>Test your knowledge with interactive flashcards. Learn at your own pace and build confidence.</p>
-                                <button className="w-full py-2 font-semibold text-white bg-teal-800 rounded-md cursor-pointer">Start Solo Mode</button>
+                                <button className="w-full py-2 font-semibold text-white bg-teal-800 rounded-md cursor-pointer" onClick={() => router.push("/reviewee/game/solo")}>
+                                    Start Solo Mode
+                                </button>
                             </div>
                         </div>
 
@@ -57,7 +64,9 @@ export default function RevieweeDashboardPage() {
                             </div>
                             <div className="p-6 border border-gray-300 rounded-b-2xl h-60 flex flex-col justify-between">
                                 <p>Challenge other students in real-time multiplayer battles. Compete and climb the leaderboard!</p>
-                                <button className="w-full py-2 font-semibold text-white bg-teal-800 rounded-md cursor-pointer">Start Battle Mode</button>
+                                <button className="w-full py-2 font-semibold text-white bg-teal-800 rounded-md cursor-pointer" onClick={() => router.push("/reviewee/game/battle")}>
+                                    Start Battle Mode
+                                </button>
                             </div>
                         </div>
 
@@ -67,7 +76,9 @@ export default function RevieweeDashboardPage() {
                             </div>
                             <div className="p-6 border border-gray-300 rounded-b-2xl h-60 flex flex-col justify-between">
                                 <p>Answer multiple-choice questions with time limits. Challenge yourself and measure your understanding.</p>
-                                <button className="w-full py-2 font-semibold text-white bg-teal-800 rounded-md cursor-pointer">Start Quiz</button>
+                                <button className="w-full py-2 font-semibold text-white bg-teal-800 rounded-md cursor-pointer" onClick={() => router.push("/reviewee/game/quiz")}>
+                                    Start Quiz
+                                </button>
                             </div>
                         </div>
                     </div>
