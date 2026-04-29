@@ -1,7 +1,20 @@
+"use client";
+
 import Image from "next/image";
 import authBackground from "@/public/authBackground.jpg";
+import { useLogin } from "@/features/login/hooks/useLogin";
+import { useAuth } from "@/features/auth/providers/AuthProvider";
+import { useEffect } from "react";
 
 export default function LoginPage() {
+  const { user } = useAuth();
+
+  const { handleLogin, handleUserInput, formData, error } = useLogin();
+
+  useEffect(() => {
+    console.log("user:", user);
+  }, []);
+
   return (
     <div className="flex h-screen">
       <section className="relative rounded-tr-[125px] w-3/5 overflow-hidden">
@@ -25,13 +38,17 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="font-medium">
                   Email Address
                 </label>
                 <input
                   type="text"
+                  id="email"
+                  name="email"
+                  defaultValue={formData.email}
+                  onChange={handleUserInput}
                   placeholder="Email Address"
                   className="border border-gray-300 w-full py-3 px-4 rounded-md"
                 />
@@ -43,10 +60,16 @@ export default function LoginPage() {
                 </label>
                 <input
                   type="password"
+                  id="password"
+                  name="password"
+                  defaultValue={formData.password}
+                  onChange={handleUserInput}
                   placeholder="Password"
                   className="border border-gray-300 w-full py-3 px-4 rounded-md"
                 />
               </div>
+
+              {error && <p className="text-red-500">{error}</p>}
 
               <div className="flex justify-end">
                 <p className="text-teal-600 font-medium">Forgot Password?</p>

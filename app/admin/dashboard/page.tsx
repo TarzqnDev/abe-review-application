@@ -1,5 +1,7 @@
 "use client";
 
+import { useAdminDashboard } from "@/features/admin/dashboard/hooks/useAdminDashboard";
+import { useAuth } from "@/features/auth/providers/AuthProvider";
 import {
   Squares2X2Icon,
   UserCircleIcon,
@@ -9,11 +11,19 @@ import {
   BookOpenIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AdminDashboardPage() {
+  const { user } = useAuth();
+
+  const { handleLogout } = useAdminDashboard();
+
   const [openAccountMenu, setOpenAccountMenu] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
+
+  useEffect(() => {
+    console.log("user:", user);
+  }, [user]);
 
   return (
     <div className="py-2 pl-2 pr-8 bg-stone-100 h-screen flex gap-8">
@@ -62,7 +72,12 @@ export default function AdminDashboardPage() {
                     Profile
                   </li>
                   <li className="px-4 py-2 hover:bg-stone-100 cursor-pointer">
-                    <button>Logout</button>
+                    <button
+                      className="w-full text-start"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
                   </li>
                 </ul>
               </div>
