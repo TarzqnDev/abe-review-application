@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { AuthProvider } from "@/features/auth/providers/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,17 +15,22 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createSupabaseServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
-    <html
-      lang="en"
-      className="h-full antialiased"
-    >
-      <body className={`${poppins.variable} min-h-full flex flex-col`}>{children}</body>
+    <html lang="en" className="h-full antialiased">
+      <body className={`${poppins.variable} min-h-full flex flex-col`}>
+        <AuthProvider user={user}>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
