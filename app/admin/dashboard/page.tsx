@@ -6,16 +6,12 @@ import {
   PlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function AdminDashboardPage() {
   const { user } = useAuth();
 
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
-
-  useEffect(() => {
-    console.log("user:", user);
-  }, [user]);
 
   return (
     <section>

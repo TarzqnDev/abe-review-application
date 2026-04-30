@@ -7,7 +7,6 @@ export const useAdminDashboard = () => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      console.log("Logged out successfull");
       router.replace("/login");
     } catch (error) {
       console.error(error);

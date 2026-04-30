@@ -1,18 +1,10 @@
 "use client";
 
-import { useAuth } from "@/features/auth/providers/AuthProvider";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function RevieweeDashboardPage() {
   const router = useRouter();
-
-  const { user } = useAuth();
-
-  useEffect(() => {
-    console.log("user:", user);
-  }, []);
 
   return (
     <div>

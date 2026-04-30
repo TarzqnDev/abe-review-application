@@ -13,10 +13,6 @@ export default function LoginPage() {
 
   const { handleLogin, handleUserInput, formData, error } = useLogin();
 
-  useEffect(() => {
-    console.log("user:", user);
-  }, []);
-
   return (
     <div className="flex h-screen">
       <section className="relative rounded-tr-[125px] w-3/5 overflow-hidden">
