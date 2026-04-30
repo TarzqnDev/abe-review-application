@@ -3,13 +3,11 @@
 import Image from "next/image";
 import authBackground from "@/public/authBackground.jpg";
 import { useLogin } from "@/features/login/hooks/useLogin";
-import { useAuth } from "@/features/auth/providers/AuthProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const { user } = useAuth();
 
   const { handleLogin, handleUserInput, formData, error } = useLogin();
 
