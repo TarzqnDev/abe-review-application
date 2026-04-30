@@ -3,8 +3,14 @@
 import Image from "next/image";
 import authBackground from "@/public/authBackground.jpg";
 import { useLogin } from "@/features/login/hooks/useLogin";
+import { useAuth } from "@/features/auth/providers/AuthProvider";
+import { useEffect, useState } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const { user } = useAuth();
+
   const { handleLogin, handleUserInput, formData, error } = useLogin();
 
   return (
@@ -50,18 +56,29 @@ export default function LoginPage() {
                 <label htmlFor="password" className="font-medium ">
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  defaultValue={formData.password}
-                  onChange={handleUserInput}
-                  placeholder="Password"
-                  className="border border-gray-300 w-full py-3 px-4 rounded-md"
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    defaultValue={formData.password}
+                    onChange={handleUserInput}
+                    placeholder="Password"
+                    className="border border-gray-300 w-full py-3 px-4 rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5 text-gray-500 cursor-pointer" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-500 cursor-pointer" />
+                    )}
+                  </button>
+                </div>
               </div>
-
-              {error && <p className="text-red-500">{error}</p>}
 
               <div className="flex justify-end">
                 <p className="text-teal-600 font-medium">Forgot Password?</p>
@@ -72,6 +89,7 @@ export default function LoginPage() {
                   Login
                 </button>
               </div>
+              {error && <p className="text-red-500">{error}</p>}
             </form>
           </div>
         </div>

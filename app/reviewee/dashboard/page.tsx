@@ -8,26 +8,6 @@ export default function RevieweeDashboardPage() {
 
   return (
     <div>
-      <section className="border-b border-gray-300 shadow-sm">
-        <div className="flex items-center justify-between mx-72 h-20">
-          <div>
-            <h1 className="font-medium text-xl">ABE Review App</h1>
-          </div>
-
-          <div>
-            <ul className="flex gap-4">
-              <li>Home</li>
-              <li>History</li>
-            </ul>
-          </div>
-
-          <div className="flex gap-2">
-            <UserCircleIcon className="h-6 w-6 text-stone-600" />
-            <p>mark@gmail.com</p>
-          </div>
-        </div>
-      </section>
-
       <section>
         <div className="mx-72 mt-8">
           <div>
