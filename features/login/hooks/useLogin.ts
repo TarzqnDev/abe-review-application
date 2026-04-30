@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { loginUser } from "../actions/login.action";
 import { handleFormChange } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/features/auth/providers/AuthProvider";
 
 export const useLogin = () => {
@@ -37,11 +36,7 @@ export const useLogin = () => {
 
     const formDataSubmission = new FormData(e.target);
 
-    const {
-      success,
-      message,
-      error: loginError,
-    } = await loginUser(formDataSubmission);
+    const { success, error: loginError } = await loginUser(formDataSubmission);
 
     if (!success) {
       setError(loginError);
@@ -51,7 +46,6 @@ export const useLogin = () => {
     getUser();
 
     router.push("/admin/dashboard");
-    console.log(message);
   };
 
   return { handleLogin, handleUserInput, formData, error };

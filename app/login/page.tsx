@@ -3,17 +3,9 @@
 import Image from "next/image";
 import authBackground from "@/public/authBackground.jpg";
 import { useLogin } from "@/features/login/hooks/useLogin";
-import { useAuth } from "@/features/auth/providers/AuthProvider";
-import { useEffect } from "react";
 
 export default function LoginPage() {
-  const { user } = useAuth();
-
   const { handleLogin, handleUserInput, formData, error } = useLogin();
-
-  useEffect(() => {
-    console.log("user:", user);
-  }, []);
 
   return (
     <div className="flex h-screen">

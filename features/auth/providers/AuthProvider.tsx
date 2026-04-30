@@ -1,7 +1,7 @@
 "use client";
 
 import { supabase } from "@/lib/supabase/client";
-import React, {
+import {
   createContext,
   ReactNode,
   useContext,
@@ -27,19 +27,6 @@ export const AuthProvider = ({
 }: AuthProviderProps) => {
   const [user, setUser] = useState(initialUser);
 
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("SESSION FROM CONTEXT:", session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
   const getUser = async () => {
     const {
       data: { user },
@@ -47,6 +34,18 @@ export const AuthProvider = ({
 
     setUser(user);
   };
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, getUser }}>
