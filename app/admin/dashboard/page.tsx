@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/features/auth/providers/AuthProvider";
 import {
   MagnifyingGlassIcon,
   PlusIcon,
@@ -9,8 +8,6 @@ import {
 import { useState } from "react";
 
 export default function AdminDashboardPage() {
-  const { user } = useAuth();
-
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
   return (
