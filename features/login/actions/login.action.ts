@@ -1,6 +1,6 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
 
 export const loginUser = async (formData: FormData) => {
   try {
@@ -11,7 +11,7 @@ export const loginUser = async (formData: FormData) => {
       throw new Error("Email and password are required");
     }
 
-    const supabase = await createSupabaseServerClient();
+    const supabase = await createSupabaseServerActionClient();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,

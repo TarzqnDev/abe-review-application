@@ -1,20 +1,19 @@
-"use client";
+import AdminLayoutClient from "@/components/AdminLayoutClient";
+import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
+import { redirect } from "next/navigation";
 
-import AdminHeader from "@/components/AdminHeader";
-import AdminNavbar from "@/components/AdminNavbar";
-
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="py-2 pl-2 pr-8 bg-stone-100 h-screen flex gap-8">
-      <AdminNavbar />
-      <main className="w-full">
-        <AdminHeader />
-        <div>{children}</div>
-      </main>
-    </div>
-  );
+  const supabase = await createSupabaseServerComponentClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  return <AdminLayoutClient>{children}</AdminLayoutClient>;
 }
