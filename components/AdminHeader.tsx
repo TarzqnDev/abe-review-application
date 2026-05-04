@@ -40,10 +40,13 @@ export default function AdminHeader() {
           <div className="absolute right-0 mt-8 w-48 bg-white border border-gray-300 rounded-md shadow-sm">
             <ul className="py-2">
               <li className="px-4 py-2 hover:bg-stone-100 cursor-pointer">
-                <button>Profile</button>
+                Profile
               </li>
-              <li className="px-4 py-2 hover:bg-stone-100 cursor-pointer">
-                <button onClick={handleLogout}>Logout</button>
+              <li
+                onClick={handleLogout}
+                className="px-4 py-2 hover:bg-stone-100 cursor-pointer"
+              >
+                Logout
               </li>
             </ul>
           </div>

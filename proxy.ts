@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServerClient } from "./lib/supabase/server";
+import { createSupabaseProxyClient } from "./lib/supabase/proxy";
 
 import {
   protectedRoutes,
@@ -9,7 +9,10 @@ import {
 export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
-  const supabase = await createSupabaseServerClient();
+  const { supabase, getResponse } = createSupabaseProxyClient(
+    request,
+    response,
+  );
 
   const {
     data: { user },
@@ -20,7 +23,6 @@ export async function proxy(request: NextRequest) {
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route),
   );
-
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   // 🚫 Not logged in
@@ -33,9 +35,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  return response;
+  return getResponse();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/reviewee/:path*", "/login", "/register"],
+  matcher: ["/", "/login", "/register", "/admin/:path*", "/reviewee/:path*"],
 };
