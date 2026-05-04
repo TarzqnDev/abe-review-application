@@ -1,6 +1,10 @@
 "use client";
 
-import { BookOpenIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
+import {
+  BookOpenIcon,
+  Squares2X2Icon,
+  LightBulbIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,11 +27,20 @@ export default function AdminNavbar() {
           <Squares2X2Icon className="h-6 w-6 mr-2" />
           Dashboard
         </Link>
+
+        <Link
+          href="/admin/subject"
+          className={`py-3 px-4 rounded-md flex items-center cursor-pointer ${pathname === "/admin/subject" ? "bg-teal-800 text-white" : "hover:bg-stone-100"}`}
+        >
+          <BookOpenIcon className="h-6 w-6 mr-2" />
+          Subjects
+        </Link>
+
         <Link
           href="/admin/mcqcontent"
           className={`py-3 px-4 rounded-md flex items-center cursor-pointer ${pathname === "/admin/mcqcontent" ? "bg-teal-800 text-white" : "hover:bg-stone-100"}`}
         >
-          <BookOpenIcon className="h-6 w-6 mr-2" />
+          <LightBulbIcon className="h-6 w-6 mr-2" />
           MCQ Content
         </Link>
       </div>
