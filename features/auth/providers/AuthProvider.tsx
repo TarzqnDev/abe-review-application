@@ -1,5 +1,6 @@
 "use client";
 
+import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { supabase } from "@/lib/supabase/client";
 import {
   createContext,
@@ -45,6 +46,19 @@ export const AuthProvider = ({
     return () => {
       subscription.unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    const getRoles = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const roles = getTokenRoles(session);
+      console.log("roles:", roles);
+    };
+
+    getRoles();
   }, []);
 
   return (
