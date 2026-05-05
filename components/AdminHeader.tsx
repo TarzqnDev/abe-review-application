@@ -11,7 +11,6 @@ export default function AdminHeader() {
 
   const pageMap: Record<string, string> = {
     "/admin/dashboard": "Dashboard",
-    "/admin/mcqcontent": "MCQ Content",
     "/admin/subject": "Subjects",
   };
 

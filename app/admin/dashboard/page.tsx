@@ -60,9 +60,7 @@ export default function AdminDashboardPage() {
 
                   <form className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
-                      <label htmlFor="email" className="font-medium">
-                        Full Name
-                      </label>
+                      <label className="font-medium">Full Name</label>
                       <input
                         type="text"
                         placeholder="FullName"
@@ -82,9 +80,16 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label htmlFor="email" className="font-medium">
-                        End Date
-                      </label>
+                      <label className="font-medium">Start Date</label>
+                      <input
+                        type="text"
+                        placeholder="Start Date"
+                        className="border border-gray-300 w-full py-3 px-4 rounded-md"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-medium">End Date</label>
                       <input
                         type="text"
                         placeholder="End Date"
@@ -120,6 +125,18 @@ export default function AdminDashboardPage() {
           </thead>
 
           <tbody>
+            <tr className="border-b border-gray-300">
+              <td className="py-3 pl-8">Mark Joseph M. Ante</td>
+              <td className="py-3 pl-8">mark@example.com</td>
+              <td className="py-3 pl-8">
+                <span className="bg-yellow-500 text-white text-sm font-medium px-4 py-1 rounded-full">
+                  Pending
+                </span>
+              </td>
+              <td className="py-3 pl-8">23/04/2026</td>
+              <td className="py-3 pl-8">14/06/2026</td>
+              <td className="py-3 pl-8">Edit</td>
+            </tr>
             <tr>
               <td className="py-3 pl-8">Mark Joseph M. Ante</td>
               <td className="py-3 pl-8">mark@example.com</td>

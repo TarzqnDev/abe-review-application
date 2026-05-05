@@ -5,6 +5,7 @@ import {
   PencilSquareIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function AdminSubjectPage() {
@@ -94,15 +95,9 @@ export default function AdminSubjectPage() {
             </button>
           </div>
           <div className="flex gap-4">
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 1
-            </p>
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 2
-            </p>
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 3
-            </p>
+            <button className="border rounded border-gray-300 bg-white hover:bg-teal-100 hover:border-teal-500 transition duration-200 ease-in-out py-3 px-4 font-medium cursor-pointer">
+              <Link href="/admin/subject/mcqcontent">Subject 1</Link>
+            </button>
           </div>
         </div>
 
@@ -115,15 +110,9 @@ export default function AdminSubjectPage() {
             </button>
           </div>
           <div className="flex gap-4">
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 1
-            </p>
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 2
-            </p>
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 3
-            </p>
+            <button className="border rounded border-gray-300 bg-white hover:bg-teal-100 hover:border-teal-500 transition duration-200 ease-in-out py-3 px-4 font-medium cursor-pointer">
+              <Link href="/admin/subject/mcqcontent">Subject 1</Link>
+            </button>
           </div>
         </div>
 
@@ -136,15 +125,9 @@ export default function AdminSubjectPage() {
             </button>
           </div>
           <div className="flex gap-4">
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 1
-            </p>
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 2
-            </p>
-            <p className="border rounded border-teal-500 bg-teal-100 py-3 px-4 font-medium">
-              Subject 3
-            </p>
+            <button className="border rounded border-gray-300 bg-white hover:bg-teal-100 hover:border-teal-500 transition duration-200 ease-in-out py-3 px-4 font-medium cursor-pointer">
+              <Link href="/admin/subject/mcqcontent">Subject 1</Link>
+            </button>
           </div>
         </div>
       </div>
