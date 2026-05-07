@@ -3,6 +3,8 @@ import { loginUser } from "../actions/login.action";
 import { handleFormChange } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/features/auth/providers/AuthProvider";
+import { getTokenRoles } from "@/lib/auth/get-token-roles";
+import { supabase } from "@/lib/supabase/client";
 
 export const useLogin = () => {
   const { getUser } = useAuth();
@@ -45,7 +47,13 @@ export const useLogin = () => {
 
     getUser();
 
-    router.push("/admin/dashboard");
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const roles = getTokenRoles(session);
+
+    if (roles.includes("admin")) router.push("/admin/dashboard");
+    else if (roles.includes("reviewee")) router.push("/reviewee/dashboard");
   };
 
   return { handleLogin, handleUserInput, formData, error };
