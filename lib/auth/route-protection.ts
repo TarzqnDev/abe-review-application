@@ -3,4 +3,4 @@ export const protectedRoutes = {
   "/reviewee/dashboard": ["reviewee"],
 };
 
-export const authRoutes = ["/login"];
+export const authRoutes = ["/login", "/signup"];
