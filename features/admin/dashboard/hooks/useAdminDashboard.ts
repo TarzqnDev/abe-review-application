@@ -66,6 +66,7 @@ export const useAdminDashboard = () => {
     if (!email) return "Email is required";
     if (!startDate) return "Start date is required";
     if (!endDate) return "End date is required";
+    if (endDate <= startDate) return "End date must be after start date";
     return null;
   };
 
@@ -110,11 +111,7 @@ export const useAdminDashboard = () => {
   };
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      void loadUsers();
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    loadUsers();
   }, []);
 
   const handleRegisterUser = async (e: React.ChangeEvent<HTMLFormElement>) => {
