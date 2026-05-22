@@ -4,15 +4,28 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
   XMarkIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  FunnelIcon,
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAdminDashboard } from "@/features/admin/dashboard/hooks/useAdminDashboard";
+
+const ITEMS_PER_PAGE = 10;
+
+type StatusFilter = "all" | "active" | "pending";
+type SortOption = "newest" | "oldest";
 
 export default function AdminDashboardPage() {
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const [openFilterMenu, setOpenFilterMenu] = useState(false);
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [successBannerMessage, setSuccessBannerMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [sortOption, setSortOption] = useState<SortOption>("newest");
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     handleRegisterUser,
     handleUserInput,
@@ -27,6 +40,48 @@ export default function AdminDashboardPage() {
     formatDate,
     getStatusClassName,
   } = useAdminDashboard();
+
+  // Filter and sort users
+  const filteredUsers = useMemo(() => {
+    let result = users;
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      result = result.filter((user) =>
+        user.full_name.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+    }
+
+    // Filter by status
+    if (statusFilter !== "all") {
+      result = result.filter((user) => user.status === statusFilter);
+    }
+
+    // Sort by date
+    result = result.sort((a, b) => {
+      const dateA = new Date(a.start_date).getTime();
+      const dateB = new Date(b.start_date).getTime();
+
+      if (sortOption === "newest") {
+        return dateB - dateA; // Most recent first
+      } else {
+        return dateA - dateB; // Oldest first
+      }
+    });
+
+    return result;
+  }, [users, searchQuery, statusFilter, sortOption]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, sortOption]);
 
   const openRegisterUserModal = () => {
     handleOpenRegisterModal();
@@ -60,6 +115,20 @@ export default function AdminDashboardPage() {
     return () => clearTimeout(timeout);
   }, [showSuccessBanner]);
 
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const toggleFilterMenu = () => {
+    setOpenFilterMenu(!openFilterMenu);
+  };
+
+  const hasActiveFilters = statusFilter !== "all" || sortOption !== "newest";
+
   return (
     <section>
       <div
@@ -83,21 +152,152 @@ export default function AdminDashboardPage() {
         </p>
       </div>
 
-      <div className="flex justify-between mb-6">
-        <div className="relative w-100">
+      <div className="flex justify-between mb-6 gap-4">
+        <div className="relative flex-1 ">
           <input
             type="text"
-            placeholder="Search User"
-            className="border border-gray-300 w-full py-3 pl-10 pr-4 rounded-md"
+            placeholder="Search User by Name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border border-gray-300 w-125 py-3 pl-10 pr-4 rounded-md"
           />
 
           <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
         </div>
 
-        <div>
+        <div className="flex gap-2">
+          {/* Filter Button */}
+          <div className="relative">
+            <button
+              onClick={toggleFilterMenu}
+              className={`flex items-center gap-2 py-3 px-4 rounded-md font-semibold transition-colors cursor-pointer ${
+                hasActiveFilters
+                  ? "bg-teal-100 text-teal-800 border border-teal-300"
+                  : "bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200"
+              }`}
+            >
+              <FunnelIcon className="h-5 w-5" />
+              Filter
+            </button>
+
+            {/* Filter Dropdown Menu */}
+            <div
+              className={`absolute right-0 top-full mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg z-40 transition-all duration-200 ${
+                openFilterMenu
+                  ? "opacity-100 visible"
+                  : "opacity-0 invisible pointer-events-none"
+              }`}
+            >
+              <div className="p-4">
+                {/* Status Filter */}
+                <div className="mb-4">
+                  <h3 className="font-semibold text-sm text-gray-700 mb-3">
+                    Status
+                  </h3>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="status"
+                        value="all"
+                        checked={statusFilter === "all"}
+                        onChange={(e) =>
+                          setStatusFilter(e.target.value as StatusFilter)
+                        }
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-gray-600">All Users</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="status"
+                        value="active"
+                        checked={statusFilter === "active"}
+                        onChange={(e) =>
+                          setStatusFilter(e.target.value as StatusFilter)
+                        }
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-gray-600">Active</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="status"
+                        value="pending"
+                        checked={statusFilter === "pending"}
+                        onChange={(e) =>
+                          setStatusFilter(e.target.value as StatusFilter)
+                        }
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-gray-600">Pending</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Sort Option */}
+                <div className="border-t border-gray-200 pt-4">
+                  <h3 className="font-semibold text-sm text-gray-700 mb-3">
+                    Sort by Date Joined
+                  </h3>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sort"
+                        value="newest"
+                        checked={sortOption === "newest"}
+                        onChange={(e) =>
+                          setSortOption(e.target.value as SortOption)
+                        }
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-gray-600">
+                        Latest First
+                      </span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sort"
+                        value="oldest"
+                        checked={sortOption === "oldest"}
+                        onChange={(e) =>
+                          setSortOption(e.target.value as SortOption)
+                        }
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-gray-600">
+                        Oldest First
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Reset Filters */}
+                {hasActiveFilters && (
+                  <div className="border-t border-gray-200 pt-4 mt-4">
+                    <button
+                      onClick={() => {
+                        setStatusFilter("all");
+                        setSortOption("newest");
+                      }}
+                      className="w-full text-sm text-teal-800 font-medium hover:bg-teal-50 py-2 rounded transition-colors"
+                    >
+                      Reset Filters
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Register Button */}
           <button
             onClick={openRegisterUserModal}
-            className="bg-teal-800 text-white font-semibold py-3 px-4 rounded-md cursor-pointer flex items-center"
+            className="bg-teal-800 text-white font-semibold py-3 px-4 rounded-md cursor-pointer flex items-center whitespace-nowrap hover:bg-teal-900 transition-colors"
           >
             <PlusIcon className="h-5 w-5 mr-2" /> Register User
           </button>
@@ -213,6 +413,34 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Active Filters Display */}
+      {hasActiveFilters && (
+        <div className="mb-4 p-3 bg-teal-50 border border-teal-200 rounded-lg flex items-center justify-between">
+          <div className="text-sm text-teal-800">
+            <span className="font-medium">Active filters:</span>
+            {statusFilter !== "all" && (
+              <span className="ml-2">
+                Status: <strong>{statusFilter}</strong>
+              </span>
+            )}
+            {sortOption !== "newest" && (
+              <span className="ml-2">
+                Sorted: <strong>{sortOption}</strong>
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              setStatusFilter("all");
+              setSortOption("newest");
+            }}
+            className="text-xs text-teal-700 font-medium hover:text-teal-900"
+          >
+            Clear All
+          </button>
+        </div>
+      )}
+
       <div className="rounded-lg border border-gray-300 overflow-hidden shadow-sm">
         <table className="w-full bg-white">
           <thead>
@@ -233,12 +461,12 @@ export default function AdminDashboardPage() {
                   Loading users...
                 </td>
               </tr>
-            ) : users.length > 0 ? (
-              users.map((user, index) => (
+            ) : paginatedUsers.length > 0 ? (
+              paginatedUsers.map((user, index) => (
                 <tr
                   key={user.user_id}
                   className={
-                    index !== users.length - 1
+                    index !== paginatedUsers.length - 1
                       ? "border-b border-gray-300"
                       : undefined
                   }
@@ -254,20 +482,77 @@ export default function AdminDashboardPage() {
                   <td className="py-3 pl-8">{formatDate(user.start_date)}</td>
                   <td className="py-3 pl-8">{formatDate(user.end_date)}</td>
                   <td className="py-3 pl-8">
-                    <button className="cursor-pointer">Edit</button>
+                    <button className="cursor-pointer hover:text-teal-800 transition-colors">
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td className="py-8 px-8 text-stone-500" colSpan={6}>
-                  {usersError || "No users have been registered yet."}
+                  {usersError ||
+                    (searchQuery
+                      ? "No users found matching your search."
+                      : statusFilter !== "all"
+                        ? `No ${statusFilter} users found.`
+                        : "No users have been registered yet.")}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {!isLoadingUsers && filteredUsers.length > 0 && (
+        <div className="flex items-center justify-between mt-6">
+          <div className="text-sm text-stone-600">
+            Showing {startIndex + 1} to{" "}
+            {Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length}{" "}
+            users
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="flex items-center justify-center h-10 w-10 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Previous page"
+            >
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`h-10 w-10 rounded-md font-medium transition-colors ${
+                      currentPage === page
+                        ? "bg-teal-800 text-white"
+                        : "border border-gray-300 text-gray-600 hover:bg-gray-50"
+                    }`}
+                    aria-current={currentPage === page ? "page" : undefined}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+            </div>
+
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="flex items-center justify-center h-10 w-10 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Next page"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
