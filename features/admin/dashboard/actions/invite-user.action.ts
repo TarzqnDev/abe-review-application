@@ -20,6 +20,10 @@ export const inviteUser = async (formData: FormData) => {
       );
     }
 
+    if (endDate <= startDate) {
+      throw new Error("End date must be after start date");
+    }
+
     const supabase = await createSupabaseServerActionClient();
     const {
       data: { session },
@@ -63,6 +67,7 @@ export const inviteUser = async (formData: FormData) => {
       throw new Error("Unable to create the invited user");
     }
 
+    // Injecting roles and fullname in metadata
     const { error: updateUserError } =
       await supabaseAdmin.auth.admin.updateUserById(invitedUser.id, {
         app_metadata: {
@@ -79,6 +84,7 @@ export const inviteUser = async (formData: FormData) => {
       throw new Error(updateUserError.message);
     }
 
+    // Adding user data in public.users table
     const { error: upsertUserError } = await supabaseAdmin.from("users").upsert(
       {
         user_id: invitedUser.id,

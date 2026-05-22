@@ -1,8 +1,8 @@
-import RevieweeLayoutClient from "@/components/RevieweeLayoutClient";
 import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
 import { redirect } from "next/navigation";
+import React from "react";
 
-export default async function RevieweeLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -15,5 +15,5 @@ export default async function RevieweeLayout({
 
   if (!user) redirect("/login");
 
-  return <RevieweeLayoutClient>{children}</RevieweeLayoutClient>;
+  return children;
 }

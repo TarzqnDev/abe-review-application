@@ -15,6 +15,7 @@ export const useLogin = () => {
       password: "",
     },
   );
+  const [isLoggingin, setIsLoggingIn] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
   const router = useRouter();
@@ -28,33 +29,40 @@ export const useLogin = () => {
   const handleUserInput = handleFormChange(formData, setFormData);
 
   const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const error = validateUserInput(formData.email, formData.password);
-    if (error) {
-      setError(error);
-      return;
+      setIsLoggingIn(true);
+
+      const error = validateUserInput(formData.email, formData.password);
+      if (error) {
+        setError(error);
+        return;
+      }
+
+      const formDataSubmission = new FormData(e.target);
+
+      const { success, error: loginError } =
+        await loginUser(formDataSubmission);
+
+      if (!success) {
+        setError(loginError);
+        return;
+      }
+
+      getUser();
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const roles = getTokenRoles(session);
+
+      if (roles.includes("admin")) router.push("/admin/dashboard");
+      else if (roles.includes("reviewee")) router.push("/reviewee/dashboard");
+    } finally {
+      setIsLoggingIn(false);
     }
-
-    const formDataSubmission = new FormData(e.target);
-
-    const { success, error: loginError } = await loginUser(formDataSubmission);
-
-    if (!success) {
-      setError(loginError);
-      return;
-    }
-
-    getUser();
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const roles = getTokenRoles(session);
-
-    if (roles.includes("admin")) router.push("/admin/dashboard");
-    else if (roles.includes("reviewee")) router.push("/reviewee/dashboard");
   };
 
-  return { handleLogin, handleUserInput, formData, error };
+  return { handleLogin, handleUserInput, formData, isLoggingin, error };
 };

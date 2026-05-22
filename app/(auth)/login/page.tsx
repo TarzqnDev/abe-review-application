@@ -5,11 +5,13 @@ import authBackground from "@/public/authBackground.jpg";
 import { useLogin } from "@/features/login/hooks/useLogin";
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { LoaderCircle } from "lucide-react";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { handleLogin, handleUserInput, formData, error } = useLogin();
+  const { handleLogin, handleUserInput, formData, isLoggingin, error } =
+    useLogin();
 
   return (
     <div className="flex h-screen">
@@ -83,8 +85,12 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <button className="bg-teal-800 text-white font-semibold w-full py-3 rounded-md cursor-pointer">
-                  Login
+                <button className="bg-teal-800 text-white font-semibold w-full py-3 rounded-md cursor-pointer flex justify-center items-center">
+                  {isLoggingin ? (
+                    <LoaderCircle className="animate-spin" />
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </div>
               {error && <p className="text-red-500">{error}</p>}
