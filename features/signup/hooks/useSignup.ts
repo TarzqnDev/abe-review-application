@@ -19,8 +19,29 @@ export const useSignup = () => {
   const [hasInviteSession, setHasInviteSession] = useState<boolean | null>(
     null,
   );
+  const [requestAccessFormData, setRequestAccessFormData] = useState<{
+    email: string;
+  }>({
+    email: "",
+  });
+  const [requestAccessError, setRequestAccessError] = useState<
+    string | undefined
+  >("");
+  const [isRequestAccessModalOpen, setIsRequestAccessModalOpen] =
+    useState(false);
+  const [isSubmittingRequestAccess, setIsSubmittingRequestAccess] =
+    useState(false);
+  const [showRequestAccessSuccessBanner, setShowRequestAccessSuccessBanner] =
+    useState(false);
+  const [requestAccessSuccessBannerMessage, setRequestAccessSuccessBannerMessage] =
+    useState("");
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [showSignupSuccessBanner, setShowSignupSuccessBanner] = useState(false);
+  const [signupSuccessBannerMessage, setSignupSuccessBannerMessage] =
+    useState("");
 
   const router = useRouter();
+
   const syncUser = useEffectEvent(async () => {
     await getUser();
   });
@@ -74,43 +95,136 @@ export const useSignup = () => {
     if (password !== confirmPassword) return "Passwords do not match";
     return null;
   };
+  const validateRequestAccessInput = (email: string) => {
+    if (!email) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return "Please enter a valid email address";
+    }
+    return null;
+  };
 
   const handleUserInput = handleFormChange(formData, setFormData);
+  const handleRequestAccessInput = handleFormChange(
+    requestAccessFormData,
+    setRequestAccessFormData,
+  );
 
   const handleSignup = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    setError("");
+      setError("");
 
-    const error = validateUserInput(
-      formData.password,
-      formData.confirmPassword,
-    );
-    if (error) {
-      setError(error);
-      return;
+      const error = validateUserInput(
+        formData.password,
+        formData.confirmPassword,
+      );
+      if (error) {
+        setError(error);
+        return;
+      }
+
+      setIsSigningUp(true);
+
+      const formDataSubmission = new FormData(e.target);
+
+      const { success, error: signupError, message } =
+        await completeSignup(formDataSubmission);
+
+      if (!success) {
+        setError(signupError);
+        return;
+      }
+
+      getUser();
+
+      setSignupSuccessBannerMessage(message);
+      setShowSignupSuccessBanner(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+
+      router.push("/reviewee/dashboard");
+    } finally {
+      setIsSigningUp(false);
     }
-
-    const formDataSubmission = new FormData(e.target);
-
-    const { success, error: signupError } =
-      await completeSignup(formDataSubmission);
-
-    if (!success) {
-      setError(signupError);
-      return;
-    }
-
-    getUser();
-
-    router.push("/reviewee/dashboard");
   };
+
+  const handleOpenRequestAccessModal = () => {
+    setRequestAccessFormData({
+      email: "",
+    });
+    setRequestAccessError("");
+    setIsRequestAccessModalOpen(true);
+  };
+
+  const handleCloseRequestAccessModal = () => {
+    setIsRequestAccessModalOpen(false);
+
+    setTimeout(() => {
+      setRequestAccessFormData({
+        email: "",
+      });
+      setRequestAccessError("");
+    }, 300);
+  };
+
+  const handleRequestAccessSubmission = async (
+    e: React.ChangeEvent<HTMLFormElement>,
+  ) => {
+    try {
+      e.preventDefault();
+
+      setRequestAccessError("");
+
+      const error = validateRequestAccessInput(requestAccessFormData.email);
+
+      if (error) {
+        setRequestAccessError(error);
+        return;
+      }
+
+      setIsSubmittingRequestAccess(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      handleCloseRequestAccessModal();
+      setRequestAccessSuccessBannerMessage(
+        "Request submitted. Admin notifications will be implemented soon.",
+      );
+      setShowRequestAccessSuccessBanner(true);
+    } finally {
+      setIsSubmittingRequestAccess(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!showRequestAccessSuccessBanner) return;
+
+    const timeout = setTimeout(() => {
+      setShowRequestAccessSuccessBanner(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [showRequestAccessSuccessBanner]);
 
   return {
     error,
     formData,
     handleSignup,
+    handleCloseRequestAccessModal,
+    handleOpenRequestAccessModal,
+    handleRequestAccessSubmission,
+    handleRequestAccessInput,
     handleUserInput,
     hasInviteSession,
+    isRequestAccessModalOpen,
+    isSubmittingRequestAccess,
+    isSigningUp,
+    requestAccessError,
+    requestAccessFormData,
+    requestAccessSuccessBannerMessage,
+    showSignupSuccessBanner,
+    showRequestAccessSuccessBanner,
+    signupSuccessBannerMessage,
   };
 };
