@@ -49,8 +49,8 @@ export const fetchSubjectAreas = async () => {
 
     const subjectAreas = ((data ?? []) as AdminSubjectArea[]).map((area) => ({
       ...area,
-      subjects: [...(area.subjects ?? [])].sort((firstSubject, secondSubject) =>
-        firstSubject.id - secondSubject.id,
+      subjects: [...(area.subjects ?? [])].sort(
+        (firstSubject, secondSubject) => firstSubject.id - secondSubject.id,
       ),
     }));
 

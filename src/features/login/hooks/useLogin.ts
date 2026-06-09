@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { loginUser } from "../actions/login.action";
 import { handleFormChange } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/features/auth/providers/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { supabase } from "@/lib/supabase/client";
 

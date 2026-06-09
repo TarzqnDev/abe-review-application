@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
-import { AuthProvider } from "@/features/auth/providers/AuthProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",

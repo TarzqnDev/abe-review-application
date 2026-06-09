@@ -4,12 +4,8 @@ import Image from "next/image";
 import authBackground from "@/public/authBackground.jpg";
 import { useSignup } from "@/features/signup/hooks/useSignup";
 import { useState } from "react";
-import {
-  EyeIcon,
-  EyeSlashIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { useAuth } from "@/features/auth/providers/AuthProvider";
+import { EyeIcon, EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "@/providers/AuthProvider";
 import { LoaderCircle } from "lucide-react";
 
 export default function SignupPage() {

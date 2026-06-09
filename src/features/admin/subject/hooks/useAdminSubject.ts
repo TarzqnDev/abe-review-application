@@ -24,7 +24,10 @@ export const useAdminSubject = () => {
   const [editingAreaId, setEditingAreaId] = useState<number | null>(null);
   const [editingAreaName, setEditingAreaName] = useState("");
 
-  const handleSubjectInput = handleFormChange(subjectFormData, setSubjectFormData);
+  const handleSubjectInput = handleFormChange(
+    subjectFormData,
+    setSubjectFormData,
+  );
 
   const validateSubjectName = (subjectName: string) => {
     if (!subjectName.trim()) return "Subject name is required";
@@ -99,8 +102,11 @@ export const useAdminSubject = () => {
 
       const formDataSubmission = new FormData(e.target);
 
-      const { success, error: createSubjectError, message } =
-        await createSubject(formDataSubmission);
+      const {
+        success,
+        error: createSubjectError,
+        message,
+      } = await createSubject(formDataSubmission);
 
       if (!success) {
         setError(createSubjectError);
@@ -169,8 +175,11 @@ export const useAdminSubject = () => {
       formDataSubmission.set("areaId", String(editingAreaId));
       formDataSubmission.set("areaName", editingAreaName.trim());
 
-      const { success, error: updateSubjectAreaError, message } =
-        await updateSubjectArea(formDataSubmission);
+      const {
+        success,
+        error: updateSubjectAreaError,
+        message,
+      } = await updateSubjectArea(formDataSubmission);
 
       if (!success) {
         setError(updateSubjectAreaError);

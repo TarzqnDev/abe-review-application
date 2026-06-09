@@ -2,7 +2,7 @@ import React, { useEffect, useEffectEvent, useState } from "react";
 import { completeSignup } from "../actions/complete-signup.action";
 import { handleFormChange } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/features/auth/providers/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
 
 export const useSignup = () => {
@@ -33,8 +33,10 @@ export const useSignup = () => {
     useState(false);
   const [showRequestAccessSuccessBanner, setShowRequestAccessSuccessBanner] =
     useState(false);
-  const [requestAccessSuccessBannerMessage, setRequestAccessSuccessBannerMessage] =
-    useState("");
+  const [
+    requestAccessSuccessBannerMessage,
+    setRequestAccessSuccessBannerMessage,
+  ] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [showSignupSuccessBanner, setShowSignupSuccessBanner] = useState(false);
   const [signupSuccessBannerMessage, setSignupSuccessBannerMessage] =
@@ -128,8 +130,11 @@ export const useSignup = () => {
 
       const formDataSubmission = new FormData(e.target);
 
-      const { success, error: signupError, message } =
-        await completeSignup(formDataSubmission);
+      const {
+        success,
+        error: signupError,
+        message,
+      } = await completeSignup(formDataSubmission);
 
       if (!success) {
         setError(signupError);

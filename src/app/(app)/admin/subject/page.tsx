@@ -162,7 +162,10 @@ export default function AdminSubjectPage() {
                       <button
                         type="button"
                         onClick={() =>
-                          handleStartAreaEditing(subjectArea.id, subjectArea.name)
+                          handleStartAreaEditing(
+                            subjectArea.id,
+                            subjectArea.name,
+                          )
                         }
                         className="cursor-pointer"
                       >
@@ -236,7 +239,11 @@ export default function AdminSubjectPage() {
               onSubmit={handleCreateSubjectSubmission}
               className="flex flex-col gap-4"
             >
-              <input type="hidden" name="areaId" value={subjectFormData.areaId} />
+              <input
+                type="hidden"
+                name="areaId"
+                value={subjectFormData.areaId}
+              />
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="subjectName" className="font-medium">
