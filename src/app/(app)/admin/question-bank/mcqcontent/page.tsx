@@ -17,7 +17,7 @@ export default function AdminMCQContentPage() {
     <section>
       <div>
         <Link
-          href="/admin/subject"
+          href="/admin/question-bank"
           className="text-teal-600 flex items-center mb-8"
         >
           <ArrowLeftIcon className="h-5 w-5 inline-block mr-1" />

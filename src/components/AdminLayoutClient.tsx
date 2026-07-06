@@ -9,12 +9,12 @@ export default function AdminLayoutClient({
   children: React.ReactNode;
 }) {
   return (
-    <div className="py-2 pl-2 pr-8 bg-stone-100 h-screen flex gap-8">
-      <AdminNavbar />
-      <main className="w-full">
-        <AdminHeader />
-        <div>{children}</div>
-      </main>
+    <div className="min-h-screen bg-slate-50 text-slate-950">
+      <AdminHeader />
+      <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-5 py-10 md:grid-cols-[250px_1fr]">
+        <AdminNavbar />
+        <main className="min-w-0">{children}</main>
+      </div>
     </div>
   );
 }

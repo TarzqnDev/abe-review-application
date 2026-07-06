@@ -29,7 +29,9 @@ export async function proxy(request: NextRequest) {
   // ✅ Already logged in
   if (isAuthRoute && session) {
     if (roles.includes("admin"))
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL("/admin/question-bank", request.url),
+      );
     else if (roles.includes("reviewee"))
       return NextResponse.redirect(new URL("/reviewee/dashboard", request.url));
   }

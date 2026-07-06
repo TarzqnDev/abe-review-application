@@ -57,7 +57,7 @@ export const useLogin = () => {
       } = await supabase.auth.getSession();
       const roles = getTokenRoles(session);
 
-      if (roles.includes("admin")) router.push("/admin/dashboard");
+      if (roles.includes("admin")) router.push("/admin/question-bank");
       else if (roles.includes("reviewee")) router.push("/reviewee/dashboard");
     } finally {
       setIsLoggingIn(false);
