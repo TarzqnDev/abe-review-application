@@ -19,15 +19,11 @@ type QuestionFormData = {
   correctOptionSortOrder: string;
   difficulty: QuestionBankDifficulty;
   gameType: QuestionBankGameType;
-  hint: string;
   option1: string;
   option2: string;
   option3: string;
   option4: string;
   questionText: string;
-  situation: string;
-  statementA: string;
-  statementB: string;
 };
 
 type UseQuestionFormModalProps = {
@@ -42,15 +38,11 @@ const initialQuestionFormData: QuestionFormData = {
   correctOptionSortOrder: "",
   difficulty: "Easy",
   gameType: "Guess the Word",
-  hint: "",
   option1: "",
   option2: "",
   option3: "",
   option4: "",
   questionText: "",
-  situation: "",
-  statementA: "",
-  statementB: "",
 };
 
 const getQuestionFormData = (question: AdminQuestion): QuestionFormData => {
@@ -64,15 +56,11 @@ const getQuestionFormData = (question: AdminQuestion): QuestionFormData => {
       : "",
     difficulty: initialQuestionFormData.difficulty,
     gameType: initialQuestionFormData.gameType,
-    hint: question.hint ?? "",
     option1: question.question_options[0]?.option_text ?? "",
     option2: question.question_options[1]?.option_text ?? "",
     option3: question.question_options[2]?.option_text ?? "",
     option4: question.question_options[3]?.option_text ?? "",
-    questionText: question.question_text ?? "",
-    situation: question.situation ?? "",
-    statementA: question.statement_a ?? "",
-    statementB: question.statement_b ?? "",
+    questionText: question.question_text,
   };
 };
 

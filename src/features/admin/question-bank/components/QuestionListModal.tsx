@@ -18,25 +18,6 @@ export default function QuestionListModal({
   questions,
   summary,
 }: QuestionListModalProps) {
-  const getQuestionDetails = (question: AdminQuestion) => {
-    if (summary?.gameType === "Guess the Word" && question.hint) {
-      return [{ label: "Hint", value: question.hint }];
-    }
-
-    if (summary?.gameType === "AB-Solution") {
-      return [
-        { label: "Statement A", value: question.statement_a },
-        { label: "Statement B", value: question.statement_b },
-      ].filter((detail) => detail.value);
-    }
-
-    if (summary?.gameType === "Situationship" && question.situation) {
-      return [{ label: "Situation/Scenario", value: question.situation }];
-    }
-
-    return [];
-  };
-
   return (
     <div
       className={`fixed inset-0 z-60 flex items-center justify-center px-4 transition-opacity duration-300 ${
@@ -74,70 +55,39 @@ export default function QuestionListModal({
 
         <div className="flex flex-col gap-4">
           {questions.length > 0 ? (
-            questions.map((question, questionIndex) => {
-              const questionDetails = getQuestionDetails(question);
+            questions.map((question, questionIndex) => (
+              <article
+                key={question.id}
+                className="rounded border border-slate-200 bg-slate-50 p-5"
+              >
+                <div className="mb-4 flex gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-teal-600 text-xs font-semibold text-white">
+                    {questionIndex + 1}
+                  </span>
+                  <p className="text-sm font-medium leading-6 text-slate-950">
+                    {question.question_text}
+                  </p>
+                </div>
 
-              return (
-                <article
-                  key={question.id}
-                  className="rounded border border-slate-200 bg-slate-50 p-5"
-                >
-                  <div className="mb-4 flex gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-teal-600 text-xs font-semibold text-white">
-                      {questionIndex + 1}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      {questionDetails.length > 0 && (
-                        <div className="grid gap-2">
-                          {questionDetails.map((detail) => (
-                            <div
-                              key={detail.label}
-                              className="rounded border border-slate-200 bg-white px-3 py-2"
-                            >
-                              <p className="text-xs font-semibold text-slate-500">
-                                {detail.label}
-                              </p>
-                              <p className="mt-1 text-sm leading-6 text-slate-700">
-                                {detail.value}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {question.question_text && (
-                        <p className="mt-3 text-sm font-medium leading-6 text-slate-950 first:mt-0">
-                          {question.question_text}
-                        </p>
-                      )}
+                <div className="grid gap-2 md:grid-cols-2">
+                  {question.question_options.map((option) => (
+                    <div
+                      key={option.id}
+                      className={`rounded border px-3 py-2 text-sm ${
+                        option.is_correct
+                          ? "border-teal-600 bg-teal-50 text-teal-700"
+                          : "border-slate-200 bg-white text-slate-600"
+                      }`}
+                    >
+                      <span className="mr-2 font-semibold">
+                        {QUESTION_BANK_OPTION_LABELS[option.sort_order - 1]}.
+                      </span>
+                      {option.option_text}
                     </div>
-                  </div>
-
-                  <div className="grid gap-2 md:grid-cols-2">
-                    {question.question_options.map((option) => (
-                      <div
-                        key={option.id}
-                        className={`rounded border px-3 py-2 text-sm ${
-                          option.is_correct
-                            ? "border-teal-600 bg-teal-50 text-teal-700"
-                            : "border-slate-200 bg-white text-slate-600"
-                        }`}
-                      >
-                        <span className="mr-2 font-semibold">
-                          {
-                            QUESTION_BANK_OPTION_LABELS[
-                              option.sort_order - 1
-                            ]
-                          }
-                          .
-                        </span>
-                        {option.option_text}
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              );
-            })
+                  ))}
+                </div>
+              </article>
+            ))
           ) : (
             <div className="rounded border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">
               No questions yet.

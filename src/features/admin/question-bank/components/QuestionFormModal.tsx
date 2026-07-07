@@ -3,7 +3,6 @@ import type { AdminQuestion } from "@/features/admin/question-bank/actions/fetch
 import {
   QUESTION_BANK_DIFFICULTIES,
   QUESTION_BANK_GAME_TYPES,
-  QUESTION_BANK_GAME_TYPE_FIELDS,
   QUESTION_BANK_OPTION_LABELS,
 } from "@/features/admin/question-bank/constants/questionBank";
 import { LoaderCircle } from "lucide-react";
@@ -13,15 +12,11 @@ type QuestionFormData = {
   correctOptionSortOrder: string;
   difficulty: string;
   gameType: string;
-  hint: string;
   option1: string;
   option2: string;
   option3: string;
   option4: string;
   questionText: string;
-  situation: string;
-  statementA: string;
-  statementB: string;
 };
 
 type QuestionFormModalProps = {
@@ -58,37 +53,6 @@ export default function QuestionFormModal({
   subject,
 }: QuestionFormModalProps) {
   const isEditMode = mode === "edit";
-  const gameTypeFields =
-    QUESTION_BANK_GAME_TYPE_FIELDS[
-      formData.gameType as keyof typeof QUESTION_BANK_GAME_TYPE_FIELDS
-    ] ?? [];
-  const fieldsBeforeQuestion =
-    formData.gameType === "Situationship" ? gameTypeFields : [];
-  const fieldsAfterQuestion =
-    formData.gameType === "Situationship" ? [] : gameTypeFields;
-  const showQuestionField = formData.gameType !== "AB-Solution";
-
-  const renderGameTypeField = (
-    field: (typeof gameTypeFields)[number],
-  ) => (
-    <div key={field.name} className="flex flex-col gap-2">
-      <label htmlFor={field.name} className="text-sm font-semibold">
-        {field.label}
-        {field.optional && (
-          <span className="font-normal text-slate-500"> (Optional)</span>
-        )}
-      </label>
-      <textarea
-        id={field.name}
-        name={field.name}
-        value={formData[field.name as keyof QuestionFormData]}
-        onChange={onInput}
-        rows={field.rows}
-        maxLength={field.maxLength}
-        className="resize-none rounded border border-slate-200 px-4 py-3 text-sm outline-none focus:border-teal-600"
-      />
-    </div>
-  );
 
   return (
     <div
@@ -195,26 +159,20 @@ export default function QuestionFormModal({
             </div>
           </div>
 
-          {fieldsBeforeQuestion.map(renderGameTypeField)}
-
-          {showQuestionField && (
-            <div className="flex flex-col gap-2">
-              <label htmlFor="questionText" className="text-sm font-semibold">
-                Question
-              </label>
-              <textarea
-                id="questionText"
-                name="questionText"
-                value={formData.questionText}
-                onChange={onInput}
-                rows={4}
-                maxLength={1000}
-                className="resize-none rounded border border-slate-200 px-4 py-3 text-sm outline-none focus:border-teal-600"
-              />
-            </div>
-          )}
-
-          {fieldsAfterQuestion.map(renderGameTypeField)}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="questionText" className="text-sm font-semibold">
+              Question
+            </label>
+            <textarea
+              id="questionText"
+              name="questionText"
+              value={formData.questionText}
+              onChange={onInput}
+              rows={4}
+              maxLength={1000}
+              className="resize-none rounded border border-slate-200 px-4 py-3 text-sm outline-none focus:border-teal-600"
+            />
+          </div>
 
           <div>
             <div className="mb-3 flex items-center justify-between">

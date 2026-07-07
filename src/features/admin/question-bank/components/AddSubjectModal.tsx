@@ -1,4 +1,3 @@
-import type { AdminSubjectArea } from "@/features/admin/question-bank/actions/fetch-subject-areas.action";
 import { LoaderCircle } from "lucide-react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -10,11 +9,9 @@ type AddSubjectModalProps = {
     success: boolean;
     message: string;
   }>;
-  onSubjectInput: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => void;
+  onSubjectInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   open: boolean;
-  subjectAreas: AdminSubjectArea[];
+  selectedSubjectAreaName: string;
   subjectFormData: {
     areaId: string;
     subjectName: string;
@@ -28,7 +25,7 @@ export default function AddSubjectModal({
   onCreateSubject,
   onSubjectInput,
   open,
-  subjectAreas,
+  selectedSubjectAreaName,
   subjectFormData,
 }: AddSubjectModalProps) {
   return (
@@ -57,24 +54,19 @@ export default function AddSubjectModal({
         </h2>
 
         <form onSubmit={onCreateSubject} className="flex flex-col gap-5">
+          <input type="hidden" name="areaId" value={subjectFormData.areaId} />
+
           <div className="flex flex-col gap-2">
-            <label htmlFor="areaId" className="text-sm font-semibold">
+            <label htmlFor="selectedArea" className="text-sm font-semibold">
               Area
             </label>
-            <select
-              id="areaId"
-              name="areaId"
-              value={subjectFormData.areaId}
-              onChange={onSubjectInput}
-              required
-              className="h-[50px] w-full rounded border border-slate-200 bg-white px-5 text-base text-slate-950 outline-none focus:border-teal-600"
-            >
-              {subjectAreas.map((subjectArea) => (
-                <option key={subjectArea.id} value={subjectArea.id}>
-                  {subjectArea.name}
-                </option>
-              ))}
-            </select>
+            <input
+              id="selectedArea"
+              type="text"
+              value={selectedSubjectAreaName}
+              readOnly
+              className="h-[50px] w-full cursor-default rounded border border-slate-200 bg-slate-50 px-5 text-base font-medium text-slate-700 outline-none"
+            />
           </div>
 
           <div className="flex flex-col gap-2">

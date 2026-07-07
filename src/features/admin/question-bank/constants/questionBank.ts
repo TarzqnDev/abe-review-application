@@ -18,52 +18,6 @@ export type QuestionBankSummary = {
 
 export const QUESTION_BANK_OPTION_LABELS = ["A", "B", "C", "D"] as const;
 
-export const QUESTION_BANK_GAME_TYPE_FIELDS = {
-  "Guess the Word": [
-    {
-      label: "Hint",
-      maxLength: 500,
-      name: "hint",
-      optional: true,
-      rows: 3,
-    },
-  ],
-  "AB-Solution": [
-    {
-      label: "Statement A",
-      maxLength: 1000,
-      name: "statementA",
-      optional: false,
-      rows: 3,
-    },
-    {
-      label: "Statement B",
-      maxLength: 1000,
-      name: "statementB",
-      optional: false,
-      rows: 3,
-    },
-  ],
-  Situationship: [
-    {
-      label: "Situation/Scenario",
-      maxLength: 1000,
-      name: "situation",
-      optional: false,
-      rows: 4,
-    },
-  ],
-} as const satisfies Record<
-  QuestionBankGameType,
-  {
-    label: string;
-    maxLength: number;
-    name: string;
-    optional: boolean;
-    rows: number;
-  }[]
->;
-
 export const createEmptyQuestionBankSummaries = (): QuestionBankSummary[] =>
   QUESTION_BANK_DIFFICULTIES.flatMap((difficulty) =>
     QUESTION_BANK_GAME_TYPES.map((gameType) => ({

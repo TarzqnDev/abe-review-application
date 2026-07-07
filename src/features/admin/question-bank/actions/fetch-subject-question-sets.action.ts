@@ -20,14 +20,10 @@ export type AdminQuestionOption = {
 
 export type AdminQuestion = {
   created_at: string;
-  hint: string | null;
   id: number;
   question_options: AdminQuestionOption[];
   question_set_id: number;
-  question_text: string | null;
-  situation: string | null;
-  statement_a: string | null;
-  statement_b: string | null;
+  question_text: string;
   updated_at: string;
 };
 
@@ -51,7 +47,7 @@ export const fetchSubjectQuestionSets = async (subjectId: number) => {
     const { data, error } = await supabase
       .from("question_sets")
       .select(
-        "id, subject_id, game_type, difficulty, created_at, updated_at, questions(id, question_set_id, question_text, hint, statement_a, statement_b, situation, created_at, updated_at, question_options(id, question_id, option_text, is_correct, sort_order))",
+        "id, subject_id, game_type, difficulty, created_at, updated_at, questions(id, question_set_id, question_text, created_at, updated_at, question_options(id, question_id, option_text, is_correct, sort_order))",
       )
       .eq("subject_id", subjectId)
       .order("id");

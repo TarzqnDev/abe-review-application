@@ -9,16 +9,12 @@ export type ValidatedQuestionForm = {
   correctOptionSortOrder: number;
   difficulty: QuestionBankDifficulty;
   gameType: QuestionBankGameType;
-  hint: string | null;
   options: {
     is_correct: boolean;
     option_text: string;
     sort_order: number;
   }[];
-  questionText: string | null;
-  situation: string | null;
-  statementA: string | null;
-  statementB: string | null;
+  questionText: string;
   subjectId: number;
 };
 
@@ -29,10 +25,6 @@ export const validateQuestionForm = (
   const gameType = String(formData.get("gameType") ?? "");
   const difficulty = String(formData.get("difficulty") ?? "");
   const questionText = String(formData.get("questionText") ?? "").trim();
-  const hint = String(formData.get("hint") ?? "").trim();
-  const statementA = String(formData.get("statementA") ?? "").trim();
-  const statementB = String(formData.get("statementB") ?? "").trim();
-  const situation = String(formData.get("situation") ?? "").trim();
   const correctOptionSortOrder = Number(formData.get("correctOptionSortOrder"));
   const optionTexts = [1, 2, 3, 4].map((sortOrder) =>
     String(formData.get(`option${sortOrder}`) ?? "").trim(),
@@ -50,36 +42,12 @@ export const validateQuestionForm = (
     throw new Error("A valid difficulty is required");
   }
 
-  if (gameType !== "AB-Solution" && !questionText) {
+  if (!questionText) {
     throw new Error("Question is required");
   }
 
   if (questionText.length > 1000) {
     throw new Error("Question must not exceed 1000 characters");
-  }
-
-  if (hint.length > 500) {
-    throw new Error("Hint must not exceed 500 characters");
-  }
-
-  if (statementA.length > 1000) {
-    throw new Error("Statement A must not exceed 1000 characters");
-  }
-
-  if (statementB.length > 1000) {
-    throw new Error("Statement B must not exceed 1000 characters");
-  }
-
-  if (situation.length > 1000) {
-    throw new Error("Situation/Scenario must not exceed 1000 characters");
-  }
-
-  if (gameType === "AB-Solution" && (!statementA || !statementB)) {
-    throw new Error("Statement A and Statement B are required");
-  }
-
-  if (gameType === "Situationship" && !situation) {
-    throw new Error("Situation/Scenario is required");
   }
 
   const missingOption = optionTexts.some((optionText) => !optionText);
@@ -108,7 +76,6 @@ export const validateQuestionForm = (
     correctOptionSortOrder,
     difficulty,
     gameType,
-    hint: gameType === "Guess the Word" ? hint || null : null,
     options: optionTexts.map((optionText, optionIndex) => {
       const sortOrder = optionIndex + 1;
 
@@ -118,10 +85,7 @@ export const validateQuestionForm = (
         sort_order: sortOrder,
       };
     }),
-    questionText: gameType === "AB-Solution" ? null : questionText,
-    situation: gameType === "Situationship" ? situation : null,
-    statementA: gameType === "AB-Solution" ? statementA : null,
-    statementB: gameType === "AB-Solution" ? statementB : null,
+    questionText,
     subjectId,
   };
 };

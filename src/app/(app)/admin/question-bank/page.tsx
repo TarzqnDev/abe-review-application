@@ -48,6 +48,7 @@ export default function AdminSubjectPage() {
     searchQuery,
     selectedEditQuestionId,
     selectedSubject,
+    selectedSubjectAreaName,
     selectedSubjectSummariesByDifficulty,
     selectedSubjectTotalQuestions,
     showSuccessBanner,
@@ -123,7 +124,7 @@ export default function AdminSubjectPage() {
         onCreateSubject={handleCreateSubject}
         onSubjectInput={handleSubjectInput}
         open={openAddSubjectModal}
-        subjectAreas={subjectAreas}
+        selectedSubjectAreaName={selectedSubjectAreaName}
         subjectFormData={subjectFormData}
       />
 

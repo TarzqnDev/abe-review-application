@@ -36,12 +36,8 @@ export const updateQuestion = async (formData: FormData) => {
     const { error: questionError } = await supabase
       .from("questions")
       .update({
-        hint: validatedForm.hint,
         question_set_id: questionSet.id,
         question_text: validatedForm.questionText,
-        situation: validatedForm.situation,
-        statement_a: validatedForm.statementA,
-        statement_b: validatedForm.statementB,
       })
       .eq("id", questionId);
 

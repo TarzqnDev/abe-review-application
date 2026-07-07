@@ -30,12 +30,8 @@ export const createQuestion = async (formData: FormData) => {
     const { data: question, error: questionError } = await supabase
       .from("questions")
       .insert({
-        hint: validatedForm.hint,
         question_set_id: questionSet.id,
         question_text: validatedForm.questionText,
-        situation: validatedForm.situation,
-        statement_a: validatedForm.statementA,
-        statement_b: validatedForm.statementB,
       })
       .select("id")
       .single();
