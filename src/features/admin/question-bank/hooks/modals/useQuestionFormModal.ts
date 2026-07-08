@@ -11,6 +11,7 @@ import {
   type QuestionBankGameType,
   type QuestionBankSummary,
 } from "@/features/admin/question-bank/constants/questionBank";
+import type { QuestionFormModalRequest } from "@/features/admin/question-bank/hooks/modals/useSubjectDetailsModal";
 import { handleFormChange } from "@/lib/utils";
 
 type QuestionFormMode = "create" | "edit";
@@ -30,6 +31,7 @@ type UseQuestionFormModalProps = {
   loadSubjectQuestions: (subjectId: number) => Promise<void>;
   questionSets: AdminQuestionSet[];
   questionSummaries: QuestionBankSummary[];
+  request: QuestionFormModalRequest | null;
   selectedSubject: AdminSubject | null;
   showSuccessMessage: (message: string) => void;
 };
@@ -64,43 +66,95 @@ const getQuestionFormData = (question: AdminQuestion): QuestionFormData => {
   };
 };
 
+const getRequestSummary = (
+  request: QuestionFormModalRequest | null,
+  questionSummaries: QuestionBankSummary[],
+) =>
+  request?.summary ??
+  questionSummaries[0] ?? {
+    difficulty: "Easy" as QuestionBankDifficulty,
+    gameType: "Guess the Word" as QuestionBankGameType,
+    questionCount: 0,
+    questionSetId: null,
+  };
+
+const getQuestionSet = (
+  questionSets: AdminQuestionSet[],
+  summary: QuestionBankSummary | null,
+) => {
+  if (!summary) return null;
+
+  return (
+    questionSets.find(
+      (questionSet) =>
+        questionSet.game_type === summary.gameType &&
+        questionSet.difficulty === summary.difficulty,
+    ) ?? null
+  );
+};
+
 export const useQuestionFormModal = ({
   loadSubjectQuestions,
   questionSets,
   questionSummaries,
+  request,
   selectedSubject,
   showSuccessMessage,
 }: UseQuestionFormModalProps) => {
-  const [openQuestionFormModal, setOpenQuestionFormModal] = useState(false);
-  const [questionFormMode, setQuestionFormMode] =
-    useState<QuestionFormMode>("create");
-  const [questionFormData, setQuestionFormData] = useState<QuestionFormData>(
-    initialQuestionFormData,
+  const initialQuestionSummary = getRequestSummary(request, questionSummaries);
+  const initialQuestionSet = getQuestionSet(questionSets, initialQuestionSummary);
+  const initialEditQuestion =
+    initialQuestionSet?.questions.find(
+      (question) => question.id === request?.questionId,
+    ) ??
+    initialQuestionSet?.questions[0] ??
+    null;
+  const shouldOpenQuestionForm =
+    request !== null && (request.mode === "create" || initialEditQuestion !== null);
+
+  const [openQuestionFormModal, setOpenQuestionFormModal] = useState(
+    shouldOpenQuestionForm,
   );
+  const [questionFormMode] = useState<QuestionFormMode>(
+    request?.mode ?? "create",
+  );
+  const [questionFormData, setQuestionFormData] = useState<QuestionFormData>(() => {
+    if (
+      request?.mode === "edit" &&
+      initialEditQuestion &&
+      initialQuestionSummary
+    ) {
+      return {
+        ...getQuestionFormData(initialEditQuestion),
+        difficulty: initialQuestionSummary.difficulty,
+        gameType: initialQuestionSummary.gameType,
+      };
+    }
+
+    return {
+      ...initialQuestionFormData,
+      difficulty: initialQuestionSummary.difficulty,
+      gameType: initialQuestionSummary.gameType,
+    };
+  });
   const [questionFormError, setQuestionFormError] = useState("");
   const [isSavingQuestion, setIsSavingQuestion] = useState(false);
-  const [activeQuestionSummary, setActiveQuestionSummary] =
-    useState<QuestionBankSummary | null>(null);
+  const [activeQuestionSummary] = useState<QuestionBankSummary | null>(
+    initialQuestionSummary,
+  );
   const [selectedEditQuestionId, setSelectedEditQuestionId] = useState<
     number | null
-  >(null);
+  >(initialEditQuestion?.id ?? null);
 
   const handleQuestionInput = handleFormChange(
     questionFormData,
     setQuestionFormData,
   );
 
-  const activeQuestionSet = useMemo(() => {
-    if (!activeQuestionSummary) return null;
-
-    return (
-      questionSets.find(
-        (questionSet) =>
-          questionSet.game_type === activeQuestionSummary.gameType &&
-          questionSet.difficulty === activeQuestionSummary.difficulty,
-      ) ?? null
-    );
-  }, [activeQuestionSummary, questionSets]);
+  const activeQuestionSet = useMemo(
+    () => getQuestionSet(questionSets, activeQuestionSummary),
+    [activeQuestionSummary, questionSets],
+  );
 
   const activeQuestionSetQuestions = activeQuestionSet?.questions ?? [];
 
@@ -109,81 +163,15 @@ export const useQuestionFormModal = ({
       (question) => question.id === selectedEditQuestionId,
     ) ?? null;
 
-  const applyQuestionSummaryToForm = (summary: QuestionBankSummary) => {
-    setQuestionFormData({
-      ...initialQuestionFormData,
-      difficulty: summary.difficulty,
-      gameType: summary.gameType,
-    });
-  };
-
-  const handleOpenCreateQuestionModal = (
-    summary?: QuestionBankSummary | null,
-  ) => {
-    const selectedSummary = summary ??
-      questionSummaries[0] ?? {
-        difficulty: "Easy" as QuestionBankDifficulty,
-        gameType: "Guess the Word" as QuestionBankGameType,
-        questionCount: 0,
-        questionSetId: null,
-      };
-
-    setQuestionFormMode("create");
-    setActiveQuestionSummary(selectedSummary);
-    applyQuestionSummaryToForm(selectedSummary);
-    setQuestionFormError("");
-    setSelectedEditQuestionId(null);
-    setOpenQuestionFormModal(true);
-  };
-
   const handleCloseQuestionFormModal = () => {
     setOpenQuestionFormModal(false);
     setQuestionFormError("");
     setSelectedEditQuestionId(null);
   };
 
-  const handleOpenEditQuestionModal = (summary: QuestionBankSummary) => {
-    const questionSet = questionSets.find(
-      (questionSet) =>
-        questionSet.game_type === summary.gameType &&
-        questionSet.difficulty === summary.difficulty,
-    );
-    const firstQuestion = questionSet?.questions[0];
-
-    if (!firstQuestion) return;
-
-    setQuestionFormMode("edit");
-    setActiveQuestionSummary(summary);
-    setSelectedEditQuestionId(firstQuestion.id);
-    setQuestionFormData({
-      ...getQuestionFormData(firstQuestion),
-      difficulty: summary.difficulty,
-      gameType: summary.gameType,
-    });
-    setQuestionFormError("");
-    setOpenQuestionFormModal(true);
-  };
-
-  const handleSelectEditQuestion = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+  const handleSaveQuestion = async (
+    event: React.FormEvent<HTMLFormElement>,
   ) => {
-    const questionId = Number(event.target.value);
-    const question = activeQuestionSetQuestions.find(
-      (activeQuestionSetQuestion) =>
-        activeQuestionSetQuestion.id === questionId,
-    );
-
-    if (!question || !activeQuestionSummary) return;
-
-    setSelectedEditQuestionId(question.id);
-    setQuestionFormData({
-      ...getQuestionFormData(question),
-      difficulty: activeQuestionSummary.difficulty,
-      gameType: activeQuestionSummary.gameType,
-    });
-  };
-
-  const handleSaveQuestion = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
       event.preventDefault();
 
@@ -216,14 +204,10 @@ export const useQuestionFormModal = ({
   };
 
   return {
-    activeQuestionSetQuestions,
     activeQuestionSummary,
     handleCloseQuestionFormModal,
-    handleOpenCreateQuestionModal,
-    handleOpenEditQuestionModal,
     handleQuestionInput,
     handleSaveQuestion,
-    handleSelectEditQuestion,
     isSavingQuestion,
     openQuestionFormModal,
     questionFormData,

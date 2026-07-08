@@ -9,7 +9,7 @@
 - Don’t overly add comments, just add comments if it is necessary
 - Don’t add comments for your new changes or update or fix, just see the overall code per file and add comments if you think the code is confusing
 - Group the modals components usage in every page/screen and add comments label above so that the developer knows it is modals section
-- If the modal have logics, seperate the logics to its own custom hook rather than placing it in the custom hook of the original page so that it will not get messier, place the custom hook in the (mirror director)/\<page folder name>/hooks/modals/\<name of the modal>
+- If the modal have logics, seperate the logics to its own custom hook rather than placing it in the custom hook of the original page so that it will be more organized, place the custom hook in the (mirror director)/\<page folder name>/hooks/modals/\<name of the modal>. Also, use the custom hook of the modal in the modal itself (not in the original page and just past the arguments to modal component) so the imports from the custom hook will be happening in the modal itself
 
 ## Next.js Rules
 

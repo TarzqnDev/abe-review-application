@@ -1,13 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  type AdminSubject,
   fetchSubjectAreas,
   type AdminSubjectArea,
 } from "@/features/admin/question-bank/actions/fetch-subject-areas.action";
 import { updateSubjectArea } from "@/features/admin/question-bank/actions/update-subject-area.action";
-import { useAddSubjectModal } from "@/features/admin/question-bank/hooks/modals/useAddSubjectModal";
-import { useQuestionFormModal } from "@/features/admin/question-bank/hooks/modals/useQuestionFormModal";
-import { useQuestionListModal } from "@/features/admin/question-bank/hooks/modals/useQuestionListModal";
-import { useSubjectDetailsModal } from "@/features/admin/question-bank/hooks/modals/useSubjectDetailsModal";
 
 export type SubjectAreaFilter = "all" | number;
 
@@ -32,6 +29,12 @@ export const useQuestionBank = () => {
     useState<SubjectAreaFilter>("all");
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [successBannerMessage, setSuccessBannerMessage] = useState("");
+  const [selectedAddSubjectAreaId, setSelectedAddSubjectAreaId] = useState<
+    number | null
+  >(null);
+  const [selectedSubject, setSelectedSubject] = useState<AdminSubject | null>(
+    null,
+  );
 
   const showSuccessMessage = (message: string) => {
     setSuccessBannerMessage(message);
@@ -52,26 +55,6 @@ export const useQuestionBank = () => {
     setIsLoadingSubjectAreas(false);
   };
 
-  const addSubjectModal = useAddSubjectModal({
-    loadSubjectAreas,
-    setIsLoadingSubjectAreas,
-    showSuccessMessage,
-  });
-
-  const subjectDetailsModal = useSubjectDetailsModal();
-
-  const questionFormModal = useQuestionFormModal({
-    loadSubjectQuestions: subjectDetailsModal.loadSubjectQuestions,
-    questionSets: subjectDetailsModal.activeSubjectQuestionSets,
-    questionSummaries: subjectDetailsModal.questionSummaries,
-    selectedSubject: subjectDetailsModal.selectedSubject,
-    showSuccessMessage,
-  });
-
-  const questionListModal = useQuestionListModal({
-    questionSets: subjectDetailsModal.activeSubjectQuestionSets,
-  });
-
   const filteredSubjectAreas = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
 
@@ -91,11 +74,8 @@ export const useQuestionBank = () => {
         if (!normalizedSearchQuery) return true;
 
         return subjectArea.subjects.length > 0;
-      });
+    });
   }, [activeAreaFilter, searchQuery, subjectAreas]);
-
-  const selectedSubjectAreaName =
-    addSubjectModal.selectedSubjectAreaName(subjectAreas);
 
   useEffect(() => {
     void Promise.resolve().then(loadSubjectAreas);
@@ -129,14 +109,24 @@ export const useQuestionBank = () => {
     setActiveAreaFilter(areaFilter);
   };
 
-  const handleCloseSubjectDetails = () => {
-    subjectDetailsModal.handleCloseSubjectDetails();
-    questionFormModal.handleCloseQuestionFormModal();
-    questionListModal.handleCloseQuestionListModal();
-  };
-
   const handleHideSuccessBanner = () => {
     setShowSuccessBanner(false);
+  };
+
+  const handleOpenAddSubjectModal = (areaId: number) => {
+    setSelectedAddSubjectAreaId(areaId);
+  };
+
+  const handleCloseAddSubjectModal = () => {
+    setSelectedAddSubjectAreaId(null);
+  };
+
+  const handleOpenSubjectDetails = (subject: AdminSubject) => {
+    setSelectedSubject(subject);
+  };
+
+  const handleCloseSubjectDetails = () => {
+    setSelectedSubject(null);
   };
 
   const handleAreaNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,59 +187,31 @@ export const useQuestionBank = () => {
 
   return {
     activeAreaFilter,
-    activeQuestionSetQuestions: questionFormModal.activeQuestionSetQuestions,
-    activeQuestionSummary: questionListModal.activeQuestionSummary,
     editingAreaId,
     editingAreaName,
-    error: addSubjectModal.error,
     filteredSubjectAreas,
     handleAreaFilterChange,
     handleAreaNameChange,
     handleCancelAreaEditing,
-    handleCloseAddSubjectModal: addSubjectModal.handleCloseAddSubjectModal,
-    handleCloseQuestionFormModal: questionFormModal.handleCloseQuestionFormModal,
-    handleCloseQuestionListModal: questionListModal.handleCloseQuestionListModal,
+    handleCloseAddSubjectModal,
     handleCloseSubjectDetails,
-    handleCreateSubject: addSubjectModal.handleCreateSubject,
     handleHideSuccessBanner,
-    handleOpenAddSubjectModal: addSubjectModal.handleOpenAddSubjectModal,
-    handleOpenCreateQuestionModal: questionFormModal.handleOpenCreateQuestionModal,
-    handleOpenEditQuestionModal: questionFormModal.handleOpenEditQuestionModal,
-    handleOpenQuestionListModal: questionListModal.handleOpenQuestionListModal,
-    handleOpenSubjectDetails: subjectDetailsModal.handleOpenSubjectDetails,
-    handleQuestionInput: questionFormModal.handleQuestionInput,
-    handleSaveQuestion: questionFormModal.handleSaveQuestion,
+    handleOpenAddSubjectModal,
+    handleOpenSubjectDetails,
     handleSearchQueryChange,
-    handleSelectEditQuestion: questionFormModal.handleSelectEditQuestion,
     handleStartAreaEditing,
-    handleSubjectInput: addSubjectModal.handleSubjectInput,
     handleUpdateArea,
-    isCreatingSubject: addSubjectModal.isCreatingSubject,
-    isLoadingQuestionSets: subjectDetailsModal.isLoadingQuestionSets,
     isLoadingSubjectAreas,
-    isSavingQuestion: questionFormModal.isSavingQuestion,
     isUpdatingArea,
-    openAddSubjectModal: addSubjectModal.openAddSubjectModal,
-    openQuestionFormModal: questionFormModal.openQuestionFormModal,
-    openQuestionListModal: questionListModal.openQuestionListModal,
-    questionFormData: questionFormModal.questionFormData,
-    questionFormError: questionFormModal.questionFormError,
-    questionFormMode: questionFormModal.questionFormMode,
-    questionListQuestions: questionListModal.activeQuestionSetQuestions,
-    questionSetsError: subjectDetailsModal.questionSetsError,
     searchQuery,
-    selectedEditQuestion: questionFormModal.selectedEditQuestion,
-    selectedEditQuestionId: questionFormModal.selectedEditQuestionId,
-    selectedSubject: subjectDetailsModal.selectedSubject,
-    selectedSubjectAreaName,
-    selectedSubjectSummariesByDifficulty:
-      subjectDetailsModal.selectedSubjectSummariesByDifficulty,
-    selectedSubjectTotalQuestions:
-      subjectDetailsModal.selectedSubjectTotalQuestions,
+    selectedAddSubjectAreaId,
+    selectedSubject,
     showSuccessBanner,
+    showSuccessMessage,
     subjectAreas,
     subjectAreasError,
-    subjectFormData: addSubjectModal.subjectFormData,
     successBannerMessage,
+    loadSubjectAreas,
+    setIsLoadingSubjectAreas,
   };
 };

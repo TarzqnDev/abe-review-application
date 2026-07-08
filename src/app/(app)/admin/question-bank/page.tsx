@@ -1,8 +1,6 @@
 "use client";
 
 import AddSubjectModal from "@/features/admin/question-bank/components/AddSubjectModal";
-import QuestionFormModal from "@/features/admin/question-bank/components/QuestionFormModal";
-import QuestionListModal from "@/features/admin/question-bank/components/QuestionListModal";
 import SubjectAreaSection from "@/features/admin/question-bank/components/SubjectAreaSection";
 import SubjectDetailsModal from "@/features/admin/question-bank/components/SubjectDetailsModal";
 import SubjectFilters from "@/features/admin/question-bank/components/SubjectFilters";
@@ -13,48 +11,23 @@ import { useQuestionBank } from "@/features/admin/question-bank/hooks/useQuestio
 export default function AdminSubjectPage() {
   const {
     activeAreaFilter,
-    activeQuestionSetQuestions,
-    activeQuestionSummary,
-    error,
     filteredSubjectAreas,
     handleAreaFilterChange,
-    handleCloseAddSubjectModal,
-    handleCloseQuestionFormModal,
-    handleCloseQuestionListModal,
     handleCloseSubjectDetails,
-    handleCreateSubject,
+    handleCloseAddSubjectModal,
     handleOpenAddSubjectModal,
-    handleOpenCreateQuestionModal,
-    handleOpenEditQuestionModal,
-    handleOpenQuestionListModal,
     handleOpenSubjectDetails,
-    handleQuestionInput,
-    handleSaveQuestion,
     handleSearchQueryChange,
-    handleSelectEditQuestion,
-    handleSubjectInput,
-    isCreatingSubject,
     isLoadingSubjectAreas,
-    isLoadingQuestionSets,
-    isSavingQuestion,
-    openAddSubjectModal,
-    openQuestionFormModal,
-    openQuestionListModal,
-    questionFormData,
-    questionFormError,
-    questionFormMode,
-    questionListQuestions,
-    questionSetsError,
+    loadSubjectAreas,
     searchQuery,
-    selectedEditQuestionId,
+    selectedAddSubjectAreaId,
     selectedSubject,
-    selectedSubjectAreaName,
-    selectedSubjectSummariesByDifficulty,
-    selectedSubjectTotalQuestions,
+    setIsLoadingSubjectAreas,
     showSuccessBanner,
+    showSuccessMessage,
     subjectAreas,
     subjectAreasError,
-    subjectFormData,
     successBannerMessage,
   } = useQuestionBank();
 
@@ -118,49 +91,21 @@ export default function AdminSubjectPage() {
 
       {/* Modals Section */}
       <AddSubjectModal
-        error={error}
-        isCreatingSubject={isCreatingSubject}
+        key={selectedAddSubjectAreaId ?? "add-subject-modal"}
+        areaId={selectedAddSubjectAreaId}
+        loadSubjectAreas={loadSubjectAreas}
         onClose={handleCloseAddSubjectModal}
-        onCreateSubject={handleCreateSubject}
-        onSubjectInput={handleSubjectInput}
-        open={openAddSubjectModal}
-        selectedSubjectAreaName={selectedSubjectAreaName}
-        subjectFormData={subjectFormData}
+        setIsLoadingSubjectAreas={setIsLoadingSubjectAreas}
+        showSuccessMessage={showSuccessMessage}
+        subjectAreas={subjectAreas}
       />
 
       <SubjectDetailsModal
-        isLoadingQuestionSets={isLoadingQuestionSets}
-        onAddQuestion={handleOpenCreateQuestionModal}
+        key={selectedSubject?.id ?? "subject-details-modal"}
         onClose={handleCloseSubjectDetails}
-        onEditQuestions={handleOpenEditQuestionModal}
-        onViewQuestions={handleOpenQuestionListModal}
         open={selectedSubject !== null}
-        questionSetsError={questionSetsError}
+        showSuccessMessage={showSuccessMessage}
         subject={selectedSubject}
-        summaryGroups={selectedSubjectSummariesByDifficulty}
-        totalQuestions={selectedSubjectTotalQuestions}
-      />
-
-      <QuestionFormModal
-        error={questionFormError}
-        formData={questionFormData}
-        isSaving={isSavingQuestion}
-        mode={questionFormMode}
-        onClose={handleCloseQuestionFormModal}
-        onInput={handleQuestionInput}
-        onSave={handleSaveQuestion}
-        onSelectEditQuestion={handleSelectEditQuestion}
-        open={openQuestionFormModal}
-        questions={activeQuestionSetQuestions}
-        selectedEditQuestionId={selectedEditQuestionId}
-        subject={selectedSubject}
-      />
-
-      <QuestionListModal
-        onClose={handleCloseQuestionListModal}
-        open={openQuestionListModal}
-        questions={questionListQuestions}
-        summary={activeQuestionSummary}
       />
     </section>
   );

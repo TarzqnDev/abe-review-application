@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import {
-  type AdminSubjectArea,
-} from "@/features/admin/question-bank/actions/fetch-subject-areas.action";
+import { type AdminSubjectArea } from "@/features/admin/question-bank/actions/fetch-subject-areas.action";
 import { createSubject } from "@/features/admin/question-bank/actions/create-subject.action";
 import { handleFormChange } from "@/lib/utils";
 
@@ -11,15 +9,23 @@ type SubjectFormData = {
 };
 
 type UseAddSubjectModalProps = {
+  areaId: number | null;
   loadSubjectAreas: () => Promise<void>;
+  onClose: () => void;
   setIsLoadingSubjectAreas: React.Dispatch<React.SetStateAction<boolean>>;
   showSuccessMessage: (message: string) => void;
+  subjectAreas: AdminSubjectArea[];
 };
 
 const initialSubjectFormData: SubjectFormData = {
   areaId: "",
   subjectName: "",
 };
+
+const getInitialSubjectFormData = (areaId: number | null): SubjectFormData => ({
+  areaId: areaId === null ? "" : String(areaId),
+  subjectName: "",
+});
 
 const validateSubjectName = (subjectName: string) => {
   if (!subjectName.trim()) return "Subject name is required";
@@ -31,33 +37,28 @@ const validateSubjectName = (subjectName: string) => {
 };
 
 export const useAddSubjectModal = ({
+  areaId,
   loadSubjectAreas,
+  onClose,
   setIsLoadingSubjectAreas,
   showSuccessMessage,
+  subjectAreas,
 }: UseAddSubjectModalProps) => {
-  const [openAddSubjectModal, setOpenAddSubjectModal] = useState(false);
   const [isCreatingSubject, setIsCreatingSubject] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [subjectFormData, setSubjectFormData] = useState<SubjectFormData>(
-    initialSubjectFormData,
+    getInitialSubjectFormData(areaId),
   );
+
+  const openAddSubjectModal = areaId !== null;
 
   const handleSubjectInput = handleFormChange(
     subjectFormData,
     setSubjectFormData,
   );
 
-  const handleOpenAddSubjectModal = (areaId: number) => {
-    setSubjectFormData({
-      areaId: String(areaId),
-      subjectName: "",
-    });
-    setError("");
-    setOpenAddSubjectModal(true);
-  };
-
   const handleCloseAddSubjectModal = () => {
-    setOpenAddSubjectModal(false);
+    onClose();
 
     setTimeout(() => {
       setSubjectFormData(initialSubjectFormData);
@@ -65,7 +66,9 @@ export const useAddSubjectModal = ({
     }, 300);
   };
 
-  const handleCreateSubject = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateSubject = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     try {
       event.preventDefault();
 
@@ -114,9 +117,7 @@ export const useAddSubjectModal = ({
     }
   };
 
-  const selectedSubjectAreaName = (
-    subjectAreas: AdminSubjectArea[],
-  ) => {
+  const selectedSubjectAreaName = (subjectAreas: AdminSubjectArea[]) => {
     const selectedSubjectArea = subjectAreas.find(
       (subjectArea) => String(subjectArea.id) === subjectFormData.areaId,
     );
@@ -128,11 +129,10 @@ export const useAddSubjectModal = ({
     error,
     handleCloseAddSubjectModal,
     handleCreateSubject,
-    handleOpenAddSubjectModal,
     handleSubjectInput,
     isCreatingSubject,
     openAddSubjectModal,
-    selectedSubjectAreaName,
+    selectedSubjectAreaName: selectedSubjectAreaName(subjectAreas),
     subjectFormData,
   };
 };

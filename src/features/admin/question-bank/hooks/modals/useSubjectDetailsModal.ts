@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AdminSubject } from "@/features/admin/question-bank/actions/fetch-subject-areas.action";
 import {
+  type AdminQuestion,
   fetchSubjectQuestionSets,
   type AdminQuestionSet,
 } from "@/features/admin/question-bank/actions/fetch-subject-question-sets.action";
@@ -10,18 +11,39 @@ import {
   type QuestionBankSummary,
 } from "@/features/admin/question-bank/constants/questionBank";
 
-export const useSubjectDetailsModal = () => {
-  const [selectedSubject, setSelectedSubject] = useState<AdminSubject | null>(
-    null,
-  );
+export type QuestionFormModalRequest = {
+  mode: "create" | "edit";
+  questionId?: number | null;
+  requestId: number;
+  summary?: QuestionBankSummary | null;
+};
+
+export type QuestionListModalRequest = {
+  requestId: number;
+  summary: QuestionBankSummary;
+};
+
+type UseSubjectDetailsModalProps = {
+  onClose: () => void;
+  subject: AdminSubject | null;
+};
+
+export const useSubjectDetailsModal = ({
+  onClose,
+  subject,
+}: UseSubjectDetailsModalProps) => {
   const [questionSets, setQuestionSets] = useState<AdminQuestionSet[]>([]);
   const [questionSummaries, setQuestionSummaries] = useState<
     QuestionBankSummary[]
   >(createEmptyQuestionBankSummaries());
   const [isLoadingQuestionSets, setIsLoadingQuestionSets] = useState(false);
   const [questionSetsError, setQuestionSetsError] = useState("");
+  const [questionFormRequest, setQuestionFormRequest] =
+    useState<QuestionFormModalRequest | null>(null);
+  const [questionListRequest, setQuestionListRequest] =
+    useState<QuestionListModalRequest | null>(null);
 
-  const selectedSubjectSummaries = selectedSubject
+  const selectedSubjectSummaries = subject
     ? questionSummaries
     : createEmptyQuestionBankSummaries();
 
@@ -59,16 +81,48 @@ export const useSubjectDetailsModal = () => {
     setIsLoadingQuestionSets(false);
   };
 
-  const handleOpenSubjectDetails = (subject: AdminSubject) => {
-    setSelectedSubject(subject);
-    void loadSubjectQuestions(subject.id);
-  };
+  useEffect(() => {
+    if (!subject) return;
+
+    void Promise.resolve().then(() => loadSubjectQuestions(subject.id));
+  }, [subject]);
 
   const handleCloseSubjectDetails = () => {
-    setSelectedSubject(null);
+    onClose();
     setQuestionSets([]);
     setQuestionSummaries(createEmptyQuestionBankSummaries());
     setQuestionSetsError("");
+    setQuestionFormRequest(null);
+    setQuestionListRequest(null);
+  };
+
+  const handleOpenCreateQuestionModal = (
+    summary?: QuestionBankSummary | null,
+  ) => {
+    setQuestionFormRequest({
+      mode: "create",
+      requestId: Date.now(),
+      summary,
+    });
+  };
+
+  const handleOpenEditQuestionModal = (
+    summary: QuestionBankSummary,
+    question: AdminQuestion,
+  ) => {
+    setQuestionFormRequest({
+      mode: "edit",
+      questionId: question.id,
+      requestId: Date.now(),
+      summary,
+    });
+  };
+
+  const handleOpenQuestionListModal = (summary: QuestionBankSummary) => {
+    setQuestionListRequest({
+      requestId: Date.now(),
+      summary,
+    });
   };
 
   const activeSubjectQuestionSets = useMemo(
@@ -79,12 +133,15 @@ export const useSubjectDetailsModal = () => {
   return {
     activeSubjectQuestionSets,
     handleCloseSubjectDetails,
-    handleOpenSubjectDetails,
+    handleOpenCreateQuestionModal,
+    handleOpenEditQuestionModal,
+    handleOpenQuestionListModal,
     isLoadingQuestionSets,
     loadSubjectQuestions,
+    questionFormRequest,
+    questionListRequest,
     questionSetsError,
     questionSummaries,
-    selectedSubject,
     selectedSubjectSummariesByDifficulty,
     selectedSubjectTotalQuestions,
   };

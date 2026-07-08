@@ -1,17 +1,32 @@
 import { useMemo, useState } from "react";
-import type { AdminQuestionSet } from "@/features/admin/question-bank/actions/fetch-subject-question-sets.action";
+import type {
+  AdminQuestion,
+  AdminQuestionSet,
+} from "@/features/admin/question-bank/actions/fetch-subject-question-sets.action";
 import type { QuestionBankSummary } from "@/features/admin/question-bank/constants/questionBank";
+import type { QuestionListModalRequest } from "@/features/admin/question-bank/hooks/modals/useSubjectDetailsModal";
 
 type UseQuestionListModalProps = {
+  onEditQuestion: (
+    summary: QuestionBankSummary,
+    question: AdminQuestion,
+  ) => void;
   questionSets: AdminQuestionSet[];
+  request: QuestionListModalRequest | null;
 };
 
 export const useQuestionListModal = ({
+  onEditQuestion,
   questionSets,
+  request,
 }: UseQuestionListModalProps) => {
-  const [openQuestionListModal, setOpenQuestionListModal] = useState(false);
+  const [openQuestionListModal, setOpenQuestionListModal] = useState(
+    request !== null,
+  );
   const [activeQuestionSummary, setActiveQuestionSummary] =
-    useState<QuestionBankSummary | null>(null);
+    useState<QuestionBankSummary | null>(request?.summary ?? null);
+  const [selectedDeleteQuestion, setSelectedDeleteQuestion] =
+    useState<AdminQuestion | null>(null);
 
   const activeQuestionSet = useMemo(() => {
     if (!activeQuestionSummary) return null;
@@ -27,21 +42,34 @@ export const useQuestionListModal = ({
 
   const activeQuestionSetQuestions = activeQuestionSet?.questions ?? [];
 
-  const handleOpenQuestionListModal = (summary: QuestionBankSummary) => {
-    setActiveQuestionSummary(summary);
-    setOpenQuestionListModal(true);
-  };
-
   const handleCloseQuestionListModal = () => {
     setOpenQuestionListModal(false);
     setActiveQuestionSummary(null);
+    setSelectedDeleteQuestion(null);
+  };
+
+  const handleOpenEditQuestion = (question: AdminQuestion) => {
+    if (!activeQuestionSummary) return;
+
+    onEditQuestion(activeQuestionSummary, question);
+  };
+
+  const handleOpenDeleteConfirmation = (question: AdminQuestion) => {
+    setSelectedDeleteQuestion(question);
+  };
+
+  const handleCloseDeleteConfirmation = () => {
+    setSelectedDeleteQuestion(null);
   };
 
   return {
     activeQuestionSetQuestions,
     activeQuestionSummary,
+    handleCloseDeleteConfirmation,
     handleCloseQuestionListModal,
-    handleOpenQuestionListModal,
+    handleOpenDeleteConfirmation,
+    handleOpenEditQuestion,
     openQuestionListModal,
+    selectedDeleteQuestion,
   };
 };
