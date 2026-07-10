@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import useRevieweeDashboard from "@/features/reviewee/dashboard/hooks/useRevieweeDashboard";
+import useRevieweeDashboard from "@/features/app/reviewee/dashboard/hooks/useRevieweeDashboard";
 
 export default function RevieweeNavbar() {
   const pathname = usePathname();

@@ -27,14 +27,14 @@ export async function proxy(request: NextRequest) {
   const roles = getTokenRoles(session);
 
   // ✅ Already logged in
-  if (isAuthRoute && session) {
-    if (roles.includes("admin"))
-      return NextResponse.redirect(
-        new URL("/admin/question-bank", request.url),
-      );
-    else if (roles.includes("reviewee"))
-      return NextResponse.redirect(new URL("/reviewee/dashboard", request.url));
-  }
+  // if (isAuthRoute && session) {
+  //   if (roles.includes("admin"))
+  //     return NextResponse.redirect(
+  //       new URL("/admin/question-bank", request.url),
+  //     );
+  //   else if (roles.includes("reviewee"))
+  //     return NextResponse.redirect(new URL("/reviewee/dashboard", request.url));
+  // }
 
   for (const [route, allowedRoles] of Object.entries(protectedRoutes)) {
     if (pathname.startsWith(route)) {

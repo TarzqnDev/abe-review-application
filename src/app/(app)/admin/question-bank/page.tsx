@@ -1,12 +1,12 @@
 "use client";
 
-import AddSubjectModal from "@/features/admin/question-bank/components/AddSubjectModal";
-import SubjectAreaSection from "@/features/admin/question-bank/components/SubjectAreaSection";
-import SubjectDetailsModal from "@/features/admin/question-bank/components/SubjectDetailsModal";
-import SubjectFilters from "@/features/admin/question-bank/components/SubjectFilters";
-import SubjectIntroCard from "@/features/admin/question-bank/components/SubjectIntroCard";
-import SubjectSuccessBanner from "@/features/admin/question-bank/components/SubjectSuccessBanner";
-import { useQuestionBank } from "@/features/admin/question-bank/hooks/useQuestionBank";
+import AddSubjectModal from "@/features/app/admin/question-bank/components/AddSubjectModal";
+import SubjectAreaSection from "@/features/app/admin/question-bank/components/SubjectAreaSection";
+import SubjectDetailsModal from "@/features/app/admin/question-bank/components/SubjectDetailsModal";
+import SubjectFilters from "@/features/app/admin/question-bank/components/SubjectFilters";
+import SubjectIntroCard from "@/features/app/admin/question-bank/components/SubjectIntroCard";
+import SubjectSuccessBanner from "@/features/app/admin/question-bank/components/SubjectSuccessBanner";
+import { useQuestionBank } from "@/features/app/admin/question-bank/hooks/useQuestionBank";
 
 export default function AdminSubjectPage() {
   const {
@@ -39,9 +39,7 @@ export default function AdminSubjectPage() {
       />
 
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-950">
-          Question Bank
-        </h1>
+        <h1 className="text-2xl font-semibold text-slate-950">Question Bank</h1>
         <p className="mt-1 text-base text-slate-500">
           Manage and organize your question sets by subject, area, and
           difficulty

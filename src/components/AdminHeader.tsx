@@ -1,13 +1,9 @@
-import { useAdminHeader } from "@/features/admin/header/hooks/useAdminHeader";
+import { useAdminHeader } from "@/features/app/admin/header/hooks/useAdminHeader";
 import { BookOpenIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 export default function AdminHeader() {
-  const {
-    email,
-    handleLogout,
-    handleToggleAccountMenu,
-    openAccountMenu,
-  } = useAdminHeader();
+  const { email, handleLogout, handleToggleAccountMenu, openAccountMenu } =
+    useAdminHeader();
 
   return (
     <header className="border-b border-slate-200 bg-white">

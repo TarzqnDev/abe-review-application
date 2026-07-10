@@ -9,3 +9,8 @@
 - Question Bank: modals use a shared animation hook so modal-owned hooks still preserve entrance and exit transitions.
 - Question Bank: question set cards now view questions only; individual question edit and delete actions live inside the question list modal.
 - Question Bank: deleting a question now uses a confirmation modal and a server action that removes question options before deleting the question.
+- Manage Reviewees: registration now assigns the join date automatically, records online or in-house review mode, and stores a validated payment proof in private Supabase Storage.
+- Manage Reviewees: administrators can load payment proofs through short-lived signed URLs.
+- Manage Reviewees: reviewee listings and payment proofs are restricted to accounts assigned the reviewee role; invited accounts receive that role immediately.
+- Project Structure: all feature imports were aligned with the mirrored `src/features/app` and `src/features/auth` structure and verified.
+- Manage Reviewees: user fetching and invitation server actions now live with the reviewees feature.

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import authBackground from "@/public/authBackground.jpg";
-import { useLogin } from "@/features/login/hooks/useLogin";
+import { useLogin } from "@/features/auth/login/hooks/useLogin";
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
