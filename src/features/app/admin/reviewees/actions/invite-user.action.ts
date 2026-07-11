@@ -77,7 +77,7 @@ export const inviteUser = async (formData: FormData) => {
 
     const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       data: { full_name: fullName },
-      redirectTo: `${origin}/signup`,
+      redirectTo: `${origin}/auth/accept-invite`,
     });
 
     if (error) throw new Error(error.message);

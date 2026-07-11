@@ -14,6 +14,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      payments: {
+        Row: {
+          created_at: string
+          id: number
+          image_path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_path?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       permissions: {
         Row: {
           created_at: string | null
@@ -35,32 +64,108 @@ export type Database = {
         }
         Relationships: []
       }
-      payments: {
+      question_options: {
         Row: {
           created_at: string
-          id: string
-          image_path: string
-          user_id: string
+          id: number
+          is_correct: boolean
+          option_text: string
+          question_id: number
+          sort_order: number
+          updated_at: string
         }
         Insert: {
           created_at?: string
-          id?: string
-          image_path: string
-          user_id: string
+          id?: number
+          is_correct?: boolean
+          option_text: string
+          question_id: number
+          sort_order: number
+          updated_at?: string
         }
         Update: {
           created_at?: string
-          id?: string
-          image_path?: string
-          user_id?: string
+          id?: number
+          is_correct?: boolean
+          option_text?: string
+          question_id?: number
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "payments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["user_id"]
+            foreignKeyName: "question_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      question_sets: {
+        Row: {
+          created_at: string
+          difficulty: string
+          game_type: string
+          id: number
+          subject_id: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty: string
+          game_type: string
+          id?: number
+          subject_id: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string
+          game_type?: string
+          id?: number
+          subject_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_sets_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions: {
+        Row: {
+          created_at: string
+          id: number
+          question_set_id: number
+          question_text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          question_set_id: number
+          question_text: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          question_set_id?: number
+          question_text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_question_set_id_fkey"
+            columns: ["question_set_id"]
+            isOneToOne: false
+            referencedRelation: "question_sets"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -112,6 +217,59 @@ export type Database = {
         }
         Relationships: []
       }
+      subject_areas: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          area_id: number
+          created_at: string
+          id: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          area_id: number
+          created_at?: string
+          id?: number
+          name?: string
+          updated_at?: string
+        }
+        Update: {
+          area_id?: number
+          created_at?: string
+          id?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subjects_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "subject_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: number
@@ -132,7 +290,7 @@ export type Database = {
           {
             foreignKeyName: "user_roles_role_id_fkey1"
             columns: ["role_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "roles"
             referencedColumns: ["id"]
           },
@@ -147,6 +305,7 @@ export type Database = {
       }
       users: {
         Row: {
+          account_setup_completed_at: string | null
           email: string
           full_name: string
           mode_of_review: string
@@ -155,14 +314,16 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          account_setup_completed_at?: string | null
           email?: string
           full_name: string
-          mode_of_review: string
+          mode_of_review?: string
           start_date?: string
           status?: string
           user_id?: string
         }
         Update: {
+          account_setup_completed_at?: string | null
           email?: string
           full_name?: string
           mode_of_review?: string

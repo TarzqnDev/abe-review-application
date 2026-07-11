@@ -1,11 +1,13 @@
 import React, { useEffect, useEffectEvent, useState } from "react";
-import { completeSignup } from "../actions/complete-signup.action";
+import { completeAccountSetup } from "@/features/auth/accept-invite/actions/complete-account-setup.action";
+import { getAccountSetupStatus } from "@/features/auth/accept-invite/actions/get-account-setup-status.action";
 import { handleFormChange } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
+import { getTokenRoles } from "@/lib/auth/get-token-roles";
 
-export const useSignup = () => {
+export const useAcceptInvite = () => {
   const { getUser, user } = useAuth();
 
   const [formData, setFormData] = useState<{
@@ -19,28 +21,20 @@ export const useSignup = () => {
   const [hasInviteSession, setHasInviteSession] = useState<boolean | null>(
     null,
   );
-  const [requestAccessFormData, setRequestAccessFormData] = useState<{
-    email: string;
-  }>({
-    email: "",
-  });
-  const [requestAccessError, setRequestAccessError] = useState<
-    string | undefined
-  >("");
+  const [isAccountSetupCompleted, setIsAccountSetupCompleted] = useState<
+    boolean | null
+  >(null);
+  const [accountSetupStatusError, setAccountSetupStatusError] = useState("");
   const [isRequestAccessModalOpen, setIsRequestAccessModalOpen] =
     useState(false);
-  const [isSubmittingRequestAccess, setIsSubmittingRequestAccess] =
+  const [isCompletingAccountSetup, setIsCompletingAccountSetup] =
     useState(false);
-  const [showRequestAccessSuccessBanner, setShowRequestAccessSuccessBanner] =
+  const [showAccountSetupSuccessBanner, setShowAccountSetupSuccessBanner] =
     useState(false);
   const [
-    requestAccessSuccessBannerMessage,
-    setRequestAccessSuccessBannerMessage,
+    accountSetupSuccessBannerMessage,
+    setAccountSetupSuccessBannerMessage,
   ] = useState("");
-  const [isSigningUp, setIsSigningUp] = useState(false);
-  const [showSignupSuccessBanner, setShowSignupSuccessBanner] = useState(false);
-  const [signupSuccessBannerMessage, setSignupSuccessBannerMessage] =
-    useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -48,6 +42,22 @@ export const useSignup = () => {
 
   const syncUser = useEffectEvent(async () => {
     await getUser();
+  });
+
+  const syncAccountSetupStatus = useEffectEvent(async () => {
+    setIsAccountSetupCompleted(null);
+    setAccountSetupStatusError("");
+
+    const result = await getAccountSetupStatus();
+
+    if (!result.success) {
+      setAccountSetupStatusError(
+        result.error ?? "Unable to check your account",
+      );
+      return;
+    }
+
+    setIsAccountSetupCompleted(result.isAccountSetupCompleted);
   });
 
   useEffect(() => {
@@ -69,6 +79,7 @@ export const useSignup = () => {
 
         await syncUser();
         setHasInviteSession(true);
+        await syncAccountSetupStatus();
 
         const nextUrl = new URL(window.location.href);
         nextUrl.hash = "";
@@ -79,6 +90,7 @@ export const useSignup = () => {
 
       if (user) {
         setHasInviteSession(true);
+        await syncAccountSetupStatus();
         return;
       }
 
@@ -87,6 +99,10 @@ export const useSignup = () => {
       } = await supabase.auth.getSession();
 
       setHasInviteSession(Boolean(session));
+
+      if (session) {
+        await syncAccountSetupStatus();
+      }
     };
 
     syncInviteSession();
@@ -99,20 +115,7 @@ export const useSignup = () => {
     if (password !== confirmPassword) return "Passwords do not match";
     return null;
   };
-  const validateRequestAccessInput = (email: string) => {
-    if (!email) return "Email is required";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return "Please enter a valid email address";
-    }
-    return null;
-  };
-
   const handleUserInput = handleFormChange(formData, setFormData);
-
-  const handleRequestAccessInput = handleFormChange(
-    requestAccessFormData,
-    setRequestAccessFormData,
-  );
 
   const handlePasswordVisibility = () => {
     setShowPassword((isPasswordVisible) => !isPasswordVisible);
@@ -124,129 +127,91 @@ export const useSignup = () => {
     );
   };
 
-  const handleSignup = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleCompleteAccountSetup = async (
+    event: React.ChangeEvent<HTMLFormElement>,
+  ) => {
     try {
-      e.preventDefault();
+      event.preventDefault();
 
       setError("");
 
-      const error = validateUserInput(
+      const validationError = validateUserInput(
         formData.password,
         formData.confirmPassword,
       );
-      if (error) {
-        setError(error);
+      if (validationError) {
+        setError(validationError);
         return;
       }
 
-      setIsSigningUp(true);
+      setIsCompletingAccountSetup(true);
 
-      const formDataSubmission = new FormData(e.target);
+      const formDataSubmission = new FormData(event.target);
 
       const {
         success,
-        error: signupError,
+        error: accountSetupError,
         message,
-      } = await completeSignup(formDataSubmission);
+      } = await completeAccountSetup(formDataSubmission);
 
       if (!success) {
-        setError(signupError);
+        setError(accountSetupError);
         return;
       }
 
       getUser();
 
-      setSignupSuccessBannerMessage(message);
-      setShowSignupSuccessBanner(true);
+      setAccountSetupSuccessBannerMessage(message);
+      setShowAccountSetupSuccessBanner(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 2500));
-
-      router.push("/reviewee/dashboard");
+      setTimeout(() => {
+        setShowAccountSetupSuccessBanner(false);
+      }, 4000);
     } finally {
-      setIsSigningUp(false);
+      setIsCompletingAccountSetup(false);
+    }
+  };
+
+  const handleGoToDashboard = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const roles = getTokenRoles(session);
+
+    if (roles.includes("admin")) {
+      router.push("/admin/question-bank");
+    } else {
+      router.push("/reviewee/dashboard");
     }
   };
 
   const handleOpenRequestAccessModal = () => {
-    setRequestAccessFormData({
-      email: "",
-    });
-    setRequestAccessError("");
     setIsRequestAccessModalOpen(true);
   };
 
   const handleCloseRequestAccessModal = () => {
     setIsRequestAccessModalOpen(false);
-
-    setTimeout(() => {
-      setRequestAccessFormData({
-        email: "",
-      });
-      setRequestAccessError("");
-    }, 300);
   };
-
-  const handleRequestAccessSubmission = async (
-    e: React.ChangeEvent<HTMLFormElement>,
-  ) => {
-    try {
-      e.preventDefault();
-
-      setRequestAccessError("");
-
-      const error = validateRequestAccessInput(requestAccessFormData.email);
-
-      if (error) {
-        setRequestAccessError(error);
-        return;
-      }
-
-      setIsSubmittingRequestAccess(true);
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      handleCloseRequestAccessModal();
-      setRequestAccessSuccessBannerMessage(
-        "Request submitted. Admin notifications will be implemented soon.",
-      );
-      setShowRequestAccessSuccessBanner(true);
-    } finally {
-      setIsSubmittingRequestAccess(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!showRequestAccessSuccessBanner) return;
-
-    const timeout = setTimeout(() => {
-      setShowRequestAccessSuccessBanner(false);
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, [showRequestAccessSuccessBanner]);
 
   return {
+    accountSetupStatusError,
+    accountSetupSuccessBannerMessage,
     error,
     formData,
-    handleSignup,
-    handleConfirmPasswordVisibility,
     handleCloseRequestAccessModal,
+    handleCompleteAccountSetup,
+    handleConfirmPasswordVisibility,
+    handleGoToDashboard,
     handleOpenRequestAccessModal,
-    handleRequestAccessSubmission,
-    handleRequestAccessInput,
-    handleUserInput,
     handlePasswordVisibility,
+    handleUserInput,
     hasInviteSession,
+    isAccountSetupCompleted,
+    isCompletingAccountSetup,
     isRequestAccessModalOpen,
-    isSubmittingRequestAccess,
-    isSigningUp,
-    requestAccessError,
-    requestAccessFormData,
-    requestAccessSuccessBannerMessage,
-    showSignupSuccessBanner,
-    showRequestAccessSuccessBanner,
+    showAccountSetupSuccessBanner,
     showConfirmPassword,
     showPassword,
-    signupSuccessBannerMessage,
   };
 };

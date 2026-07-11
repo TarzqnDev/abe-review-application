@@ -34,10 +34,6 @@ export const useAdminReviewees = () => {
   }, []);
 
   useEffect(() => {
-    if (users.length > 0) console.log("users:", users);
-  }, [users]);
-
-  useEffect(() => {
     let isCurrentRequest = true;
     void fetchUsers().then((result) => {
       if (!isCurrentRequest) return;

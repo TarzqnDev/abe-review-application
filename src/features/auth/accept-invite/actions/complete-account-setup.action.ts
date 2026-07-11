@@ -2,7 +2,7 @@
 
 import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
 
-export const completeSignup = async (formData: FormData) => {
+export const completeAccountSetup = async (formData: FormData) => {
   try {
     const password = formData.get("password") as string;
 
@@ -17,6 +17,20 @@ export const completeSignup = async (formData: FormData) => {
 
     if (!user) {
       throw new Error("Your invite session is invalid or has expired");
+    }
+
+    const { data: accountSetupData, error: accountSetupError } = await supabase
+      .from("users")
+      .select("account_setup_completed_at")
+      .eq("user_id", user.id)
+      .single();
+
+    if (accountSetupError) {
+      throw new Error(accountSetupError.message);
+    }
+
+    if (accountSetupData.account_setup_completed_at) {
+      throw new Error("This invitation has already been accepted");
     }
 
     const { error } = await supabase.auth.updateUser({
@@ -61,7 +75,10 @@ export const completeSignup = async (formData: FormData) => {
 
     const { error: statusUpdateError } = await supabase
       .from("users")
-      .update({ status: "active" })
+      .update({
+        status: "active",
+        account_setup_completed_at: new Date().toISOString(),
+      })
       .eq("user_id", user.id);
 
     if (statusUpdateError) {
@@ -70,14 +87,14 @@ export const completeSignup = async (formData: FormData) => {
 
     await supabase.auth.refreshSession();
 
-    return { success: true, message: "Signup completed successfully" };
+    return { success: true, message: "Account setup completed successfully" };
   } catch (error: unknown) {
     console.error(error);
 
     return {
       success: false,
-      message: "Signup failed",
-      error: error instanceof Error ? error.message : "Signup failed",
+      message: "Account setup failed",
+      error: error instanceof Error ? error.message : "Account setup failed",
     };
   }
 };

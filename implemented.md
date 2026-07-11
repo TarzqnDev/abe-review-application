@@ -15,4 +15,6 @@
 - Project Structure: all feature imports were aligned with the mirrored `src/features/app` and `src/features/auth` structure and verified.
 - Manage Reviewees: user fetching and invitation server actions now live with the reviewees feature.
 - Admin Layout: navigation components now use semantic names—the top navigation is `AdminNavbar`, and the side navigation is `AdminSidebar`.
-- Authentication: login and invited signup now share a responsive reference-matched layout with branded headers, refined forms, and desktop book imagery.
+- Authentication: invited users accept invitations at `/auth/accept-invite`, where they can complete their account in a centered branded flow or continue to the reviewee dashboard when the invitation was already accepted.
+- Authentication: invited accounts track when account setup is completed.
+- Payments: payment record IDs use generated bigint values.
