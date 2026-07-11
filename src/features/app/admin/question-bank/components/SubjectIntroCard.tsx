@@ -1,5 +1,6 @@
 import type { AdminSubjectArea } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
-import { BookOpenIcon } from "@heroicons/react/24/outline";
+import BookPileIconImage from "@/public/book-pile.png";
+import Image from "next/image";
 
 type SubjectIntroCardProps = {
   onAddSubject: (areaId: number) => void;
@@ -13,7 +14,12 @@ export default function SubjectIntroCard({
   return (
     <div className="rounded-md border border-teal-600 bg-teal-50 px-6 py-10">
       <div className="mx-auto flex max-w-xl flex-col items-center text-center">
-        <BookOpenIcon className="mb-6 h-16 w-16 text-teal-600" />
+        <Image
+          src={BookPileIconImage}
+          alt="Book pile image"
+          width={110}
+          height={110}
+        />
         <h2 className="text-xl font-semibold text-slate-950">
           Create New Subject
         </h2>

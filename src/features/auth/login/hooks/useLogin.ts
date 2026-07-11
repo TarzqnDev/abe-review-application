@@ -17,6 +17,7 @@ export const useLogin = () => {
   );
   const [isLoggingin, setIsLoggingIn] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -27,6 +28,10 @@ export const useLogin = () => {
   };
 
   const handleUserInput = handleFormChange(formData, setFormData);
+
+  const handlePasswordVisibility = () => {
+    setShowPassword((isPasswordVisible) => !isPasswordVisible);
+  };
 
   const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
     try {
@@ -64,5 +69,13 @@ export const useLogin = () => {
     }
   };
 
-  return { handleLogin, handleUserInput, formData, isLoggingin, error };
+  return {
+    error,
+    formData,
+    handleLogin,
+    handlePasswordVisibility,
+    handleUserInput,
+    isLoggingin,
+    showPassword,
+  };
 };

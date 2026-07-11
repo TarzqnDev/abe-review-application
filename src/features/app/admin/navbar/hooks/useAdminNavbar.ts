@@ -5,7 +5,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const useAdminHeader = () => {
+export const useAdminNavbar = () => {
   const router = useRouter();
   const { user } = useAuth();
   const [openAccountMenu, setOpenAccountMenu] = useState(false);

@@ -41,6 +41,8 @@ export const useSignup = () => {
   const [showSignupSuccessBanner, setShowSignupSuccessBanner] = useState(false);
   const [signupSuccessBannerMessage, setSignupSuccessBannerMessage] =
     useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
 
@@ -111,6 +113,16 @@ export const useSignup = () => {
     requestAccessFormData,
     setRequestAccessFormData,
   );
+
+  const handlePasswordVisibility = () => {
+    setShowPassword((isPasswordVisible) => !isPasswordVisible);
+  };
+
+  const handleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(
+      (isConfirmPasswordVisible) => !isConfirmPasswordVisible,
+    );
+  };
 
   const handleSignup = async (e: React.ChangeEvent<HTMLFormElement>) => {
     try {
@@ -217,11 +229,13 @@ export const useSignup = () => {
     error,
     formData,
     handleSignup,
+    handleConfirmPasswordVisibility,
     handleCloseRequestAccessModal,
     handleOpenRequestAccessModal,
     handleRequestAccessSubmission,
     handleRequestAccessInput,
     handleUserInput,
+    handlePasswordVisibility,
     hasInviteSession,
     isRequestAccessModalOpen,
     isSubmittingRequestAccess,
@@ -231,6 +245,8 @@ export const useSignup = () => {
     requestAccessSuccessBannerMessage,
     showSignupSuccessBanner,
     showRequestAccessSuccessBanner,
+    showConfirmPassword,
+    showPassword,
     signupSuccessBannerMessage,
   };
 };

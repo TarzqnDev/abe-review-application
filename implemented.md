@@ -14,3 +14,5 @@
 - Manage Reviewees: reviewee listings and payment proofs are restricted to accounts assigned the reviewee role; invited accounts receive that role immediately.
 - Project Structure: all feature imports were aligned with the mirrored `src/features/app` and `src/features/auth` structure and verified.
 - Manage Reviewees: user fetching and invitation server actions now live with the reviewees feature.
+- Admin Layout: navigation components now use semantic names—the top navigation is `AdminNavbar`, and the side navigation is `AdminSidebar`.
+- Authentication: login and invited signup now share a responsive reference-matched layout with branded headers, refined forms, and desktop book imagery.
