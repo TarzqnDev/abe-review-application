@@ -1,4 +1,4 @@
-import React, { useEffect, useEffectEvent, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import { completeAccountSetup } from "@/features/auth/accept-invite/actions/complete-account-setup.action";
 import { getAccountSetupStatus } from "@/features/auth/accept-invite/actions/get-account-setup-status.action";
 import { handleFormChange } from "@/lib/utils";
@@ -37,6 +37,7 @@ export const useAcceptInvite = () => {
   ] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const hasInitializedInviteSession = useRef(false);
 
   const router = useRouter();
 
@@ -62,6 +63,10 @@ export const useAcceptInvite = () => {
 
   useEffect(() => {
     const syncInviteSession = async () => {
+      if (hasInitializedInviteSession.current) return;
+
+      hasInitializedInviteSession.current = true;
+
       const hashParams = new URLSearchParams(window.location.hash.slice(1));
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
@@ -158,6 +163,8 @@ export const useAcceptInvite = () => {
         setError(accountSetupError);
         return;
       }
+
+      hasInitializedInviteSession.current = false;
 
       getUser();
 

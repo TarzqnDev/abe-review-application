@@ -17,4 +17,5 @@
 - Admin Layout: navigation components now use semantic names—the top navigation is `AdminNavbar`, and the side navigation is `AdminSidebar`.
 - Authentication: invited users accept invitations at `/auth/accept-invite`, where they can complete their account in a centered branded flow or continue to the reviewee dashboard when the invitation was already accepted.
 - Authentication: invited accounts track when account setup is completed.
+- Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
 - Payments: payment record IDs use generated bigint values.
