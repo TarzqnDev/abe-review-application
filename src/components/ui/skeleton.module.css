@@ -1,0 +1,25 @@
+.skeleton::after {
+  animation: shimmer 1.6s infinite;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 65%),
+    transparent
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}

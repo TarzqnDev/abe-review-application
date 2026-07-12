@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
+import { ProofOfPaymentSkeleton } from "@/features/app/admin/reviewees/components/skeletons/ProofOfPaymentSkeleton";
 import { useProofOfPaymentModal } from "@/features/app/admin/reviewees/hooks/modals/useProofOfPaymentModal";
 
 type ProofOfPaymentModalProps = {
@@ -34,7 +34,7 @@ export const ProofOfPaymentModal = (props: ProofOfPaymentModalProps) => {
 
         <div className="flex min-h-[420px] items-center justify-center overflow-hidden rounded bg-slate-50">
           {modal.isLoading ? (
-            <LoaderCircle className="h-7 w-7 animate-spin text-teal-600" />
+            <ProofOfPaymentSkeleton />
           ) : modal.error ? (
             <p className="px-6 text-center text-sm text-slate-500">{modal.error}</p>
           ) : modal.imageUrl ? (
@@ -48,11 +48,13 @@ export const ProofOfPaymentModal = (props: ProofOfPaymentModalProps) => {
               />
             </div>
           ) : (
-            <p className="px-6 text-center text-sm text-slate-500">
-              {props.imagePath
-                ? "Loading proof of payment..."
-                : "No proof of payment is available."}
-            </p>
+            props.imagePath ? (
+              <ProofOfPaymentSkeleton />
+            ) : (
+              <p className="px-6 text-center text-sm text-slate-500">
+                No proof of payment is available.
+              </p>
+            )
           )}
         </div>
       </div>

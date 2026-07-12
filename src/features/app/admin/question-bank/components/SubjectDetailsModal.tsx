@@ -1,6 +1,7 @@
 import type { AdminSubject } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
 import QuestionFormModal from "@/features/app/admin/question-bank/components/QuestionFormModal";
 import QuestionListModal from "@/features/app/admin/question-bank/components/QuestionListModal";
+import SubjectDetailsSkeleton from "@/features/app/admin/question-bank/components/SubjectDetailsSkeleton";
 import { useSubjectDetailsModal } from "@/features/app/admin/question-bank/hooks/modals/useSubjectDetailsModal";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -86,9 +87,7 @@ export default function SubjectDetailsModal({
           </button>
 
           {isLoadingQuestionSets ? (
-            <div className="rounded border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">
-              Loading questions...
-            </div>
+            <SubjectDetailsSkeleton />
           ) : questionSetsError ? (
             <div className="rounded border border-red-200 bg-red-50 p-5 text-sm text-red-600">
               {questionSetsError}

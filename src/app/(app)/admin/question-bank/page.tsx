@@ -1,6 +1,7 @@
 "use client";
 
 import AddSubjectModal from "@/features/app/admin/question-bank/components/AddSubjectModal";
+import QuestionBankLoadingSkeleton from "@/features/app/admin/question-bank/components/QuestionBankLoadingSkeleton";
 import SubjectAreaSection from "@/features/app/admin/question-bank/components/SubjectAreaSection";
 import SubjectDetailsModal from "@/features/app/admin/question-bank/components/SubjectDetailsModal";
 import SubjectFilters from "@/features/app/admin/question-bank/components/SubjectFilters";
@@ -47,9 +48,7 @@ export default function AdminSubjectPage() {
       </div>
 
       {isLoadingSubjectAreas ? (
-        <div className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-500">
-          Loading subject areas...
-        </div>
+        <QuestionBankLoadingSkeleton />
       ) : subjectAreasError ? (
         <div className="rounded-md border border-red-200 bg-red-50 p-5 text-sm text-red-600">
           {subjectAreasError}

@@ -21,3 +21,4 @@
 - Authentication: invited accounts track when account setup is completed.
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
 - Payments: payment record IDs use generated bigint values.
+- Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.

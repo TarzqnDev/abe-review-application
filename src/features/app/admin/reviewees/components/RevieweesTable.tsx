@@ -1,4 +1,5 @@
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import { RevieweesTableSkeleton } from "@/features/app/admin/reviewees/components/skeletons/RevieweesTableSkeleton";
 import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
 
 type RevieweesTableProps = {
@@ -32,7 +33,7 @@ export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }
       </thead>
       <tbody>
         {isLoading ? (
-          <tr><td colSpan={7} className="px-5 py-10 text-center text-slate-500">Loading users...</td></tr>
+          <RevieweesTableSkeleton />
         ) : users.length ? users.map((user) => (
           <tr key={user.user_id} className="border-b border-slate-200 last:border-b-0">
             <td className="whitespace-nowrap px-5 py-3 font-medium text-slate-900">{user.full_name}</td>
