@@ -14,7 +14,9 @@
 - Manage Reviewees: reviewee listings and payment proofs are restricted to accounts assigned the reviewee role; invited accounts receive that role immediately.
 - Project Structure: all feature imports were aligned with the mirrored `src/features/app` and `src/features/auth` structure and verified.
 - Manage Reviewees: user fetching and invitation server actions now live with the reviewees feature.
-- Admin Layout: navigation components now use semantic names—the top navigation is `AdminNavbar`, and the side navigation is `AdminSidebar`.
+- App Layout: admin and reviewee routes share the role-aware `Navbar` and `Sidebar` app shell, including role labels and role-specific navigation links.
+- Reviewee Dashboard: MCQ Quiz, Flash Cards, and History pages now match the supplied dashboard references; the MCQ page includes the three image-based quiz cards.
+- ABE Trivia: the admin page now matches the finished portion of the supplied reference with its heading, description, and Add Trivia action.
 - Authentication: invited users accept invitations at `/auth/accept-invite`, where they can complete their account in a centered branded flow or continue to the reviewee dashboard when the invitation was already accepted.
 - Authentication: invited accounts track when account setup is completed.
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.

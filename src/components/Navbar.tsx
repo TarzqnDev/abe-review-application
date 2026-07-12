@@ -1,11 +1,24 @@
-import { useAdminNavbar } from "@/features/app/admin/navbar/hooks/useAdminNavbar";
+"use client";
+
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+
+import type { AppRole } from "@/features/app/layout/types/appRole";
+import { useNavbar } from "@/features/app/navbar/hooks/useNavbar";
 import LogoV2 from "@/public/logo-v2.png";
 
-export default function AdminNavbar() {
-  const { email, handleLogout, handleToggleAccountMenu, openAccountMenu } =
-    useAdminNavbar();
+type NavbarProps = {
+  role: AppRole | null;
+};
+
+export default function Navbar({ role }: NavbarProps) {
+  const {
+    email,
+    handleLogout,
+    handleToggleAccountMenu,
+    openAccountMenu,
+    roleLabel,
+  } = useNavbar(role);
 
   return (
     <header className="border-b border-slate-200 bg-white">
@@ -35,7 +48,7 @@ export default function AdminNavbar() {
               </span>
               <span className="flex items-center justify-end gap-1 text-xs text-slate-500">
                 <span className="h-1.5 w-1.5 rounded-full bg-teal-600"></span>
-                Administrator
+                {roleLabel}
               </span>
             </span>
             <UserCircleIcon className="h-7 w-7 text-slate-500" />
