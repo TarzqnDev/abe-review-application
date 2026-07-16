@@ -22,3 +22,5 @@
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
 - Payments: payment record IDs use generated bigint values.
 - Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.
+- ABE Trivia: administrators can view trivia cards and open the Create Trivia modal for trivia content and publish date; the feature currently uses hardcoded local UI data with no backend integration.
+- Flash Cards: reviewees can view and play flash-card decks and open create or edit modals for deck questions and answers; the feature currently uses hardcoded local UI data with no backend integration.
