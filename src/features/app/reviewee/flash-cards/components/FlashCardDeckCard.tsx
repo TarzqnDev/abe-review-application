@@ -1,13 +1,20 @@
 import { RectangleStackIcon } from "@heroicons/react/24/outline";
+import { LoaderCircle } from "lucide-react";
 import type { FlashCardDeck } from "@/features/app/reviewee/flash-cards/types/flashCard";
 
 type FlashCardDeckCardProps = {
   flashCardDeck: FlashCardDeck;
+  isPlayDisabled: boolean;
+  isPlayLoading: boolean;
+  onPlay: (areaId: number) => void;
   onViewCards: (areaId: number) => void;
 };
 
 export default function FlashCardDeckCard({
   flashCardDeck,
+  isPlayDisabled,
+  isPlayLoading,
+  onPlay,
   onViewCards,
 }: FlashCardDeckCardProps) {
   const progressPercentage = Math.min(
@@ -52,9 +59,21 @@ export default function FlashCardDeckCard({
       <div className="mt-5 grid grid-cols-2 gap-2.5">
         <button
           type="button"
-          className="inline-flex h-10 cursor-pointer items-center justify-center rounded bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          onClick={() => onPlay(flashCardDeck.areaId)}
+          disabled={isPlayDisabled}
+          aria-busy={isPlayLoading}
+          aria-label={
+            isPlayLoading
+              ? `Preparing ${flashCardDeck.areaName} flash card game`
+              : undefined
+          }
+          className="inline-flex h-10 cursor-pointer items-center justify-center rounded bg-teal-600 px-4 text-sm font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Play Now
+          {isPlayLoading ? (
+            <LoaderCircle className="h-5 w-5 animate-spin" />
+          ) : (
+            "Play Now"
+          )}
         </button>
         <button
           type="button"

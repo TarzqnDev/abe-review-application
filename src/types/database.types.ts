@@ -111,6 +111,95 @@ export type Database = {
           },
         ]
       }
+      game_session_flash_card_answer_keys: {
+        Row: {
+          correct_answer: string
+          session_flash_card_id: number
+        }
+        Insert: {
+          correct_answer: string
+          session_flash_card_id: number
+        }
+        Update: {
+          correct_answer?: string
+          session_flash_card_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_session_flash_card_answer_keys_session_flash_card_id_fkey"
+            columns: ["session_flash_card_id"]
+            isOneToOne: true
+            referencedRelation: "game_session_flash_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_session_flash_cards: {
+        Row: {
+          card_order: number
+          deadline_at: string | null
+          flash_card_id: number | null
+          id: number
+          presented_at: string | null
+          question_text: string
+          response_time_ms: number | null
+          result: string | null
+          resolved_at: string | null
+          reveal_at: string | null
+          session_id: string
+          status: string
+          submitted_answer: string | null
+          submitted_at: string | null
+        }
+        Insert: {
+          card_order: number
+          deadline_at?: string | null
+          flash_card_id?: number | null
+          id?: number
+          presented_at?: string | null
+          question_text: string
+          response_time_ms?: number | null
+          result?: string | null
+          resolved_at?: string | null
+          reveal_at?: string | null
+          session_id: string
+          status?: string
+          submitted_answer?: string | null
+          submitted_at?: string | null
+        }
+        Update: {
+          card_order?: number
+          deadline_at?: string | null
+          flash_card_id?: number | null
+          id?: number
+          presented_at?: string | null
+          question_text?: string
+          response_time_ms?: number | null
+          result?: string | null
+          resolved_at?: string | null
+          reveal_at?: string | null
+          session_id?: string
+          status?: string
+          submitted_answer?: string | null
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_session_flash_cards_flash_card_id_fkey"
+            columns: ["flash_card_id"]
+            isOneToOne: false
+            referencedRelation: "flash_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_session_flash_cards_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       game_session_questions: {
         Row: {
           deadline_at: string | null
@@ -208,12 +297,14 @@ export type Database = {
           area_id: number | null
           area_name: string
           current_question_order: number
-          difficulty: string
+          difficulty: string | null
           end_reason: string | null
           ended_at: string | null
+          flash_card_deck_id: number | null
           game_type: string
           id: string
           prepared_at: string
+          session_type: string
           started_at: string | null
           status: string
           timer_seconds: number
@@ -224,12 +315,14 @@ export type Database = {
           area_id?: number | null
           area_name: string
           current_question_order?: number
-          difficulty: string
+          difficulty?: string | null
           end_reason?: string | null
           ended_at?: string | null
+          flash_card_deck_id?: number | null
           game_type: string
           id?: string
           prepared_at?: string
+          session_type?: string
           started_at?: string | null
           status?: string
           timer_seconds: number
@@ -240,12 +333,14 @@ export type Database = {
           area_id?: number | null
           area_name?: string
           current_question_order?: number
-          difficulty?: string
+          difficulty?: string | null
           end_reason?: string | null
           ended_at?: string | null
+          flash_card_deck_id?: number | null
           game_type?: string
           id?: string
           prepared_at?: string
+          session_type?: string
           started_at?: string | null
           status?: string
           timer_seconds?: number
@@ -258,6 +353,13 @@ export type Database = {
             columns: ["area_id"]
             isOneToOne: false
             referencedRelation: "subject_areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_sessions_flash_card_deck_id_fkey"
+            columns: ["flash_card_deck_id"]
+            isOneToOne: false
+            referencedRelation: "flash_card_decks"
             referencedColumns: ["id"]
           },
           {
@@ -593,7 +695,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      advance_flash_card_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
       advance_quiz_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
+      cancel_flash_card_session: {
         Args: { selected_session_id: string }
         Returns: Json
       }
@@ -601,13 +711,33 @@ export type Database = {
         Args: { selected_session_id: string }
         Returns: Json
       }
+      exit_flash_card_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
       exit_quiz_session: {
         Args: { selected_session_id: string }
+        Returns: Json
+      }
+      flash_card_reviewee_user_id: { Args: never; Returns: string }
+      flash_card_session_summary: {
+        Args: {
+          authenticated_user_id: string
+          selected_session_id: string
+        }
         Returns: Json
       }
       get_user_roles: { Args: { uid: string }; Returns: string[] }
       has_permission: { Args: { perm: string; uid: string }; Returns: boolean }
       jwt_custom_claims: { Args: { event: Json }; Returns: Json }
+      normalize_flash_card_answer: {
+        Args: { selected_answer: string }
+        Returns: string
+      }
+      prepare_flash_card_session: {
+        Args: { selected_area_id: number }
+        Returns: Json
+      }
       prepare_quiz_session: {
         Args: {
           selected_area_id: number
@@ -631,12 +761,27 @@ export type Database = {
         }
         Returns: number
       }
+      reveal_flash_card_answer: {
+        Args: { selected_session_flash_card_id: number }
+        Returns: Json
+      }
       reveal_quiz_answer: {
         Args: { selected_session_question_id: number }
         Returns: Json
       }
+      start_flash_card_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
       start_quiz_session: {
         Args: { selected_session_id: string }
+        Returns: Json
+      }
+      submit_flash_card_answer: {
+        Args: {
+          selected_answer: string
+          selected_session_flash_card_id: number
+        }
         Returns: Json
       }
       submit_quiz_answer: {
@@ -644,6 +789,10 @@ export type Database = {
           selected_option_id: number
           selected_session_question_id: number
         }
+        Returns: Json
+      }
+      timeout_flash_card: {
+        Args: { selected_session_flash_card_id: number }
         Returns: Json
       }
       timeout_quiz_question: {

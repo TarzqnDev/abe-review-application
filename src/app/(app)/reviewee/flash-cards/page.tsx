@@ -8,6 +8,10 @@ import FlashCardDecksSkeleton from "@/features/app/reviewee/flash-cards/componen
 import FlashCardFormModal from "@/features/app/reviewee/flash-cards/components/FlashCardFormModal";
 import FlashCardListModal from "@/features/app/reviewee/flash-cards/components/FlashCardListModal";
 import FlashCardSuccessBanner from "@/features/app/reviewee/flash-cards/components/FlashCardSuccessBanner";
+import FlashCardGameCountdownModal from "@/features/app/reviewee/flash-cards/components/game/FlashCardGameCountdownModal";
+import FlashCardGameModal from "@/features/app/reviewee/flash-cards/components/game/FlashCardGameModal";
+import FlashCardGameSummaryModal from "@/features/app/reviewee/flash-cards/components/game/FlashCardGameSummaryModal";
+import NoFlashCardsModal from "@/features/app/reviewee/flash-cards/components/game/NoFlashCardsModal";
 import { useRevieweeFlashCards } from "@/features/app/reviewee/flash-cards/hooks/useRevieweeFlashCards";
 
 export default function RevieweeFlashCardsPage() {
@@ -33,6 +37,12 @@ export default function RevieweeFlashCardsPage() {
         Create Flash Card
       </button>
 
+      {flashCardsPage.gameError && (
+        <p role="alert" className="mb-5 text-sm text-red-600">
+          {flashCardsPage.gameError}
+        </p>
+      )}
+
       {flashCardsPage.isLoadingFlashCardDecks ? (
         <FlashCardDecksSkeleton />
       ) : flashCardsPage.flashCardDecksError ? (
@@ -48,6 +58,14 @@ export default function RevieweeFlashCardsPage() {
             <FlashCardDeckCard
               key={flashCardDeck.areaId}
               flashCardDeck={flashCardDeck}
+              isPlayDisabled={
+                flashCardsPage.isPreparingGame ||
+                flashCardsPage.gameStage !== "idle"
+              }
+              isPlayLoading={
+                flashCardsPage.preparingAreaId === flashCardDeck.areaId
+              }
+              onPlay={flashCardsPage.handlePlayNow}
               onViewCards={flashCardsPage.openFlashCardListModal}
             />
           ))}
@@ -75,6 +93,28 @@ export default function RevieweeFlashCardsPage() {
             showSuccessMessage={flashCardsPage.showSuccessMessage}
           />
         )}
+      <FlashCardGameCountdownModal
+        isOpen={flashCardsPage.gameStage === "countdown"}
+        onCancel={flashCardsPage.handleCountdownCancelled}
+        onStarted={flashCardsPage.handleGameStarted}
+        preparedSession={flashCardsPage.preparedSession}
+      />
+      <FlashCardGameModal
+        initialTiming={flashCardsPage.initialTiming}
+        isOpen={flashCardsPage.gameStage === "playing"}
+        onFinished={flashCardsPage.handleGameFinished}
+        preparedSession={flashCardsPage.preparedSession}
+      />
+      <NoFlashCardsModal
+        isOpen={flashCardsPage.noFlashCards.isOpen}
+        message={flashCardsPage.noFlashCards.message}
+        onClose={flashCardsPage.closeNoFlashCards}
+      />
+      <FlashCardGameSummaryModal
+        isOpen={flashCardsPage.gameStage === "summary"}
+        onClose={flashCardsPage.resetFlashCardGame}
+        summary={flashCardsPage.gameSummary}
+      />
     </section>
   );
 }
