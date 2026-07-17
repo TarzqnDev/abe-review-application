@@ -1,24 +1,22 @@
 "use client";
 
 import { PlusIcon } from "@heroicons/react/24/outline";
-import CreateFlashCardModal from "@/features/app/reviewee/flash-cards/components/CreateFlashCardModal";
-import EditFlashCardModal from "@/features/app/reviewee/flash-cards/components/EditFlashCardModal";
 import FlashCardDeckCard from "@/features/app/reviewee/flash-cards/components/FlashCardDeckCard";
+import FlashCardDecksEmpty from "@/features/app/reviewee/flash-cards/components/FlashCardDecksEmpty";
+import FlashCardDecksError from "@/features/app/reviewee/flash-cards/components/FlashCardDecksError";
+import FlashCardDecksSkeleton from "@/features/app/reviewee/flash-cards/components/FlashCardDecksSkeleton";
+import FlashCardFormModal from "@/features/app/reviewee/flash-cards/components/FlashCardFormModal";
+import FlashCardListModal from "@/features/app/reviewee/flash-cards/components/FlashCardListModal";
+import FlashCardSuccessBanner from "@/features/app/reviewee/flash-cards/components/FlashCardSuccessBanner";
 import { useRevieweeFlashCards } from "@/features/app/reviewee/flash-cards/hooks/useRevieweeFlashCards";
 
 export default function RevieweeFlashCardsPage() {
-  const {
-    closeCreateFlashCardModal,
-    closeEditFlashCardModal,
-    flashCardDecks,
-    isCreateFlashCardModalOpen,
-    openCreateFlashCardModal,
-    openEditFlashCardModal,
-    selectedFlashCardDeck,
-  } = useRevieweeFlashCards();
+  const flashCardsPage = useRevieweeFlashCards();
 
   return (
     <section>
+      <FlashCardSuccessBanner message={flashCardsPage.successMessage} />
+
       <header className="mb-8">
         <h1 className="text-2xl font-semibold text-slate-900">My Flash Cards</h1>
         <p className="mt-1 text-base text-slate-500">
@@ -28,36 +26,55 @@ export default function RevieweeFlashCardsPage() {
 
       <button
         type="button"
-        onClick={openCreateFlashCardModal}
-        className="mb-8 inline-flex h-[46px] cursor-pointer items-center justify-center gap-2 rounded bg-teal-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+        onClick={flashCardsPage.openCreateFlashCardModal}
+        className="mb-7 inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded bg-teal-600 px-5 text-sm font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
       >
         <PlusIcon className="h-4 w-4" />
         Create Flash Card
       </button>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-        {flashCardDecks.map((flashCardDeck) => (
-          <FlashCardDeckCard
-            key={flashCardDeck.id}
-            flashCardDeck={flashCardDeck}
-            onEdit={openEditFlashCardModal}
-          />
-        ))}
-      </div>
+      {flashCardsPage.isLoadingFlashCardDecks ? (
+        <FlashCardDecksSkeleton />
+      ) : flashCardsPage.flashCardDecksError ? (
+        <FlashCardDecksError
+          message={flashCardsPage.flashCardDecksError}
+          onRetry={flashCardsPage.retryLoadFlashCardDecks}
+        />
+      ) : flashCardsPage.flashCardDecks.length === 0 ? (
+        <FlashCardDecksEmpty />
+      ) : (
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          {flashCardsPage.flashCardDecks.map((flashCardDeck) => (
+            <FlashCardDeckCard
+              key={flashCardDeck.areaId}
+              flashCardDeck={flashCardDeck}
+              onViewCards={flashCardsPage.openFlashCardListModal}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Modals Section */}
-      {isCreateFlashCardModalOpen && (
-        <CreateFlashCardModal
-          isOpen={isCreateFlashCardModalOpen}
-          onClose={closeCreateFlashCardModal}
+      {flashCardsPage.formModalRequest && (
+        <FlashCardFormModal
+          request={flashCardsPage.formModalRequest}
+          flashCardDecks={flashCardsPage.flashCardDecks}
+          loadFlashCardDecks={flashCardsPage.loadFlashCardDecks}
+          onClose={flashCardsPage.closeFlashCardFormModal}
+          showSuccessMessage={flashCardsPage.showSuccessMessage}
         />
       )}
-      {selectedFlashCardDeck && (
-        <EditFlashCardModal
-          flashCardDeck={selectedFlashCardDeck}
-          onClose={closeEditFlashCardModal}
-        />
-      )}
+      {flashCardsPage.selectedFlashCardDeck &&
+        !flashCardsPage.formModalRequest && (
+          <FlashCardListModal
+            flashCardDeck={flashCardsPage.selectedFlashCardDeck}
+            loadFlashCardDecks={flashCardsPage.loadFlashCardDecks}
+            onAddFlashCard={flashCardsPage.openAddFlashCardModal}
+            onEditFlashCard={flashCardsPage.openEditFlashCardModal}
+            onClose={flashCardsPage.closeFlashCardListModal}
+            showSuccessMessage={flashCardsPage.showSuccessMessage}
+          />
+        )}
     </section>
   );
 }

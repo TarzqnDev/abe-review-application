@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      flash_card_decks: {
+        Row: {
+          area_id: number
+          created_at: string
+          id: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          area_id: number
+          created_at?: string
+          id?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          area_id?: number
+          created_at?: string
+          id?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flash_card_decks_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "subject_areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flash_card_decks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      flash_cards: {
+        Row: {
+          answer: string
+          created_at: string
+          deck_id: number
+          id: number
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          deck_id: number
+          id?: number
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          deck_id?: number
+          id?: number
+          question?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flash_cards_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "flash_card_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       game_session_answer_keys: {
         Row: {
           correct_option_id: number
