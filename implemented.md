@@ -33,3 +33,5 @@
 - MCQ and flash-card timers remain hidden during between-item and final-summary transitions, and reset to the configured maximum before the next item appears.
 - Flash Card management keeps the card list modal open while add and edit forms appear as nested modal layers above it.
 - Flash Card management success banners appear above the list and form modal layers so successful operations remain visible.
+- Question Bank: question list modals now include question search, five-item frontend pagination, and a nested Add Question flow while preserving the list beneath the form modal.
+- Question Bank: question list answer states now use the reference teal palette, and success banners render above every nested question-bank modal.

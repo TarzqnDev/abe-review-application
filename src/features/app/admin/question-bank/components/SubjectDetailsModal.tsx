@@ -150,6 +150,7 @@ export default function SubjectDetailsModal({
       <QuestionListModal
         key={questionListRequest?.requestId ?? "question-list-modal"}
         loadSubjectQuestions={loadSubjectQuestions}
+        onAddQuestion={handleOpenCreateQuestionModal}
         onEditQuestion={handleOpenEditQuestionModal}
         questionSets={activeSubjectQuestionSets}
         request={questionListRequest}
