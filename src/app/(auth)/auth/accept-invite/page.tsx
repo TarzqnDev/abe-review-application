@@ -10,6 +10,7 @@ import AuthBrand from "@/features/auth/components/AuthBrand";
 import RequestRegistrationModal from "@/features/auth/accept-invite/components/RequestRegistrationModal";
 import { useAcceptInvite } from "@/features/auth/accept-invite/hooks/useAcceptInvite";
 import { useAuth } from "@/providers/AuthProvider";
+import Link from "next/link";
 
 export default function AcceptInvitePage() {
   const { user } = useAuth();
@@ -83,13 +84,23 @@ export default function AcceptInvitePage() {
                 <div className="rounded-sm border border-red-200 bg-red-50 p-4 text-red-700">
                   Your invite link is invalid or has expired.
                 </div>
-                <button
-                  type="button"
-                  onClick={handleOpenRequestAccessModal}
-                  className="h-12 cursor-pointer rounded-sm bg-teal-600 px-4 font-medium text-white transition hover:bg-teal-700"
-                >
-                  Request Registration Access
-                </button>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={handleOpenRequestAccessModal}
+                    className="h-12 cursor-pointer rounded-sm bg-teal-600 px-4 font-medium text-white transition hover:bg-teal-700 w-full mb-2"
+                  >
+                    Request Registration Access
+                  </button>
+
+                  <Link
+                    href="/login"
+                    className="text-xs leading-6 text-slate-500 sm:text-sm"
+                  >
+                    Login account
+                  </Link>
+                </div>
               </div>
             ) : accountSetupStatusError ? (
               <div className="flex flex-col gap-5 text-center">

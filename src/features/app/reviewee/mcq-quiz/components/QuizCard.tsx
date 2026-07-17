@@ -1,12 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
-import type { QuizGame } from "@/features/app/reviewee/dashboard/constants/quizGames";
+import type { QuizGame } from "@/features/app/reviewee/mcq-quiz/constants/quizGames";
 
 type QuizCardProps = {
+  onStart: (quizGame: QuizGame) => void;
   quizGame: QuizGame;
 };
 
-export default function QuizCard({ quizGame }: QuizCardProps) {
+export default function QuizCard({ onStart, quizGame }: QuizCardProps) {
   return (
     <article className="overflow-hidden rounded-lg border border-slate-200 bg-white">
       <div className="relative h-[150px] w-full overflow-hidden">
@@ -26,12 +26,13 @@ export default function QuizCard({ quizGame }: QuizCardProps) {
         <p className="mt-0.5 min-h-10 text-sm leading-5 text-slate-500">
           {quizGame.description}
         </p>
-        <Link
-          href={quizGame.href}
+        <button
+          type="button"
+          onClick={() => onStart(quizGame)}
           className="mt-3 flex w-full items-center justify-center rounded bg-teal-600 px-4 py-2 text-base font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
         >
           Start Game
-        </Link>
+        </button>
       </div>
     </article>
   );

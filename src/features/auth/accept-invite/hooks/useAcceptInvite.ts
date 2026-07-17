@@ -187,9 +187,9 @@ export const useAcceptInvite = () => {
     const roles = getTokenRoles(session);
 
     if (roles.includes("admin")) {
-      router.push("/admin/question-bank");
+      router.push("/admin");
     } else {
-      router.push("/reviewee/dashboard");
+      router.push("/reviewee");
     }
   };
 

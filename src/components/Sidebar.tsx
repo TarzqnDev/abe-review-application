@@ -50,11 +50,11 @@ const adminLinks: SidebarLink[] = [
 
 const revieweeLinks: SidebarLink[] = [
   {
-    href: "/reviewee/dashboard",
+    href: "/reviewee/mcq-quiz",
     icon: McqQuizIconImage,
     iconAlt: "MCQ quiz icon",
     label: "MCQ Quiz",
-    matchPath: (pathname) => pathname === "/reviewee/dashboard",
+    matchPath: (pathname) => pathname === "/reviewee/mcq-quiz",
   },
   {
     href: "/reviewee/flash-cards",

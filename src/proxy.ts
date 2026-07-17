@@ -15,27 +15,30 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+  const isAcceptInviteRoute = authRoutes.some((route) =>
+    pathname.startsWith("/auth/accept-invite"),
+  );
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session && !isAuthRoute) {
+  // 🔒 App protection
+  if (!session && !isAuthRoute && !isAcceptInviteRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   const roles = getTokenRoles(session);
 
-  // ✅ Already logged in
-  // if (isAuthRoute && session) {
-  //   if (roles.includes("admin"))
-  //     return NextResponse.redirect(
-  //       new URL("/admin/question-bank", request.url),
-  //     );
-  //   else if (roles.includes("reviewee"))
-  //     return NextResponse.redirect(new URL("/reviewee/dashboard", request.url));
-  // }
+  // ✅ Already logged in, redirect to designated dashboard
+  if (isAuthRoute && session) {
+    if (roles.includes("admin"))
+      return NextResponse.redirect(new URL("/admin", request.url));
+    else if (roles.includes("reviewee"))
+      return NextResponse.redirect(new URL("/reviewee", request.url));
+  }
 
+  // Role authorization detection
   for (const [route, allowedRoles] of Object.entries(protectedRoutes)) {
     if (pathname.startsWith(route)) {
       const authorized = allowedRoles.some((role) => roles.includes(role));

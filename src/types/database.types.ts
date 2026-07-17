@@ -14,6 +14,187 @@ export type Database = {
   }
   public: {
     Tables: {
+      game_session_answer_keys: {
+        Row: {
+          correct_option_id: number
+          session_question_id: number
+        }
+        Insert: {
+          correct_option_id: number
+          session_question_id: number
+        }
+        Update: {
+          correct_option_id?: number
+          session_question_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_session_answer_keys_session_question_id_fkey"
+            columns: ["session_question_id"]
+            isOneToOne: true
+            referencedRelation: "game_session_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_session_questions: {
+        Row: {
+          deadline_at: string | null
+          id: number
+          options: Json
+          presented_at: string | null
+          question_id: number | null
+          question_order: number
+          question_set_id: number | null
+          question_text: string
+          response_time_ms: number | null
+          result: string | null
+          resolved_at: string | null
+          reveal_at: string | null
+          selected_option_id: number | null
+          session_id: string
+          status: string
+          subject_id: number | null
+          subject_name: string
+          submitted_at: string | null
+        }
+        Insert: {
+          deadline_at?: string | null
+          id?: number
+          options: Json
+          presented_at?: string | null
+          question_id?: number | null
+          question_order: number
+          question_set_id?: number | null
+          question_text: string
+          response_time_ms?: number | null
+          result?: string | null
+          resolved_at?: string | null
+          reveal_at?: string | null
+          selected_option_id?: number | null
+          session_id: string
+          status?: string
+          subject_id?: number | null
+          subject_name: string
+          submitted_at?: string | null
+        }
+        Update: {
+          deadline_at?: string | null
+          id?: number
+          options?: Json
+          presented_at?: string | null
+          question_id?: number | null
+          question_order?: number
+          question_set_id?: number | null
+          question_text?: string
+          response_time_ms?: number | null
+          result?: string | null
+          resolved_at?: string | null
+          reveal_at?: string | null
+          selected_option_id?: number | null
+          session_id?: string
+          status?: string
+          subject_id?: number | null
+          subject_name?: string
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_session_questions_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_session_questions_question_set_id_fkey"
+            columns: ["question_set_id"]
+            isOneToOne: false
+            referencedRelation: "question_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_session_questions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_session_questions_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_sessions: {
+        Row: {
+          area_id: number | null
+          area_name: string
+          current_question_order: number
+          difficulty: string
+          end_reason: string | null
+          ended_at: string | null
+          game_type: string
+          id: string
+          prepared_at: string
+          started_at: string | null
+          status: string
+          timer_seconds: number
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          area_id?: number | null
+          area_name: string
+          current_question_order?: number
+          difficulty: string
+          end_reason?: string | null
+          ended_at?: string | null
+          game_type: string
+          id?: string
+          prepared_at?: string
+          started_at?: string | null
+          status?: string
+          timer_seconds: number
+          total_questions?: number
+          user_id: string
+        }
+        Update: {
+          area_id?: number | null
+          area_name?: string
+          current_question_order?: number
+          difficulty?: string
+          end_reason?: string | null
+          ended_at?: string | null
+          game_type?: string
+          id?: string
+          prepared_at?: string
+          started_at?: string | null
+          status?: string
+          timer_seconds?: number
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_sessions_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "subject_areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           created_at: string
@@ -338,9 +519,63 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      advance_quiz_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
+      cancel_quiz_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
+      exit_quiz_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
       get_user_roles: { Args: { uid: string }; Returns: string[] }
       has_permission: { Args: { perm: string; uid: string }; Returns: boolean }
       jwt_custom_claims: { Args: { event: Json }; Returns: Json }
+      prepare_quiz_session: {
+        Args: {
+          selected_area_id: number
+          selected_difficulty: string
+          selected_game_type: string
+        }
+        Returns: Json
+      }
+      quiz_reviewee_user_id: { Args: never; Returns: string }
+      quiz_session_summary: {
+        Args: {
+          authenticated_user_id: string
+          selected_session_id: string
+        }
+        Returns: Json
+      }
+      quiz_timer_seconds: {
+        Args: {
+          selected_difficulty: string
+          selected_game_type: string
+        }
+        Returns: number
+      }
+      reveal_quiz_answer: {
+        Args: { selected_session_question_id: number }
+        Returns: Json
+      }
+      start_quiz_session: {
+        Args: { selected_session_id: string }
+        Returns: Json
+      }
+      submit_quiz_answer: {
+        Args: {
+          selected_option_id: number
+          selected_session_question_id: number
+        }
+        Returns: Json
+      }
+      timeout_quiz_question: {
+        Args: { selected_session_question_id: number }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

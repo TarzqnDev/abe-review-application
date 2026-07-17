@@ -1,6 +1,6 @@
 export const protectedRoutes = {
-  "/admin/dashboard": ["admin"],
-  "/reviewee/dashboard": ["reviewee"],
+  "/admin": ["admin"],
+  "/reviewee": ["reviewee"],
 };
 
-export const authRoutes = ["/login", "/auth/accept-invite"];
+export const authRoutes = ["/login"];

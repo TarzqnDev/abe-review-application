@@ -15,12 +15,15 @@
 - Project Structure: all feature imports were aligned with the mirrored `src/features/app` and `src/features/auth` structure and verified.
 - Manage Reviewees: user fetching and invitation server actions now live with the reviewees feature.
 - App Layout: admin and reviewee routes share the role-aware `Navbar` and `Sidebar` app shell, including role labels and role-specific navigation links.
-- Reviewee Dashboard: MCQ Quiz, Flash Cards, and History pages now match the supplied dashboard references; the MCQ page includes the three image-based quiz cards.
+- Reviewee App: MCQ Quiz, Flash Cards, and History pages now match the supplied references; the MCQ Quiz page at `/reviewee/mcq-quiz` includes the three image-based quiz cards.
 - ABE Trivia: the admin page now matches the finished portion of the supplied reference with its heading, description, and Add Trivia action.
-- Authentication: invited users accept invitations at `/auth/accept-invite`, where they can complete their account in a centered branded flow or continue to the reviewee dashboard when the invitation was already accepted.
+- Authentication: invited users accept invitations at `/auth/accept-invite`, where they can complete their account in a centered branded flow or continue to the reviewee MCQ Quiz page when the invitation was already accepted.
 - Authentication: invited accounts track when account setup is completed.
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
 - Payments: payment record IDs use generated bigint values.
 - Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.
 - ABE Trivia: administrators can view trivia cards and open the Create Trivia modal for trivia content and publish date; the feature currently uses hardcoded local UI data with no backend integration.
 - Flash Cards: reviewees can view and play flash-card decks and open create or edit modals for deck questions and answers; the feature currently uses hardcoded local UI data with no backend integration.
+- Reviewee Quiz Games: MCQ Quiz game cards open an area and difficulty selection flow, preload randomized eligible questions across the selected area's subjects, and run difficulty-specific timed games with countdown, answer feedback, timeout, exit confirmation, and summary states.
+- Reviewee Quiz Games: game attempts and each assigned question result are persisted for completed and early-exit sessions while correct answers remain hidden until server-side validation.
+- Role landing redirects: post-auth navigation now targets `/admin` or `/reviewee`, keeping each role's default destination centralized in its route page.
