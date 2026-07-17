@@ -14,6 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_history: {
+        Row: {
+          accuracy_percentage: number
+          answered_count: number
+          area_id: number | null
+          area_name: string
+          completion_percentage: number
+          correct_count: number
+          difficulty: string | null
+          duration_seconds: number
+          end_reason: string
+          game_session_id: string
+          game_type: string
+          id: number
+          incorrect_count: number
+          not_played_count: number
+          prepared_at: string
+          questions_reached_count: number
+          session_type: string
+          started_at: string | null
+          status: string
+          terminal_at: string
+          timed_out_count: number
+          total_questions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy_percentage: number
+          answered_count: number
+          area_id?: number | null
+          area_name: string
+          completion_percentage: number
+          correct_count: number
+          difficulty?: string | null
+          duration_seconds: number
+          end_reason: string
+          game_session_id: string
+          game_type: string
+          id?: number
+          incorrect_count: number
+          not_played_count: number
+          prepared_at: string
+          questions_reached_count: number
+          session_type: string
+          started_at?: string | null
+          status: string
+          terminal_at: string
+          timed_out_count: number
+          total_questions: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy_percentage?: number
+          answered_count?: number
+          area_id?: number | null
+          area_name?: string
+          completion_percentage?: number
+          correct_count?: number
+          difficulty?: string | null
+          duration_seconds?: number
+          end_reason?: string
+          game_session_id?: string
+          game_type?: string
+          id?: number
+          incorrect_count?: number
+          not_played_count?: number
+          prepared_at?: string
+          questions_reached_count?: number
+          session_type?: string
+          started_at?: string | null
+          status?: string
+          terminal_at?: string
+          timed_out_count?: number
+          total_questions?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_history_game_session_id_fkey"
+            columns: ["game_session_id"]
+            isOneToOne: true
+            referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       flash_card_decks: {
         Row: {
           area_id: number
@@ -728,6 +824,10 @@ export type Database = {
         Returns: Json
       }
       get_user_roles: { Args: { uid: string }; Returns: string[] }
+      get_activity_history_details: {
+        Args: { selected_history_id: number }
+        Returns: Json
+      }
       has_permission: { Args: { perm: string; uid: string }; Returns: boolean }
       jwt_custom_claims: { Args: { event: Json }; Returns: Json }
       normalize_flash_card_answer: {
