@@ -82,17 +82,14 @@ export default function RevieweeFlashCardsPage() {
           showSuccessMessage={flashCardsPage.showSuccessMessage}
         />
       )}
-      {flashCardsPage.selectedFlashCardDeck &&
-        !flashCardsPage.formModalRequest && (
-          <FlashCardListModal
-            flashCardDeck={flashCardsPage.selectedFlashCardDeck}
-            loadFlashCardDecks={flashCardsPage.loadFlashCardDecks}
-            onAddFlashCard={flashCardsPage.openAddFlashCardModal}
-            onEditFlashCard={flashCardsPage.openEditFlashCardModal}
-            onClose={flashCardsPage.closeFlashCardListModal}
-            showSuccessMessage={flashCardsPage.showSuccessMessage}
-          />
-        )}
+      {flashCardsPage.selectedFlashCardDeck && (
+        <FlashCardListModal
+          flashCardDeck={flashCardsPage.selectedFlashCardDeck}
+          loadFlashCardDecks={flashCardsPage.loadFlashCardDecks}
+          onClose={flashCardsPage.closeFlashCardListModal}
+          showSuccessMessage={flashCardsPage.showSuccessMessage}
+        />
+      )}
       <FlashCardGameCountdownModal
         isOpen={flashCardsPage.gameStage === "countdown"}
         onCancel={flashCardsPage.handleCountdownCancelled}
@@ -100,6 +97,7 @@ export default function RevieweeFlashCardsPage() {
         preparedSession={flashCardsPage.preparedSession}
       />
       <FlashCardGameModal
+        key={flashCardsPage.preparedSession?.sessionId ?? "flash-card-game"}
         initialTiming={flashCardsPage.initialTiming}
         isOpen={flashCardsPage.gameStage === "playing"}
         onFinished={flashCardsPage.handleGameFinished}

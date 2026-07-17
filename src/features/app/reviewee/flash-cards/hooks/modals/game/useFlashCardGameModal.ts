@@ -42,6 +42,7 @@ export const useFlashCardGameModal = ({
   const pausedAtRef = useRef<number | null>(null);
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
+  const isSessionActiveRef = useRef(false);
   const timeoutRecordedRef = useRef(false);
   const serverOffsetRef = useRef(0);
   const [currentTiming, setCurrentTiming] =
@@ -102,7 +103,16 @@ export const useFlashCardGameModal = ({
     if (!isOpen || !initialTiming) return;
 
     operationIdRef.current += 1;
+    isSessionActiveRef.current = true;
+    const activeOperationId = operationIdRef.current;
     void Promise.resolve().then(() => {
+      if (
+        !isSessionActiveRef.current ||
+        operationIdRef.current !== activeOperationId
+      ) {
+        return;
+      }
+
       applyTiming(initialTiming);
       setIsExitConfirmationOpen(false);
       setIsFlashCardVisible(true);
@@ -110,6 +120,7 @@ export const useFlashCardGameModal = ({
 
     return () => {
       operationIdRef.current += 1;
+      isSessionActiveRef.current = false;
       isActionInProgressRef.current = false;
     };
   }, [applyTiming, initialTiming, isOpen]);
@@ -123,7 +134,13 @@ export const useFlashCardGameModal = ({
 
   const advanceToNextFlashCard = useCallback(
     async (fallbackPhase: "result" | "timeoutHold") => {
-      if (!preparedSession || isActionInProgressRef.current) return;
+      if (
+        !preparedSession ||
+        !isSessionActiveRef.current ||
+        isActionInProgressRef.current
+      ) {
+        return;
+      }
 
       isActionInProgressRef.current = true;
       setError("");
@@ -132,11 +149,23 @@ export const useFlashCardGameModal = ({
       const activeOperationId = operationIdRef.current;
 
       await wait(CARD_FADE_DURATION_MS);
+      if (
+        !isSessionActiveRef.current ||
+        operationIdRef.current !== activeOperationId
+      ) {
+        return;
+      }
+
       const result = await advanceFlashCardSession({
         sessionId: preparedSession.sessionId,
       });
 
-      if (operationIdRef.current !== activeOperationId) return;
+      if (
+        !isSessionActiveRef.current ||
+        operationIdRef.current !== activeOperationId
+      ) {
+        return;
+      }
 
       if (!result.success || !result.advancement) {
         setError(result.error ?? "Unable to load the next flash card.");
@@ -175,7 +204,13 @@ export const useFlashCardGameModal = ({
   );
 
   const resolveSubmittedAnswer = useCallback(async () => {
-    if (!currentTiming || isActionInProgressRef.current) return;
+    if (
+      !currentTiming ||
+      !isSessionActiveRef.current ||
+      isActionInProgressRef.current
+    ) {
+      return;
+    }
 
     isActionInProgressRef.current = true;
     setError("");
@@ -184,7 +219,12 @@ export const useFlashCardGameModal = ({
       sessionFlashCardId: currentTiming.sessionFlashCardId,
     });
 
-    if (operationIdRef.current !== activeOperationId) return;
+    if (
+      !isSessionActiveRef.current ||
+      operationIdRef.current !== activeOperationId
+    ) {
+      return;
+    }
 
     if (!result.success || !result.answer) {
       setError(result.error ?? "Unable to check your answer.");
@@ -200,7 +240,13 @@ export const useFlashCardGameModal = ({
   }, [currentTiming]);
 
   const resolveTimedOutFlashCard = useCallback(async () => {
-    if (!currentTiming || isActionInProgressRef.current) return;
+    if (
+      !currentTiming ||
+      !isSessionActiveRef.current ||
+      isActionInProgressRef.current
+    ) {
+      return;
+    }
 
     if (timeoutRecordedRef.current) {
       await advanceToNextFlashCard("timeoutHold");
@@ -214,7 +260,12 @@ export const useFlashCardGameModal = ({
       sessionFlashCardId: currentTiming.sessionFlashCardId,
     });
 
-    if (operationIdRef.current !== activeOperationId) return;
+    if (
+      !isSessionActiveRef.current ||
+      operationIdRef.current !== activeOperationId
+    ) {
+      return;
+    }
 
     if (!result.success || !result.timeout) {
       setError(result.error ?? "Unable to record the timed-out flash card.");
@@ -231,6 +282,7 @@ export const useFlashCardGameModal = ({
   useEffect(() => {
     if (
       !isOpen ||
+      !isSessionActiveRef.current ||
       !currentTiming ||
       isExitConfirmationOpen ||
       phase === "transitioning"
@@ -302,10 +354,18 @@ export const useFlashCardGameModal = ({
     setError("");
     setPhase("checking");
     phaseDeadlineRef.current = Date.now() + 3000;
+    const activeOperationId = operationIdRef.current;
     const result = await submitFlashCardAnswer({
       answer: submittedAnswer,
       sessionFlashCardId: currentTiming.sessionFlashCardId,
     });
+
+    if (
+      !isSessionActiveRef.current ||
+      operationIdRef.current !== activeOperationId
+    ) {
+      return;
+    }
 
     if (!result.success || !result.submission) {
       setError(result.error ?? "Unable to submit your answer.");
@@ -339,7 +399,10 @@ export const useFlashCardGameModal = ({
   };
 
   const handleExited = (summary: FlashCardSummary) => {
+    isSessionActiveRef.current = false;
     operationIdRef.current += 1;
+    isActionInProgressRef.current = false;
+    setError("");
     setIsExitConfirmationOpen(false);
     onFinished(summary);
   };

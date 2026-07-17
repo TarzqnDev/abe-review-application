@@ -41,6 +41,7 @@ export const useQuizGameModal = ({
   const pausedAtRef = useRef<number | null>(null);
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
+  const isSessionActiveRef = useRef(false);
   const timeoutRecordedRef = useRef(false);
   const serverOffsetRef = useRef(0);
   const [currentTiming, setCurrentTiming] =
@@ -103,7 +104,16 @@ export const useQuizGameModal = ({
     if (!isOpen || !initialTiming) return;
 
     operationIdRef.current += 1;
+    isSessionActiveRef.current = true;
+    const activeOperationId = operationIdRef.current;
     void Promise.resolve().then(() => {
+      if (
+        !isSessionActiveRef.current ||
+        operationIdRef.current !== activeOperationId
+      ) {
+        return;
+      }
+
       applyTiming(initialTiming);
       setIsExitConfirmationOpen(false);
       setIsQuestionVisible(true);
@@ -111,13 +121,20 @@ export const useQuizGameModal = ({
 
     return () => {
       operationIdRef.current += 1;
+      isSessionActiveRef.current = false;
       isActionInProgressRef.current = false;
     };
   }, [applyTiming, initialTiming, isOpen]);
 
   const advanceToNextQuestion = useCallback(
     async (fallbackPhase: "result" | "timeoutHold") => {
-      if (!preparedSession || isActionInProgressRef.current) return;
+      if (
+        !preparedSession ||
+        !isSessionActiveRef.current ||
+        isActionInProgressRef.current
+      ) {
+        return;
+      }
 
       isActionInProgressRef.current = true;
       setError("");
@@ -126,11 +143,23 @@ export const useQuizGameModal = ({
       const activeOperationId = operationIdRef.current;
 
       await wait(QUESTION_FADE_DURATION_MS);
+      if (
+        !isSessionActiveRef.current ||
+        operationIdRef.current !== activeOperationId
+      ) {
+        return;
+      }
+
       const result = await advanceQuizSession({
         sessionId: preparedSession.sessionId,
       });
 
-      if (operationIdRef.current !== activeOperationId) return;
+      if (
+        !isSessionActiveRef.current ||
+        operationIdRef.current !== activeOperationId
+      ) {
+        return;
+      }
 
       if (!result.success || !result.advancement) {
         setError(result.error ?? "Unable to load the next question.");
@@ -169,7 +198,13 @@ export const useQuizGameModal = ({
   );
 
   const resolveSubmittedAnswer = useCallback(async () => {
-    if (!currentTiming || isActionInProgressRef.current) return;
+    if (
+      !currentTiming ||
+      !isSessionActiveRef.current ||
+      isActionInProgressRef.current
+    ) {
+      return;
+    }
 
     isActionInProgressRef.current = true;
     setError("");
@@ -178,7 +213,12 @@ export const useQuizGameModal = ({
       sessionQuestionId: currentTiming.sessionQuestionId,
     });
 
-    if (operationIdRef.current !== activeOperationId) return;
+    if (
+      !isSessionActiveRef.current ||
+      operationIdRef.current !== activeOperationId
+    ) {
+      return;
+    }
 
     if (!result.success || !result.answer) {
       setError(result.error ?? "Unable to check your answer.");
@@ -194,7 +234,13 @@ export const useQuizGameModal = ({
   }, [currentTiming]);
 
   const resolveTimedOutQuestion = useCallback(async () => {
-    if (!currentTiming || isActionInProgressRef.current) return;
+    if (
+      !currentTiming ||
+      !isSessionActiveRef.current ||
+      isActionInProgressRef.current
+    ) {
+      return;
+    }
 
     if (timeoutRecordedRef.current) {
       await advanceToNextQuestion("timeoutHold");
@@ -208,7 +254,12 @@ export const useQuizGameModal = ({
       sessionQuestionId: currentTiming.sessionQuestionId,
     });
 
-    if (operationIdRef.current !== activeOperationId) return;
+    if (
+      !isSessionActiveRef.current ||
+      operationIdRef.current !== activeOperationId
+    ) {
+      return;
+    }
 
     if (!result.success || !result.timeout) {
       setError(result.error ?? "Unable to record the timed-out question.");
@@ -225,6 +276,7 @@ export const useQuizGameModal = ({
   useEffect(() => {
     if (
       !isOpen ||
+      !isSessionActiveRef.current ||
       !currentTiming ||
       isExitConfirmationOpen ||
       phase === "transitioning"
@@ -294,10 +346,18 @@ export const useQuizGameModal = ({
     setError("");
     setPhase("checking");
     phaseDeadlineRef.current = Date.now() + 3000;
+    const activeOperationId = operationIdRef.current;
     const result = await submitQuizAnswer({
       selectedOptionId,
       sessionQuestionId: currentTiming.sessionQuestionId,
     });
+
+    if (
+      !isSessionActiveRef.current ||
+      operationIdRef.current !== activeOperationId
+    ) {
+      return;
+    }
 
     if (!result.success || !result.submission) {
       setError(result.error ?? "Unable to submit your answer.");
@@ -332,7 +392,10 @@ export const useQuizGameModal = ({
   };
 
   const handleExited = (summary: QuizSummary) => {
+    isSessionActiveRef.current = false;
     operationIdRef.current += 1;
+    isActionInProgressRef.current = false;
+    setError("");
     setIsExitConfirmationOpen(false);
     onFinished(summary);
   };

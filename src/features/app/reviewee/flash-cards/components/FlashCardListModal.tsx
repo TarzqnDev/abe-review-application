@@ -5,35 +5,31 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import DeleteFlashCardConfirmationModal from "@/features/app/reviewee/flash-cards/components/DeleteFlashCardConfirmationModal";
+import FlashCardFormModal from "@/features/app/reviewee/flash-cards/components/FlashCardFormModal";
 import { useFlashCardListModal } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardListModal";
-import type {
-  FlashCard,
-  FlashCardDeck,
-} from "@/features/app/reviewee/flash-cards/types/flashCard";
+import type { FlashCardDeck } from "@/features/app/reviewee/flash-cards/types/flashCard";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
 
 type FlashCardListModalProps = {
   flashCardDeck: FlashCardDeck | null;
   loadFlashCardDecks: () => Promise<void>;
-  onAddFlashCard: (areaId: number) => void;
   onClose: () => void;
-  onEditFlashCard: (areaId: number, flashCard: FlashCard) => void;
   showSuccessMessage: (message: string) => void;
 };
 
 export default function FlashCardListModal({
   flashCardDeck,
   loadFlashCardDecks,
-  onAddFlashCard,
   onClose,
-  onEditFlashCard,
   showSuccessMessage,
 }: FlashCardListModalProps) {
   const {
     dialogRef,
     filteredFlashCards,
+    flashCardFormRequest,
     handleAddFlashCard,
     handleCloseDeleteConfirmation,
+    handleCloseFlashCardForm,
     handleCloseFlashCardListModal,
     handleEditFlashCard,
     handleOpenDeleteConfirmation,
@@ -43,9 +39,7 @@ export default function FlashCardListModal({
     setSearchQuery,
   } = useFlashCardListModal({
     flashCardDeck,
-    onAddFlashCard,
     onClose,
-    onEditFlashCard,
   });
   const { closeWithAnimation, isModalVisible } = useModalAnimation(
     flashCardDeck !== null,
@@ -199,6 +193,16 @@ export default function FlashCardListModal({
       </div>
 
       {/* Modals Section */}
+      <FlashCardFormModal
+        key={
+          flashCardFormRequest?.requestId ?? "nested-flash-card-form-modal"
+        }
+        request={flashCardFormRequest}
+        flashCardDecks={flashCardDeck ? [flashCardDeck] : []}
+        loadFlashCardDecks={loadFlashCardDecks}
+        onClose={handleCloseFlashCardForm}
+        showSuccessMessage={showSuccessMessage}
+      />
       <DeleteFlashCardConfirmationModal
         key={selectedDeleteFlashCard?.id ?? "delete-flash-card-confirmation"}
         flashCard={selectedDeleteFlashCard}

@@ -48,6 +48,7 @@ export default function RevieweeMcqQuizPage() {
         preparedSession={mcqQuiz.preparedSession}
       />
       <QuizGameModal
+        key={mcqQuiz.preparedSession?.sessionId ?? "quiz-game"}
         initialTiming={mcqQuiz.initialTiming}
         isOpen={mcqQuiz.stage === "playing"}
         onFinished={mcqQuiz.handleGameFinished}

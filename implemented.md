@@ -29,3 +29,7 @@
 - Reviewee Quiz Games: MCQ Quiz game cards open an area and difficulty selection flow, preload randomized eligible questions across the selected area's subjects, and run difficulty-specific timed games with countdown, answer feedback, timeout, exit confirmation, and summary states.
 - Reviewee Quiz Games: game attempts and each assigned question result are persisted for completed and early-exit sessions while correct answers remain hidden until server-side validation.
 - Role landing redirects: post-auth navigation now targets `/admin` or `/reviewee`, keeping each role's default destination centralized in its route page.
+- MCQ and flash-card games isolate asynchronous gameplay work and local state per session so early exits cannot surface stale timeout errors in later games.
+- MCQ and flash-card timers remain hidden during between-item and final-summary transitions, and reset to the configured maximum before the next item appears.
+- Flash Card management keeps the card list modal open while add and edit forms appear as nested modal layers above it.
+- Flash Card management success banners appear above the list and form modal layers so successful operations remain visible.

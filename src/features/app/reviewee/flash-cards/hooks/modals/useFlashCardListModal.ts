@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { FlashCardFormModalRequest } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardFormModal";
 import type {
   FlashCard,
   FlashCardDeck,
@@ -6,20 +7,18 @@ import type {
 
 type UseFlashCardListModalProps = {
   flashCardDeck: FlashCardDeck | null;
-  onAddFlashCard: (areaId: number) => void;
   onClose: () => void;
-  onEditFlashCard: (areaId: number, flashCard: FlashCard) => void;
 };
 
 export const useFlashCardListModal = ({
   flashCardDeck,
-  onAddFlashCard,
   onClose,
-  onEditFlashCard,
 }: UseFlashCardListModalProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDeleteFlashCard, setSelectedDeleteFlashCard] =
     useState<FlashCard | null>(null);
+  const [flashCardFormRequest, setFlashCardFormRequest] =
+    useState<FlashCardFormModalRequest | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +33,7 @@ export const useFlashCardListModal = ({
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (selectedDeleteFlashCard) return;
+      if (flashCardFormRequest || selectedDeleteFlashCard) return;
 
       if (event.key === "Escape") {
         onClose();
@@ -72,7 +71,7 @@ export const useFlashCardListModal = ({
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocusedElement?.focus();
     };
-  }, [flashCardDeck, onClose, selectedDeleteFlashCard]);
+  }, [flashCardDeck, flashCardFormRequest, onClose, selectedDeleteFlashCard]);
 
   const filteredFlashCards = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase();
@@ -92,19 +91,36 @@ export const useFlashCardListModal = ({
   const handleCloseFlashCardListModal = () => {
     setSearchQuery("");
     setSelectedDeleteFlashCard(null);
+    setFlashCardFormRequest(null);
     onClose();
   };
 
   const handleAddFlashCard = () => {
     if (!flashCardDeck) return;
 
-    onAddFlashCard(flashCardDeck.areaId);
+    setFlashCardFormRequest({
+      areaId: flashCardDeck.areaId,
+      flashCard: null,
+      lockArea: true,
+      mode: "create",
+      requestId: crypto.randomUUID(),
+    });
   };
 
   const handleEditFlashCard = (flashCard: FlashCard) => {
     if (!flashCardDeck) return;
 
-    onEditFlashCard(flashCardDeck.areaId, flashCard);
+    setFlashCardFormRequest({
+      areaId: flashCardDeck.areaId,
+      flashCard,
+      lockArea: true,
+      mode: "edit",
+      requestId: crypto.randomUUID(),
+    });
+  };
+
+  const handleCloseFlashCardForm = () => {
+    setFlashCardFormRequest(null);
   };
 
   const handleOpenDeleteConfirmation = (flashCard: FlashCard) => {
@@ -118,8 +134,10 @@ export const useFlashCardListModal = ({
   return {
     dialogRef,
     filteredFlashCards,
+    flashCardFormRequest,
     handleAddFlashCard,
     handleCloseDeleteConfirmation,
+    handleCloseFlashCardForm,
     handleCloseFlashCardListModal,
     handleEditFlashCard,
     handleOpenDeleteConfirmation,

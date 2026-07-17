@@ -1,23 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchFlashCardDecks } from "@/features/app/reviewee/flash-cards/actions/fetch-flash-card-decks.action";
 import { prepareFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/prepare-flash-card-session.action";
-import type {
-  FlashCard,
-  FlashCardDeck,
-} from "@/features/app/reviewee/flash-cards/types/flashCard";
+import type { FlashCardFormModalRequest } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardFormModal";
+import type { FlashCardDeck } from "@/features/app/reviewee/flash-cards/types/flashCard";
 import type {
   FlashCardSummary,
   FlashCardTiming,
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
-
-export type FlashCardFormModalRequest = {
-  requestId: string;
-  mode: "create" | "edit";
-  areaId: number | null;
-  lockArea: boolean;
-  flashCard: FlashCard | null;
-};
 
 export type RevieweeFlashCardGameStage =
   | "idle"
@@ -94,26 +84,6 @@ export const useRevieweeFlashCards = () => {
       areaId: null,
       lockArea: false,
       flashCard: null,
-    });
-  };
-
-  const openAddFlashCardModal = (areaId: number) => {
-    setFormModalRequest({
-      requestId: createRequestId(),
-      mode: "create",
-      areaId,
-      lockArea: true,
-      flashCard: null,
-    });
-  };
-
-  const openEditFlashCardModal = (areaId: number, flashCard: FlashCard) => {
-    setFormModalRequest({
-      requestId: createRequestId(),
-      mode: "edit",
-      areaId,
-      lockArea: true,
-      flashCard,
     });
   };
 
@@ -197,9 +167,7 @@ export const useRevieweeFlashCards = () => {
     isPreparingGame: preparingAreaId !== null,
     loadFlashCardDecks,
     noFlashCards,
-    openAddFlashCardModal,
     openCreateFlashCardModal,
-    openEditFlashCardModal,
     openFlashCardListModal: setSelectedAreaId,
     preparedSession,
     preparingAreaId,

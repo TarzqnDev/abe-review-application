@@ -44,7 +44,10 @@ export default function QuizGameModal(props: QuizGameModalProps) {
   }
 
   const isAnswerLocked = phase !== "answering";
-  const showResult = phase === "result" && answerReveal !== null;
+  const showResult =
+    (phase === "result" || phase === "transitioning") &&
+    answerReveal !== null;
+  const showTimer = phase !== "result" && phase !== "transitioning";
   const resultIsCorrect = answerReveal?.isCorrect === true;
   const timerIsCritical = remainingSeconds <= 3;
 
@@ -82,9 +85,9 @@ export default function QuizGameModal(props: QuizGameModalProps) {
           <div className="relative min-h-[48px] w-full max-w-[330px]">
             <div
               className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                showResult ? "opacity-0" : "opacity-100"
+                showTimer ? "opacity-100" : "opacity-0"
               }`}
-              aria-hidden={showResult}
+              aria-hidden={!showTimer}
             >
               <div
                 className="flex h-[46px] items-center gap-2 rounded border border-slate-200 bg-slate-50 px-4 text-base text-slate-500 transition-opacity duration-300"
