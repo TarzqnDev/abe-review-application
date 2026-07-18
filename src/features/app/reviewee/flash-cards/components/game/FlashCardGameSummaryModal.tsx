@@ -1,9 +1,3 @@
-import {
-  CheckCircleIcon,
-  ClockIcon,
-  MinusCircleIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
 import { useFlashCardGameSummaryModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useFlashCardGameSummaryModal";
 import type { FlashCardSummary } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
@@ -14,114 +8,113 @@ export type FlashCardGameSummaryModalProps = {
   summary: FlashCardSummary | null;
 };
 
-const formatDuration = (durationSeconds: number) => {
-  const minutes = Math.floor(durationSeconds / 60);
-  const seconds = durationSeconds % 60;
-
-  if (minutes === 0) return `${seconds} seconds`;
-  return `${minutes}m ${seconds}s`;
-};
-
 export default function FlashCardGameSummaryModal(
   props: FlashCardGameSummaryModalProps,
 ) {
-  const { closeButtonRef, modalAccessibility } =
-    useFlashCardGameSummaryModal(props);
+  const {
+    closeButtonRef,
+    donutBackground,
+    duration,
+    modalAccessibility,
+    performanceMessage,
+    scorePercentage,
+  } = useFlashCardGameSummaryModal(props);
   const { dialogRef, isVisible } = modalAccessibility;
 
   if (!props.summary) return null;
 
-  const isCompleted = props.summary.status === "completed";
-
   return (
     <QuizModalShell
-      className="max-w-[580px] overflow-hidden"
+      className="max-h-[calc(100vh-2rem)] max-w-[475px] overflow-y-auto"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="flash-card-game-summary-title"
     >
-      <div className="bg-teal-600 px-6 py-7 text-center text-white sm:px-9">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/15">
-          <CheckCircleIcon className="h-8 w-8" />
-        </div>
+      <div className="px-6 py-9 sm:px-10 sm:pb-10 sm:pt-10">
         <h2
           id="flash-card-game-summary-title"
-          className="mt-3 text-2xl font-semibold"
+          className="text-center text-base font-medium text-slate-950"
         >
-          {isCompleted ? "Game Complete!" : "Game Ended"}
+          Your score percentage was:
         </h2>
-        <p className="mt-1 text-sm text-teal-50">
-          {props.summary.areaName} · Flash Cards
+
+        <div
+          aria-label={`${scorePercentage}% correct. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, ${props.summary.timedOut} timed out, and ${props.summary.notPlayed} not played.`}
+          className="mx-auto mt-5 flex h-28 w-28 items-center justify-center rounded-full"
+          role="img"
+          style={{ background: donutBackground }}
+        >
+          <div className="flex h-[88px] w-[88px] flex-col items-center justify-center rounded-full bg-white">
+            <span className="text-xl font-semibold leading-5 text-slate-950">
+              {scorePercentage}%
+            </span>
+            <span className="text-xs text-slate-500">Correct</span>
+          </div>
+        </div>
+
+        <p className="mt-3 text-center text-sm font-medium text-[#009d8f]">
+          {performanceMessage}
         </p>
-      </div>
 
-      <div className="px-6 py-7 sm:px-9 sm:py-8">
-        <div className="text-center">
-          <p className="text-4xl font-semibold text-slate-900">
-            {props.summary.accuracyPercentage}%
-          </p>
-          <p className="mt-1 text-sm text-slate-500">Answer accuracy</p>
-        </div>
+        <section className="mt-6" aria-labelledby="flash-card-score-summary-heading">
+          <h3
+            id="flash-card-score-summary-heading"
+            className="text-sm font-medium text-slate-950"
+          >
+            Score Summary
+          </h3>
 
-        <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded border border-teal-100 bg-teal-50 p-3 text-center">
-            <CheckCircleIcon className="mx-auto h-5 w-5 text-teal-600" />
-            <p className="mt-1 text-xl font-semibold text-teal-700">
-              {props.summary.correct}
-            </p>
-            <p className="text-xs text-teal-700">Correct</p>
-          </div>
-          <div className="rounded border border-red-100 bg-red-50 p-3 text-center">
-            <XCircleIcon className="mx-auto h-5 w-5 text-red-500" />
-            <p className="mt-1 text-xl font-semibold text-red-600">
-              {props.summary.incorrect}
-            </p>
-            <p className="text-xs text-red-600">Incorrect</p>
-          </div>
-          <div className="rounded border border-amber-100 bg-amber-50 p-3 text-center">
-            <ClockIcon className="mx-auto h-5 w-5 text-amber-600" />
-            <p className="mt-1 text-xl font-semibold text-amber-700">
-              {props.summary.timedOut}
-            </p>
-            <p className="text-xs text-amber-700">Timed Out</p>
-          </div>
-          <div className="rounded border border-slate-200 bg-slate-50 p-3 text-center">
-            <MinusCircleIcon className="mx-auto h-5 w-5 text-slate-500" />
-            <p className="mt-1 text-xl font-semibold text-slate-700">
-              {props.summary.notPlayed}
-            </p>
-            <p className="text-xs text-slate-500">Not Played</p>
-          </div>
-        </div>
+          <dl className="mt-1 grid grid-cols-2 gap-2.5">
+            <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-slate-200 bg-slate-50 px-2 text-center">
+              <dt className="order-2 mt-1 text-[13px] text-slate-500">
+                Flash Cards Answered
+              </dt>
+              <dd className="order-1 text-xl font-semibold text-slate-500">
+                {props.summary.answered}/{props.summary.totalQuestions}
+              </dd>
+            </div>
+            <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-slate-200 bg-slate-50 px-2 text-center">
+              <dt className="order-2 mt-1 text-[13px] text-slate-500">
+                Game Duration
+              </dt>
+              <dd className="order-1 text-xl font-semibold text-slate-500">
+                {duration}
+              </dd>
+            </div>
+          </dl>
 
-        <dl className="mt-6 grid gap-3 rounded border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-3">
-          <div>
-            <dt className="text-slate-500">Progress</dt>
-            <dd className="mt-1 font-semibold text-slate-900">
-              {props.summary.questionsReached}/
-              {props.summary.totalQuestions}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-slate-500">Completion</dt>
-            <dd className="mt-1 font-semibold text-slate-900">
-              {props.summary.completionPercentage}%
-            </dd>
-          </div>
-          <div>
-            <dt className="text-slate-500">Duration</dt>
-            <dd className="mt-1 font-semibold text-slate-900">
-              {formatDuration(props.summary.durationSeconds)}
-            </dd>
-          </div>
-        </dl>
+          <dl className="mt-2.5 grid grid-cols-3 gap-2.5">
+            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-[#009d8f] bg-teal-50 px-1 text-center">
+              <dt className="order-2 mt-0.5 text-[13px] text-[#009d8f]">
+                Correct
+              </dt>
+              <dd className="order-1 text-base font-medium text-[#009d8f]">
+                {props.summary.correct}
+              </dd>
+            </div>
+            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-red-500 bg-red-50 px-1 text-center">
+              <dt className="order-2 mt-0.5 text-[13px] text-red-500">Wrong</dt>
+              <dd className="order-1 text-base font-medium text-red-500">
+                {props.summary.incorrect}
+              </dd>
+            </div>
+            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-amber-500 bg-amber-50 px-1 text-center">
+              <dt className="order-2 mt-0.5 text-[13px] text-amber-500">
+                Timed Out
+              </dt>
+              <dd className="order-1 text-base font-medium text-amber-500">
+                {props.summary.timedOut}
+              </dd>
+            </div>
+          </dl>
+        </section>
 
         <button
           ref={closeButtonRef}
           type="button"
           onClick={props.onClose}
-          className="mt-7 h-[50px] w-full cursor-pointer rounded bg-teal-600 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="mt-5 h-[50px] w-full cursor-pointer rounded bg-[#009d8f] text-base font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
         >
           Back to Flash Cards
         </button>

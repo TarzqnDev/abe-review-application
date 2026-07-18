@@ -37,3 +37,4 @@
 - Question Bank: question list answer states now use the reference teal palette, and success banners render above every nested question-bank modal.
 - Activity History: reviewees can view latest-first MCQ and flash-card sessions with overview metrics, activity-type and status filters, search, pagination, and complete session details in a modal.
 - Activity History: terminal game sessions are synchronized into a dedicated, backfilled history table while item-level answers remain in their mode-specific session tables and are exposed only through an ownership-checked details function.
+- MCQ and flash-card game summaries now use the score-focused reference layout with a segmented result donut, performance feedback, answered and duration cards, and compact result totals while preserving early-exit results and existing return actions.
