@@ -38,3 +38,7 @@
 - Activity History: reviewees can view latest-first MCQ and flash-card sessions with overview metrics, activity-type and status filters, search, pagination, and complete session details in a modal.
 - Activity History: terminal game sessions are synchronized into a dedicated, backfilled history table while item-level answers remain in their mode-specific session tables and are exposed only through an ownership-checked details function.
 - MCQ and flash-card game summaries now use the score-focused reference layout with a segmented result donut, performance feedback, answered and duration cards, and compact result totals while preserving early-exit results and existing return actions.
+- MCQ and flash-card game summaries include completion headers with mode-specific titles and session metadata.
+- MCQ and flash-card games use mode-specific exit notices with responsive reference-matched confirmation actions.
+- Application metadata now uses the product title "ABE Review App" and the description "Practice and track your progress with MCQ quizzes and flash cards."
+- The shared admin and reviewee navbar uses a compact teal logout popover matching the supplied reference.

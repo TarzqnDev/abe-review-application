@@ -41,6 +41,8 @@ export default function Navbar({ role }: NavbarProps) {
             type="button"
             className="flex cursor-pointer items-center gap-3 text-right"
             onClick={handleToggleAccountMenu}
+            aria-expanded={openAccountMenu}
+            aria-controls="account-menu"
           >
             <span>
               <span className="block text-sm font-medium text-slate-950">
@@ -55,11 +57,14 @@ export default function Navbar({ role }: NavbarProps) {
           </button>
 
           {openAccountMenu && (
-            <div className="absolute right-0 top-12 z-50 w-44 rounded-md border border-slate-200 bg-white shadow-sm">
+            <div
+              id="account-menu"
+              className="absolute right-0 top-12 z-50 w-[180px] rounded-lg border border-slate-200 bg-white p-3.5 shadow-md"
+            >
               <button
                 type="button"
                 onClick={handleLogout}
-                className="w-full cursor-pointer px-4 py-3 text-left text-sm text-slate-600 hover:bg-slate-50"
+                className="flex h-10 w-full cursor-pointer items-center justify-center rounded bg-[#008477] px-4 text-sm font-medium text-white transition-colors hover:bg-[#006f65] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#008477]"
               >
                 Logout
               </button>

@@ -1,3 +1,4 @@
+import GameSummaryHeader from "@/features/app/reviewee/components/GameSummaryHeader";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 import { useGameSummaryModal } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useGameSummaryModal";
 import type { QuizSummary } from "@/features/app/reviewee/mcq-quiz/types/quiz";
@@ -29,13 +30,20 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
       isVisible={isVisible}
       labelledBy="game-summary-title"
     >
+      <GameSummaryHeader
+        metadata={`${props.summary.areaName} • ${props.summary.gameType} • ${props.summary.difficulty}`}
+        title={
+          props.summary.endReason === "completed"
+            ? "MCQ Quiz Complete!"
+            : "MCQ Quiz Ended!"
+        }
+        titleId="game-summary-title"
+      />
+
       <div className="px-6 py-9 sm:px-10 sm:pb-10 sm:pt-10">
-        <h2
-          id="game-summary-title"
-          className="text-center text-base font-medium text-slate-950"
-        >
+        <p className="text-center text-base font-medium text-slate-950">
           Your score percentage was:
-        </h2>
+        </p>
 
         <div
           aria-label={`${scorePercentage}% correct. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, ${props.summary.timedOut} timed out, and ${props.summary.notPlayed} not played.`}

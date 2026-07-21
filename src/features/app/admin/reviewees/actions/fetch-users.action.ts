@@ -42,8 +42,6 @@ export const fetchUsers = async () => {
       throw new Error(error.message);
     }
 
-    console.log("data:", data);
-
     return {
       success: true,
       users: (data ?? []).map((user) => ({

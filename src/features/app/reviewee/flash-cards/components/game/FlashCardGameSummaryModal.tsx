@@ -1,3 +1,4 @@
+import GameSummaryHeader from "@/features/app/reviewee/components/GameSummaryHeader";
 import { useFlashCardGameSummaryModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useFlashCardGameSummaryModal";
 import type { FlashCardSummary } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
@@ -31,13 +32,20 @@ export default function FlashCardGameSummaryModal(
       isVisible={isVisible}
       labelledBy="flash-card-game-summary-title"
     >
+      <GameSummaryHeader
+        metadata={props.summary.areaName}
+        title={
+          props.summary.endReason === "completed"
+            ? "Flash Card Game Complete!"
+            : "Flash Card Game Ended!"
+        }
+        titleId="flash-card-game-summary-title"
+      />
+
       <div className="px-6 py-9 sm:px-10 sm:pb-10 sm:pt-10">
-        <h2
-          id="flash-card-game-summary-title"
-          className="text-center text-base font-medium text-slate-950"
-        >
+        <p className="text-center text-base font-medium text-slate-950">
           Your score percentage was:
-        </h2>
+        </p>
 
         <div
           aria-label={`${scorePercentage}% correct. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, ${props.summary.timedOut} timed out, and ${props.summary.notPlayed} not played.`}
