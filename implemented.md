@@ -22,7 +22,7 @@
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
 - Payments: payment record IDs use generated bigint values.
 - Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.
-- ABE Trivia: administrators can view trivia cards and open the Create Trivia modal for trivia content and publish date; the feature currently uses hardcoded local UI data with no backend integration.
+- ABE Trivia: administrators can load, create, edit, and delete database-backed trivia through a reusable create/edit form modal with a nested delete confirmation; trivia is grouped by publish month and paginated four items per page.
 - Flash Cards: reviewees can manage database-backed flash cards grouped by subject area, create and edit cards through one reusable form, search cards in an area list, and delete cards after confirmation.
 - Flash Card Games: Play Now prepares a randomized server-side snapshot of the selected area's cards, runs a three-second countdown and timed free-text game, records correct, incorrect, timed-out, and early-exit results, and ends with a persisted summary.
 - Flash Card Games: correct answers use green feedback, incorrect answers use red feedback and reveal the saved answer in green, and timed-out cards advance without revealing the answer.

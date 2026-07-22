@@ -1,39 +1,52 @@
 import type { AdminTrivia } from "@/features/app/admin/trivias/types/adminTrivia";
-import { CalendarDaysIcon, LightBulbIcon } from "@heroicons/react/24/outline";
+import {
+  formatTriviaDate,
+  isTriviaToday,
+} from "@/features/app/admin/trivias/utils/adminTriviaDates";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 type TriviaCardProps = {
+  onEdit: (trivia: AdminTrivia) => void;
   trivia: AdminTrivia;
 };
 
-export default function TriviaCard({ trivia }: TriviaCardProps) {
-  const isPublished = trivia.status === "Published";
+export default function TriviaCard({ onEdit, trivia }: TriviaCardProps) {
+  const isToday = isTriviaToday(trivia.publishDate);
 
   return (
-    <article className="flex min-h-[210px] flex-col rounded-md border border-slate-200 bg-white p-6 transition-shadow hover:shadow-sm">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-amber-50 text-amber-600">
-          <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
+    <article
+      className={`rounded-lg border px-5 py-5 transition-shadow hover:shadow-sm ${
+        isToday
+          ? "border-teal-600 bg-teal-50/70"
+          : "border-slate-200 bg-white"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-5">
+        <div>
+          <h3 className="text-base font-semibold text-slate-950">
+            {isToday ? "Today’s Trivia" : "This Week Trivia"}
+          </h3>
+          <time
+            dateTime={trivia.publishDate}
+            className="mt-0.5 block text-sm text-slate-500"
+          >
+            {formatTriviaDate(trivia.publishDate)}
+          </time>
         </div>
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-            isPublished
-              ? "bg-emerald-50 text-emerald-700"
-              : "bg-sky-50 text-sky-700"
-          }`}
+
+        <button
+          type="button"
+          onClick={() => onEdit(trivia)}
+          className="inline-flex shrink-0 cursor-pointer items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-teal-700 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
         >
-          {trivia.status}
-        </span>
+          <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
+          Edit Trivia
+        </button>
       </div>
 
-      <p className="mt-5 flex-1 text-sm leading-6 font-medium text-slate-800">
+      <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-950">
         {trivia.content}
       </p>
-
-      <div className="mt-5 flex items-center gap-2 border-t border-slate-100 pt-4 text-sm text-slate-500">
-        <CalendarDaysIcon className="h-4 w-4" aria-hidden="true" />
-        <span>{isPublished ? "Published" : "Publishes"}</span>
-        <time>{trivia.publishDate}</time>
-      </div>
     </article>
   );
 }
