@@ -6,6 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 import DeleteFlashCardConfirmationModal from "@/features/app/reviewee/flash-cards/components/DeleteFlashCardConfirmationModal";
 import FlashCardFormModal from "@/features/app/reviewee/flash-cards/components/FlashCardFormModal";
+import FlashCardListPagination from "@/features/app/reviewee/flash-cards/components/FlashCardListPagination";
 import { useFlashCardListModal } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardListModal";
 import type { FlashCardDeck } from "@/features/app/reviewee/flash-cards/types/flashCard";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
@@ -24,8 +25,10 @@ export default function FlashCardListModal({
   showSuccessMessage,
 }: FlashCardListModalProps) {
   const {
+    currentPage,
     dialogRef,
     filteredFlashCards,
+    firstFlashCardNumber,
     flashCardFormRequest,
     handleAddFlashCard,
     handleCloseDeleteConfirmation,
@@ -33,10 +36,14 @@ export default function FlashCardListModal({
     handleCloseFlashCardListModal,
     handleEditFlashCard,
     handleOpenDeleteConfirmation,
+    handlePageChange,
+    handleSearchQueryChange,
+    lastFlashCardNumber,
+    paginatedFlashCards,
     searchQuery,
     searchInputRef,
     selectedDeleteFlashCard,
-    setSearchQuery,
+    totalPages,
   } = useFlashCardListModal({
     flashCardDeck,
     onClose,
@@ -96,7 +103,7 @@ export default function FlashCardListModal({
                   ref={searchInputRef}
                   type="search"
                   value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onChange={handleSearchQueryChange}
                   placeholder="Search a flash card"
                   className="h-10 w-full rounded-full border border-slate-200 bg-white pr-4 pl-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
                 />
@@ -125,8 +132,8 @@ export default function FlashCardListModal({
             </button>
 
             <div className="mt-5 flex flex-col gap-3">
-              {filteredFlashCards.length > 0 ? (
-                filteredFlashCards.map((flashCard) => {
+              {paginatedFlashCards.length > 0 ? (
+                paginatedFlashCards.map((flashCard) => {
                   const flashCardNumber =
                     (flashCardDeck?.cards.findIndex(
                       (deckFlashCard) => deckFlashCard.id === flashCard.id,
@@ -188,6 +195,15 @@ export default function FlashCardListModal({
                 </div>
               )}
             </div>
+
+            <FlashCardListPagination
+              currentPage={currentPage}
+              firstFlashCardNumber={firstFlashCardNumber}
+              lastFlashCardNumber={lastFlashCardNumber}
+              onPageChange={handlePageChange}
+              totalFlashCards={filteredFlashCards.length}
+              totalPages={totalPages}
+            />
           </div>
         </div>
       </div>

@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { FlashCardFormModalRequest } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardFormModal";
 import type {
   FlashCard,
@@ -10,6 +16,8 @@ type UseFlashCardListModalProps = {
   onClose: () => void;
 };
 
+const FLASH_CARDS_PER_PAGE = 10;
+
 export const useFlashCardListModal = ({
   flashCardDeck,
   onClose,
@@ -19,6 +27,7 @@ export const useFlashCardListModal = ({
     useState<FlashCard | null>(null);
   const [flashCardFormRequest, setFlashCardFormRequest] =
     useState<FlashCardFormModalRequest | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const dialogRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,10 +97,29 @@ export const useFlashCardListModal = ({
     );
   }, [flashCardDeck?.cards, searchQuery]);
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredFlashCards.length / FLASH_CARDS_PER_PAGE),
+  );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const firstFlashCardIndex = (safeCurrentPage - 1) * FLASH_CARDS_PER_PAGE;
+  const paginatedFlashCards = filteredFlashCards.slice(
+    firstFlashCardIndex,
+    firstFlashCardIndex + FLASH_CARDS_PER_PAGE,
+  );
+  const firstFlashCardNumber = filteredFlashCards.length
+    ? firstFlashCardIndex + 1
+    : 0;
+  const lastFlashCardNumber = Math.min(
+    firstFlashCardIndex + FLASH_CARDS_PER_PAGE,
+    filteredFlashCards.length,
+  );
+
   const handleCloseFlashCardListModal = () => {
     setSearchQuery("");
     setSelectedDeleteFlashCard(null);
     setFlashCardFormRequest(null);
+    setCurrentPage(1);
     onClose();
   };
 
@@ -131,9 +159,20 @@ export const useFlashCardListModal = ({
     setSelectedDeleteFlashCard(null);
   };
 
+  const handleSearchQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(Math.min(Math.max(page, 1), totalPages));
+  };
+
   return {
+    currentPage: safeCurrentPage,
     dialogRef,
     filteredFlashCards,
+    firstFlashCardNumber,
     flashCardFormRequest,
     handleAddFlashCard,
     handleCloseDeleteConfirmation,
@@ -141,9 +180,13 @@ export const useFlashCardListModal = ({
     handleCloseFlashCardListModal,
     handleEditFlashCard,
     handleOpenDeleteConfirmation,
+    handlePageChange,
+    handleSearchQueryChange,
+    lastFlashCardNumber,
+    paginatedFlashCards,
     searchQuery,
     searchInputRef,
     selectedDeleteFlashCard,
-    setSearchQuery,
+    totalPages,
   };
 };
