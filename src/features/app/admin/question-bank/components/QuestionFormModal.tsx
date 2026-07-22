@@ -25,6 +25,7 @@ type QuestionFormData = {
 
 type QuestionFormModalProps = {
   loadSubjectQuestions: (subjectId: number) => Promise<void>;
+  onClose: () => void;
   questionSets: AdminQuestionSet[];
   questionSummaries: QuestionBankSummary[];
   request: QuestionFormModalRequest | null;
@@ -34,6 +35,7 @@ type QuestionFormModalProps = {
 
 export default function QuestionFormModal({
   loadSubjectQuestions,
+  onClose,
   questionSets,
   questionSummaries,
   request,
@@ -53,6 +55,7 @@ export default function QuestionFormModal({
     selectedEditQuestionId,
   } = useQuestionFormModal({
     loadSubjectQuestions,
+    onClose,
     questionSets,
     questionSummaries,
     request,

@@ -61,6 +61,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
       <QuizModalShell
         className="max-h-[calc(100dvh-2rem)] max-w-[795px] overflow-y-auto p-5 sm:p-8 lg:px-9 lg:py-10"
         dialogRef={dialogRef}
+        isInert={isExitConfirmationOpen}
         isOpen={props.isOpen}
         isVisible={isVisible}
         labelledBy="flash-card-game-title"

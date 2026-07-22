@@ -67,6 +67,7 @@ export const useFlashCardGameModal = ({
 
   const modalAccessibility = useQuizModalAccessibility({
     initialFocusRef: answerInputRef,
+    isFocusTrapSuspended: isExitConfirmationOpen,
     isOpen,
     onClose: handleRequestClose,
   });

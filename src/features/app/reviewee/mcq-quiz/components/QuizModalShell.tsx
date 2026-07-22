@@ -4,6 +4,7 @@ type QuizModalShellProps = {
   children: ReactNode;
   className?: string;
   dialogRef: RefObject<HTMLDivElement | null>;
+  isInert?: boolean;
   isOpen: boolean;
   isVisible: boolean;
   labelledBy: string;
@@ -16,6 +17,7 @@ export default function QuizModalShell({
   children,
   className = "",
   dialogRef,
+  isInert = false,
   isOpen,
   isVisible,
   labelledBy,
@@ -32,9 +34,10 @@ export default function QuizModalShell({
       }`}
       onMouseDown={onBackdropMouseDown}
       role="dialog"
-      aria-modal="true"
+      aria-modal={isInert ? undefined : "true"}
       aria-labelledby={labelledBy}
-      aria-hidden={!isOpen}
+      aria-hidden={!isOpen || isInert}
+      inert={isInert ? true : undefined}
     >
       <div
         ref={dialogRef}

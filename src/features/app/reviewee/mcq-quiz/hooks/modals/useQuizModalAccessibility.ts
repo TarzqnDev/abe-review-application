@@ -5,6 +5,7 @@ import {
   type MouseEvent,
   type RefObject,
 } from "react";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const MODAL_ANIMATION_DURATION_MS = 300;
 const FOCUSABLE_SELECTOR =
@@ -12,18 +13,27 @@ const FOCUSABLE_SELECTOR =
 
 type UseQuizModalAccessibilityOptions = {
   initialFocusRef?: RefObject<HTMLElement | null>;
+  isFocusTrapSuspended?: boolean;
   isOpen: boolean;
   onClose?: () => void;
 };
 
 export const useQuizModalAccessibility = ({
   initialFocusRef,
+  isFocusTrapSuspended = false,
   isOpen,
   onClose,
 }: UseQuizModalAccessibilityOptions) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onCloseRef = useRef(onClose);
   const [isVisible, setIsVisible] = useState(false);
+
+  useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     const animationFrame = requestAnimationFrame(() => {
@@ -34,11 +44,9 @@ export const useQuizModalAccessibility = ({
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isFocusTrapSuspended) return;
 
-    const previousOverflow = document.body.style.overflow;
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = "hidden";
 
     const focusFrame = requestAnimationFrame(() => {
       const firstFocusableElement =
@@ -48,9 +56,9 @@ export const useQuizModalAccessibility = ({
     });
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && onClose) {
+      if (event.key === "Escape" && onCloseRef.current) {
         event.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -85,11 +93,10 @@ export const useQuizModalAccessibility = ({
 
     return () => {
       cancelAnimationFrame(focusFrame);
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocusedElement?.focus();
     };
-  }, [initialFocusRef, isOpen, onClose]);
+  }, [initialFocusRef, isFocusTrapSuspended, isOpen]);
 
   useEffect(
     () => () => {
@@ -110,7 +117,7 @@ export const useQuizModalAccessibility = ({
   };
 
   const handleBackdropMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget && onClose) onClose();
+    if (event.target === event.currentTarget) onCloseRef.current?.();
   };
 
   return {

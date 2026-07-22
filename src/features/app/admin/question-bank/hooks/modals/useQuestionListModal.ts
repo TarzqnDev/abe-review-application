@@ -8,6 +8,7 @@ import type { QuestionListModalRequest } from "@/features/app/admin/question-ban
 
 type UseQuestionListModalProps = {
   onAddQuestion: (summary: QuestionBankSummary) => void;
+  onClose: () => void;
   onEditQuestion: (
     summary: QuestionBankSummary,
     question: AdminQuestion,
@@ -20,6 +21,7 @@ const QUESTIONS_PER_PAGE = 5;
 
 export const useQuestionListModal = ({
   onAddQuestion,
+  onClose,
   onEditQuestion,
   questionSets,
   request,
@@ -93,6 +95,7 @@ export const useQuestionListModal = ({
     setSelectedDeleteQuestion(null);
     setSearchQuery("");
     setCurrentPage(1);
+    onClose();
   };
 
   const handleAddQuestion = () => {

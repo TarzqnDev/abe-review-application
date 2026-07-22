@@ -10,6 +10,7 @@ import type {
   FlashCard,
   FlashCardDeck,
 } from "@/features/app/reviewee/flash-cards/types/flashCard";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 type UseFlashCardListModalProps = {
   flashCardDeck: FlashCardDeck | null;
@@ -30,22 +31,33 @@ export const useFlashCardListModal = ({
   const [currentPage, setCurrentPage] = useState(1);
   const dialogRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const onCloseRef = useRef(onClose);
+  const isNestedModalOpen = Boolean(
+    flashCardFormRequest || selectedDeleteFlashCard,
+  );
+  const isNestedModalOpenRef = useRef(isNestedModalOpen);
+  const isOpen = flashCardDeck !== null;
+
+  useBodyScrollLock(isOpen);
 
   useEffect(() => {
-    if (!flashCardDeck) return;
+    onCloseRef.current = onClose;
+    isNestedModalOpenRef.current = isNestedModalOpen;
+  }, [isNestedModalOpen, onClose]);
 
-    const previousOverflow = document.body.style.overflow;
+  useEffect(() => {
+    if (!isOpen) return;
+
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
     const focusFrame = requestAnimationFrame(() =>
       searchInputRef.current?.focus(),
     );
-    document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (flashCardFormRequest || selectedDeleteFlashCard) return;
+      if (isNestedModalOpenRef.current) return;
 
       if (event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -76,11 +88,10 @@ export const useFlashCardListModal = ({
 
     return () => {
       cancelAnimationFrame(focusFrame);
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocusedElement?.focus();
     };
-  }, [flashCardDeck, flashCardFormRequest, onClose, selectedDeleteFlashCard]);
+  }, [isOpen]);
 
   const filteredFlashCards = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase();
@@ -183,6 +194,7 @@ export const useFlashCardListModal = ({
     handlePageChange,
     handleSearchQueryChange,
     lastFlashCardNumber,
+    isNestedModalOpen,
     paginatedFlashCards,
     searchQuery,
     searchInputRef,

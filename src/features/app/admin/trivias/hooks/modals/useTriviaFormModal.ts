@@ -3,6 +3,7 @@ import { createTrivia } from "@/features/app/admin/trivias/actions/create-trivia
 import { updateTrivia } from "@/features/app/admin/trivias/actions/update-trivia.action";
 import type { TriviaFormModalRequest } from "@/features/app/admin/trivias/types/adminTrivia";
 import { getLocalDateValue } from "@/features/app/admin/trivias/utils/adminTriviaDates";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 type UseTriviaFormModalProps = {
   closeWithAnimation: (onClosed: () => void) => void;
@@ -36,6 +37,8 @@ export const useTriviaFormModal = ({
   const originalPublishDate = request?.trivia?.publishDate ?? "";
   const todayDate = getLocalDateValue();
 
+  useBodyScrollLock(isOpen);
+
   useEffect(() => {
     closeWithAnimationRef.current = closeWithAnimation;
     onCloseRef.current = onClose;
@@ -44,12 +47,19 @@ export const useTriviaFormModal = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const previousOverflow = document.body.style.overflow;
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
     const focusFrame = requestAnimationFrame(() =>
       contentInputRef.current?.focus(),
     );
-    document.body.style.overflow = "hidden";
+
+    return () => {
+      cancelAnimationFrame(focusFrame);
+      previouslyFocusedElement?.focus();
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -87,10 +97,7 @@ export const useTriviaFormModal = ({
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      cancelAnimationFrame(focusFrame);
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
-      previouslyFocusedElement?.focus();
     };
   }, [
     isDeleteConfirmationOpen,

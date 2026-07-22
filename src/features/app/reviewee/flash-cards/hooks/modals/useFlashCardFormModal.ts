@@ -11,6 +11,7 @@ import type {
   FlashCard,
   FlashCardDeck,
 } from "@/features/app/reviewee/flash-cards/types/flashCard";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 export type FlashCardFormModalRequest = {
   areaId: number | null;
@@ -49,23 +50,28 @@ export const useFlashCardFormModal = ({
   const [question, setQuestion] = useState(request?.flashCard?.question ?? "");
   const dialogRef = useRef<HTMLDivElement>(null);
   const questionInputRef = useRef<HTMLTextAreaElement>(null);
+  const onCloseRef = useRef(onClose);
 
   const isEditMode = request?.mode === "edit";
   const isOpen = request !== null;
 
+  useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
   useEffect(() => {
     if (!isOpen) return;
 
-    const previousOverflow = document.body.style.overflow;
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
     const focusFrame = requestAnimationFrame(() =>
       questionInputRef.current?.focus(),
     );
-    document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -96,11 +102,10 @@ export const useFlashCardFormModal = ({
 
     return () => {
       cancelAnimationFrame(focusFrame);
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocusedElement?.focus();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   const handleAreaChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setAreaId(Number(event.target.value));

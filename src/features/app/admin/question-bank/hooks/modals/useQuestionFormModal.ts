@@ -12,6 +12,7 @@ import {
   type QuestionBankSummary,
 } from "@/features/app/admin/question-bank/constants/questionBank";
 import type { QuestionFormModalRequest } from "@/features/app/admin/question-bank/hooks/modals/useSubjectDetailsModal";
+import { MODAL_ANIMATION_DURATION_MS } from "@/hooks/useModalAnimation";
 import { handleFormChange } from "@/lib/utils";
 
 type QuestionFormMode = "create" | "edit";
@@ -29,6 +30,7 @@ type QuestionFormData = {
 
 type UseQuestionFormModalProps = {
   loadSubjectQuestions: (subjectId: number) => Promise<void>;
+  onClose: () => void;
   questionSets: AdminQuestionSet[];
   questionSummaries: QuestionBankSummary[];
   request: QuestionFormModalRequest | null;
@@ -95,6 +97,7 @@ const getQuestionSet = (
 
 export const useQuestionFormModal = ({
   loadSubjectQuestions,
+  onClose,
   questionSets,
   questionSummaries,
   request,
@@ -167,6 +170,7 @@ export const useQuestionFormModal = ({
     setOpenQuestionFormModal(false);
     setQuestionFormError("");
     setSelectedEditQuestionId(null);
+    onClose();
   };
 
   const handleSaveQuestion = async (
@@ -197,6 +201,7 @@ export const useQuestionFormModal = ({
       showSuccessMessage(result.message);
       setOpenQuestionFormModal(false);
       setSelectedEditQuestionId(null);
+      window.setTimeout(onClose, MODAL_ANIMATION_DURATION_MS);
       await loadSubjectQuestions(selectedSubject.id);
     } finally {
       setIsSavingQuestion(false);

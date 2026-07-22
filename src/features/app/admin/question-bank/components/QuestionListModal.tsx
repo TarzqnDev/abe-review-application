@@ -20,8 +20,10 @@ import {
 } from "@heroicons/react/24/outline";
 
 type QuestionListModalProps = {
+  isSuspended: boolean;
   loadSubjectQuestions: (subjectId: number) => Promise<void>;
   onAddQuestion: (summary: QuestionBankSummary) => void;
+  onClose: () => void;
   onEditQuestion: (
     summary: QuestionBankSummary,
     question: AdminQuestion,
@@ -33,8 +35,10 @@ type QuestionListModalProps = {
 };
 
 export default function QuestionListModal({
+  isSuspended,
   loadSubjectQuestions,
   onAddQuestion,
+  onClose,
   onEditQuestion,
   questionSets,
   request,
@@ -62,6 +66,7 @@ export default function QuestionListModal({
     totalPages,
   } = useQuestionListModal({
     onAddQuestion,
+    onClose,
     onEditQuestion,
     questionSets,
     request,
@@ -69,75 +74,79 @@ export default function QuestionListModal({
   const { closeWithAnimation, isModalVisible } = useModalAnimation(
     openQuestionListModal,
   );
+  const isChildModalOpen = isSuspended || selectedDeleteQuestion !== null;
 
   return (
-    <div
-      className={`fixed inset-0 z-[60] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
-          ? "pointer-events-auto opacity-100"
-          : "pointer-events-none opacity-0"
-      }`}
-    >
+    <>
       <div
-        className="absolute inset-0 bg-slate-950/35"
-        onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
-      ></div>
-
-      <div
-        className={`relative max-h-[88vh] w-full max-w-[935px] overflow-y-auto rounded-md bg-white p-10 shadow-xl transition-all duration-300 ease-out ${
+        className={`fixed inset-0 z-[60] flex items-center justify-center px-4 transition-opacity duration-300 ${
           isModalVisible
-            ? "translate-y-0 scale-100 opacity-100"
-            : "-translate-y-4 scale-95 opacity-0"
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
         }`}
+        aria-hidden={!isModalVisible || isChildModalOpen}
+        inert={isChildModalOpen}
       >
-        <div className="mb-5 flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-          <div>
-            <h2 className="text-xl font-semibold text-slate-950">
-              {selectedSubject?.name}
-            </h2>
-            <p className="mt-2 text-base font-medium text-slate-500">
-              {activeQuestionSummary?.gameType} ({activeQuestionSummary?.difficulty}){" "}
-              • {activeQuestionSetQuestions.length}{" "}
-              {activeQuestionSetQuestions.length === 1
-                ? "Question"
-                : "Questions"}
-            </p>
-          </div>
+        <div
+          className="absolute inset-0 bg-slate-950/35"
+          onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
+        ></div>
 
-          <div className="flex items-center gap-4">
-            <label className="relative min-w-0 flex-1 sm:w-[275px] sm:flex-none">
-              <span className="sr-only">Search questions</span>
-              <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400" />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={handleSearchQueryChange}
-                placeholder="Search a question"
-                className="h-10 w-full rounded-full border border-slate-200 bg-white pr-4 pl-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#009688] focus:ring-2 focus:ring-[#E0F2F1]"
-              />
-            </label>
-            <button
-              type="button"
-              onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
-              className="shrink-0 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
-              aria-label="Close question list"
-            >
-              <XMarkIcon className="h-7 w-7" />
-            </button>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleAddQuestion}
-          className="mb-5 flex h-10 w-full cursor-pointer items-center justify-center rounded border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition-colors hover:border-[#009688] hover:text-[#009688] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
+        <div
+          className={`relative max-h-[88vh] w-full max-w-[935px] overflow-y-auto rounded-md bg-white p-10 shadow-xl transition-all duration-300 ease-out ${
+            isModalVisible
+              ? "translate-y-0 scale-100 opacity-100"
+              : "-translate-y-4 scale-95 opacity-0"
+          }`}
         >
-          + Add Question
-        </button>
+          <div className="mb-5 flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+            <div>
+              <h2 className="text-xl font-semibold text-slate-950">
+                {selectedSubject?.name}
+              </h2>
+              <p className="mt-2 text-base font-medium text-slate-500">
+                {activeQuestionSummary?.gameType} ({activeQuestionSummary?.difficulty}){" "}
+                • {activeQuestionSetQuestions.length}{" "}
+                {activeQuestionSetQuestions.length === 1
+                  ? "Question"
+                  : "Questions"}
+              </p>
+            </div>
 
-        <div className="flex flex-col gap-3">
-          {paginatedQuestions.length > 0 ? (
-            paginatedQuestions.map((question) => {
+            <div className="flex items-center gap-4">
+              <label className="relative min-w-0 flex-1 sm:w-[275px] sm:flex-none">
+                <span className="sr-only">Search questions</span>
+                <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={handleSearchQueryChange}
+                  placeholder="Search a question"
+                  className="h-10 w-full rounded-full border border-slate-200 bg-white pr-4 pl-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#009688] focus:ring-2 focus:ring-[#E0F2F1]"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
+                className="shrink-0 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
+                aria-label="Close question list"
+              >
+                <XMarkIcon className="h-7 w-7" />
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAddQuestion}
+            className="mb-5 flex h-10 w-full cursor-pointer items-center justify-center rounded border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition-colors hover:border-[#009688] hover:text-[#009688] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
+          >
+            + Add Question
+          </button>
+
+          <div className="flex flex-col gap-3">
+            {paginatedQuestions.length > 0 ? (
+              paginatedQuestions.map((question) => {
               const correctOption = question.question_options.find(
                 (option) => option.is_correct,
               );
@@ -205,24 +214,25 @@ export default function QuestionListModal({
                   </div>
                 </article>
               );
-            })
-          ) : (
-            <div className="rounded border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">
-              {searchQuery.trim()
-                ? "No questions match your search."
-                : "No questions yet."}
-            </div>
-          )}
-        </div>
+              })
+            ) : (
+              <div className="rounded border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">
+                {searchQuery.trim()
+                  ? "No questions match your search."
+                  : "No questions yet."}
+              </div>
+            )}
+          </div>
 
-        <QuestionListPagination
-          currentPage={currentPage}
-          firstQuestionNumber={firstQuestionNumber}
-          lastQuestionNumber={lastQuestionNumber}
-          onPageChange={handlePageChange}
-          totalQuestions={filteredQuestionCount}
-          totalPages={totalPages}
-        />
+          <QuestionListPagination
+            currentPage={currentPage}
+            firstQuestionNumber={firstQuestionNumber}
+            lastQuestionNumber={lastQuestionNumber}
+            onPageChange={handlePageChange}
+            totalQuestions={filteredQuestionCount}
+            totalPages={totalPages}
+          />
+        </div>
       </div>
 
       {/* Modals Section */}
@@ -234,6 +244,6 @@ export default function QuestionListModal({
         selectedSubject={selectedSubject}
         showSuccessMessage={showSuccessMessage}
       />
-    </div>
+    </>
   );
 }

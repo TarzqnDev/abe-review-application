@@ -56,6 +56,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
       <QuizModalShell
         className="max-h-[calc(100dvh-2rem)] max-w-[935px] overflow-y-auto p-5 sm:p-8 lg:p-10"
         dialogRef={dialogRef}
+        isInert={isExitConfirmationOpen}
         isOpen={props.isOpen}
         isVisible={isVisible}
         labelledBy="quiz-game-title"

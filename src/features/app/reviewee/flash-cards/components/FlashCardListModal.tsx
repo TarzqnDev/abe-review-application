@@ -38,6 +38,7 @@ export default function FlashCardListModal({
     handleOpenDeleteConfirmation,
     handlePageChange,
     handleSearchQueryChange,
+    isNestedModalOpen,
     lastFlashCardNumber,
     paginatedFlashCards,
     searchQuery,
@@ -63,9 +64,10 @@ export default function FlashCardListModal({
             : "pointer-events-none opacity-0"
         }`}
         role="dialog"
-        aria-modal="true"
+        aria-modal={!isNestedModalOpen}
         aria-labelledby="flash-card-list-modal-title"
-        aria-hidden={!isModalVisible}
+        aria-hidden={!isModalVisible || isNestedModalOpen}
+        inert={isNestedModalOpen}
       >
         <div
           className="absolute inset-0 bg-slate-950/35"

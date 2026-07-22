@@ -125,6 +125,14 @@ export const useSubjectDetailsModal = ({
     });
   };
 
+  const handleCloseQuestionFormModal = () => {
+    setQuestionFormRequest(null);
+  };
+
+  const handleCloseQuestionListModal = () => {
+    setQuestionListRequest(null);
+  };
+
   const activeSubjectQuestionSets = useMemo(
     () => questionSets,
     [questionSets],
@@ -132,6 +140,8 @@ export const useSubjectDetailsModal = ({
 
   return {
     activeSubjectQuestionSets,
+    handleCloseQuestionFormModal,
+    handleCloseQuestionListModal,
     handleCloseSubjectDetails,
     handleOpenCreateQuestionModal,
     handleOpenEditQuestionModal,

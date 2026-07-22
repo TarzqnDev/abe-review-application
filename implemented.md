@@ -43,3 +43,4 @@
 - MCQ and flash-card games use mode-specific exit notices with responsive reference-matched confirmation actions.
 - Application metadata now uses the product title "ABE Review App" and the description "Practice and track your progress with MCQ quizzes and flash cards."
 - The shared admin and reviewee navbar uses a compact teal logout popover matching the supplied reference.
+- Application modals use stack-aware shared body scroll locking, while nested modal flows suspend their parent dialog's accessibility and focus handling until the child closes.

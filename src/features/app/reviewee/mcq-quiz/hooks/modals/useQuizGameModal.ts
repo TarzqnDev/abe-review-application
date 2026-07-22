@@ -66,6 +66,7 @@ export const useQuizGameModal = ({
   }, [isExitConfirmationOpen]);
 
   const modalAccessibility = useQuizModalAccessibility({
+    isFocusTrapSuspended: isExitConfirmationOpen,
     isOpen,
     onClose: handleRequestClose,
   });

@@ -21,6 +21,8 @@ export default function SubjectDetailsModal({
 }: SubjectDetailsModalProps) {
   const {
     activeSubjectQuestionSets,
+    handleCloseQuestionFormModal,
+    handleCloseQuestionListModal,
     handleCloseSubjectDetails,
     handleOpenCreateQuestionModal,
     handleOpenEditQuestionModal,
@@ -38,6 +40,7 @@ export default function SubjectDetailsModal({
     subject,
   });
   const { closeWithAnimation, isModalVisible } = useModalAnimation(open);
+  const isChildModalOpen = Boolean(questionFormRequest || questionListRequest);
 
   return (
     <>
@@ -47,6 +50,8 @@ export default function SubjectDetailsModal({
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
+        aria-hidden={!isModalVisible || isChildModalOpen}
+        inert={isChildModalOpen}
       >
         <div
           className="absolute inset-0 bg-slate-950/30"
@@ -140,6 +145,7 @@ export default function SubjectDetailsModal({
       <QuestionFormModal
         key={questionFormRequest?.requestId ?? "question-form-modal"}
         loadSubjectQuestions={loadSubjectQuestions}
+        onClose={handleCloseQuestionFormModal}
         questionSets={activeSubjectQuestionSets}
         questionSummaries={questionSummaries}
         request={questionFormRequest}
@@ -149,8 +155,10 @@ export default function SubjectDetailsModal({
 
       <QuestionListModal
         key={questionListRequest?.requestId ?? "question-list-modal"}
+        isSuspended={questionFormRequest !== null}
         loadSubjectQuestions={loadSubjectQuestions}
         onAddQuestion={handleOpenCreateQuestionModal}
+        onClose={handleCloseQuestionListModal}
         onEditQuestion={handleOpenEditQuestionModal}
         questionSets={activeSubjectQuestionSets}
         request={questionListRequest}
