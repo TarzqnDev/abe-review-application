@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { supabase } from "@/lib/supabase/client";
+import {
+  AUTH_NOTICES,
+  AUTH_NOTICE_QUERY_PARAMETER,
+} from "@/features/app/layout/constants/authNotices";
 
 export const useLogin = () => {
   const { getUser } = useAuth();
@@ -62,8 +66,15 @@ export const useLogin = () => {
       } = await supabase.auth.getSession();
       const roles = getTokenRoles(session);
 
-      if (roles.includes("admin")) router.push("/admin");
-      else if (roles.includes("reviewee")) router.push("/reviewee");
+      if (roles.includes("admin")) {
+        router.push(
+          `/admin?${AUTH_NOTICE_QUERY_PARAMETER}=${AUTH_NOTICES.loginSuccess}`,
+        );
+      } else if (roles.includes("reviewee")) {
+        router.push(
+          `/reviewee?${AUTH_NOTICE_QUERY_PARAMETER}=${AUTH_NOTICES.loginSuccess}`,
+        );
+      }
     } finally {
       setIsLoggingIn(false);
     }

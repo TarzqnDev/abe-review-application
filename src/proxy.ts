@@ -3,6 +3,10 @@ import { createSupabaseProxyClient } from "./lib/supabase/proxy";
 
 import { protectedRoutes, authRoutes } from "./lib/auth/route-protection";
 import { getTokenRoles } from "./lib/auth/get-token-roles";
+import {
+  AUTH_NOTICES,
+  AUTH_NOTICE_QUERY_PARAMETER,
+} from "./features/app/layout/constants/authNotices";
 
 export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
@@ -32,10 +36,18 @@ export async function proxy(request: NextRequest) {
 
   // ✅ Already logged in, redirect to designated dashboard
   if (isAuthRoute && session) {
-    if (roles.includes("admin"))
-      return NextResponse.redirect(new URL("/admin", request.url));
-    else if (roles.includes("reviewee"))
-      return NextResponse.redirect(new URL("/reviewee", request.url));
+    const redirectUrl = new URL(
+      roles.includes("admin") ? "/admin" : "/reviewee",
+      request.url,
+    );
+    redirectUrl.searchParams.set(
+      AUTH_NOTICE_QUERY_PARAMETER,
+      AUTH_NOTICES.alreadyLoggedIn,
+    );
+
+    if (roles.includes("admin") || roles.includes("reviewee")) {
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   // Role authorization detection
