@@ -48,3 +48,4 @@
 - Authentication: successful logins show the shared animated teal success banner on the designated dashboard, while authenticated visits to `/login` explain that the current account must be logged out before another account can sign in.
 - Authentication: login success notices preserve their message and complete their entrance and exit animation when users navigate through the persistent app layout; delayed notice cleanup now uses the current route and keeps unrelated query parameters.
 - Manage Reviewees: administrators can refresh the reviewee listing in place from the search toolbar without reloading the page.
+- Authentication: the centered `/auth/forgot-password` flow supports password-reset emails with a five-minute minutes-and-seconds resend countdown; verified recovery links store a signed, expiring user ID cookie, and password changes use `auth.admin.updateUserById` without creating Supabase recovery session cookies.

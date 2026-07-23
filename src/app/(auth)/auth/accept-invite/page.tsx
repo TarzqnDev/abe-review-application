@@ -96,7 +96,7 @@ export default function AcceptInvitePage() {
 
                   <Link
                     href="/login"
-                    className="text-xs leading-6 text-secondary-text sm:text-sm"
+                    className="mt-4 text-sm font-medium text-secondary-text transition hover:text-primary-accent"
                   >
                     Login account
                   </Link>

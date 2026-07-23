@@ -14,3 +14,4 @@
 - ABE Trivia database changes are supplied as a timestamped Supabase SQL Editor script; publish dates follow the Asia/Manila calendar, allow an unchanged historical date during editing, and otherwise cannot be in the past.
 - ABE Trivia permits one trivia per publish date, restricts trivia management to administrators through row-level security, exposes only today's trivia to reviewees, groups admin listings by publish month, and paginates listings at four trivia per page.
 - All successful application operations use the established animated teal success banner that slides down into view and slides back up after completion.
+- Password recovery uses cloud-managed Supabase Auth and email-template settings, stores only a signed and expiring user ID recovery cookie, and never persists a Supabase recovery session in cookies.

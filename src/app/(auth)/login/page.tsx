@@ -2,6 +2,7 @@
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
+import Link from "next/link";
 import AuthBrand from "@/features/auth/components/AuthBrand";
 import AuthImagePanel from "@/features/auth/components/AuthImagePanel";
 import { useLogin } from "@/features/auth/login/hooks/useLogin";
@@ -80,9 +81,12 @@ export default function LoginPage() {
                   </button>
                 </div>
                 <div className="flex justify-end">
-                  <button type="button" className="cursor-pointer font-medium">
+                  <Link
+                    href="/auth/forgot-password"
+                    className="cursor-pointer font-medium"
+                  >
                     Forgot Password?
-                  </button>
+                  </Link>
                 </div>
               </div>
 

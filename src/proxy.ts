@@ -19,9 +19,7 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
-  const isAcceptInviteRoute = authRoutes.some((route) =>
-    pathname.startsWith("/auth/accept-invite"),
-  );
+  const isAcceptInviteRoute = pathname.startsWith("/auth/accept-invite");
 
   const {
     data: { session },
