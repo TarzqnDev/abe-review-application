@@ -45,7 +45,7 @@ export const getGameSummaryPresentation = (
   const timedOutEnd = Math.min(100, incorrectEnd + timedOutPercentage);
 
   return {
-    donutBackground: `conic-gradient(#009d8f 0% ${correctEnd}%, #ef4444 ${correctEnd}% ${incorrectEnd}%, #f59e0b ${incorrectEnd}% ${timedOutEnd}%, #e2e8f0 ${timedOutEnd}% 100%)`,
+    donutBackground: `conic-gradient(var(--color-primary-accent) 0% ${correctEnd}%, var(--color-error) ${correctEnd}% ${incorrectEnd}%, var(--color-warning) ${incorrectEnd}% ${timedOutEnd}%, var(--color-border) ${timedOutEnd}% 100%)`,
     duration: formatDuration(summary?.durationSeconds ?? 0),
     performanceMessage: getPerformanceMessage(scorePercentage),
     scorePercentage,

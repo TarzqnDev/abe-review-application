@@ -35,16 +35,16 @@ export default function ExitGameConfirmationModal(
       <div className="flex items-center gap-2.5">
         <TriangleAlert
           aria-hidden="true"
-          className="h-5 w-5 shrink-0 fill-yellow-300 text-slate-950"
+          className="h-5 w-5 shrink-0 fill-yellow-300 text-primary-text"
         />
         <h2
           id="exit-game-title"
-          className="text-xl font-semibold leading-6 text-slate-950"
+          className="text-xl font-semibold leading-6 text-primary-text"
         >
           Exit Notice
         </h2>
       </div>
-      <p className="mt-5 text-base font-medium leading-6 text-slate-500">
+      <p className="mt-5 text-base font-medium leading-6 text-secondary-text">
         Are you sure you want to end the MCQ quiz now?
       </p>
 
@@ -60,7 +60,7 @@ export default function ExitGameConfirmationModal(
           onClick={handleExit}
           disabled={isExiting}
           aria-busy={isExiting}
-          className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-[#008477] text-base font-medium text-white transition-colors hover:bg-[#006f65] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008477] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isExiting ? (
             <>
@@ -76,7 +76,7 @@ export default function ExitGameConfirmationModal(
           type="button"
           onClick={props.onCancel}
           disabled={isExiting}
-          className="h-[50px] cursor-pointer rounded border border-[#008477] bg-white text-base font-medium text-[#008477] transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008477] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           No, Cancel
         </button>

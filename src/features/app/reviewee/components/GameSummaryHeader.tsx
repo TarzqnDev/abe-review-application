@@ -12,9 +12,9 @@ export default function GameSummaryHeader({
   titleId,
 }: GameSummaryHeaderProps) {
   return (
-    <header className="flex min-h-[150px] flex-col items-center justify-center bg-[#008477] px-6 py-4 text-center text-white">
+    <header className="flex min-h-[150px] flex-col items-center justify-center bg-primary-accent px-6 py-4 text-center text-surface">
       <div
-        className="flex h-[52px] w-[52px] items-center justify-center rounded-full border-2 border-white"
+        className="flex h-[52px] w-[52px] items-center justify-center rounded-full border-2 border-surface"
         aria-hidden="true"
       >
         <CheckIcon className="h-8 w-8 stroke-2" />

@@ -12,7 +12,7 @@ export default function SubjectIntroCard({
   subjectAreas,
 }: SubjectIntroCardProps) {
   return (
-    <div className="rounded-md border border-teal-600 bg-teal-50 px-6 py-10">
+    <div className="rounded-md border border-primary-accent bg-teal-50 px-6 py-10">
       <div className="mx-auto flex max-w-xl flex-col items-center text-center">
         <Image
           src={BookPileIconImage}
@@ -20,10 +20,10 @@ export default function SubjectIntroCard({
           width={110}
           height={110}
         />
-        <h2 className="text-xl font-semibold text-slate-950">
+        <h2 className="text-xl font-semibold text-primary-text">
           Create New Subject
         </h2>
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-secondary-text">
           Choose an Area and create a new subject
         </p>
         <div className="mt-8 grid w-full gap-4 sm:grid-cols-3">
@@ -32,7 +32,7 @@ export default function SubjectIntroCard({
               key={subjectArea.id}
               type="button"
               onClick={() => onAddSubject(subjectArea.id)}
-              className="cursor-pointer rounded bg-teal-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-teal-700"
+              className="cursor-pointer rounded bg-primary-accent px-5 py-3 text-sm font-medium text-surface transition-colors hover:bg-primary-dark"
             >
               Add to {subjectArea.name}
             </button>

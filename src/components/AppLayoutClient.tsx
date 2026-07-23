@@ -14,7 +14,7 @@ export default function AppLayoutClient({
   role,
 }: AppLayoutClientProps) {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
+    <div className="min-h-screen bg-primary-bg text-primary-text">
       <Navbar role={role} />
       <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-5 py-10 md:grid-cols-[250px_1fr]">
         <Sidebar role={role} />

@@ -21,7 +21,7 @@ export default function SubjectFilters({
     <div className="mb-8">
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="mb-4 text-base font-semibold text-slate-950">
+          <h2 className="mb-4 text-base font-semibold text-primary-text">
             Filter by Area
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -30,8 +30,8 @@ export default function SubjectFilters({
               onClick={() => onAreaFilterChange("all")}
               className={`h-[30px] min-w-25 cursor-pointer rounded border px-5 text-xs font-medium transition-colors ${
                 activeAreaFilter === "all"
-                  ? "border-teal-600 bg-teal-600 text-white"
-                  : "border-slate-200 bg-white text-slate-950 hover:border-teal-600"
+                  ? "border-primary-accent bg-primary-accent text-surface"
+                  : "border-border bg-surface text-primary-text hover:border-primary-accent"
               }`}
             >
               All Areas
@@ -43,8 +43,8 @@ export default function SubjectFilters({
                 onClick={() => onAreaFilterChange(subjectArea.id)}
                 className={`h-[30px] min-w-20 cursor-pointer rounded border px-5 text-xs font-medium transition-colors ${
                   activeAreaFilter === subjectArea.id
-                    ? "border-teal-600 bg-teal-600 text-white"
-                    : "border-slate-200 bg-white text-slate-950 hover:border-teal-600"
+                    ? "border-primary-accent bg-primary-accent text-surface"
+                    : "border-border bg-surface text-primary-text hover:border-primary-accent"
                 }`}
               >
                 {subjectArea.name}
@@ -60,7 +60,7 @@ export default function SubjectFilters({
             value={searchQuery}
             onChange={onSearchQueryChange}
             placeholder="Search a subject"
-            className="h-[30px] w-full rounded-full border border-slate-200 bg-white pl-10 pr-4 text-xs text-slate-700 outline-none transition-colors placeholder:text-slate-300 focus:border-teal-600"
+            className="h-[30px] w-full rounded-full border border-border bg-surface pl-10 pr-4 text-xs text-slate-700 outline-none transition-colors placeholder:text-slate-300 focus:border-primary-accent"
           />
         </div>
       </div>

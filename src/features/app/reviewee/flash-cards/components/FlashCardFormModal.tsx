@@ -66,7 +66,7 @@ export default function FlashCardFormModal({
 
       <div
         ref={dialogRef}
-        className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-y-auto rounded-md bg-white px-6 py-8 shadow-xl transition-all duration-300 ease-out sm:px-9 sm:py-10 ${
+        className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-y-auto rounded-md bg-surface px-6 py-8 shadow-xl transition-all duration-300 ease-out sm:px-9 sm:py-10 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -75,7 +75,7 @@ export default function FlashCardFormModal({
         <div className="mb-8 flex items-center justify-between gap-4">
           <h2
             id="flash-card-form-modal-title"
-            className="text-xl font-semibold text-slate-950"
+            className="text-xl font-semibold text-primary-text"
           >
             {modalTitle}
           </h2>
@@ -83,7 +83,7 @@ export default function FlashCardFormModal({
             type="button"
             onClick={() => closeWithAnimation(handleClose)}
             disabled={isSaving}
-            className="cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
             aria-label={`Close ${modalTitle.toLowerCase()} modal`}
           >
             <XMarkIcon className="h-7 w-7" />
@@ -93,7 +93,7 @@ export default function FlashCardFormModal({
         <form onSubmit={handleSaveFlashCard} className="space-y-5">
           <label
             htmlFor="flash-card-area"
-            className="block text-sm font-semibold text-slate-950"
+            className="block text-sm font-semibold text-primary-text"
           >
             Area
             <span className="relative mt-2 block">
@@ -103,7 +103,7 @@ export default function FlashCardFormModal({
                 onChange={handleAreaChange}
                 disabled={request?.lockArea || isEditMode || isSaving}
                 required
-                className="h-[50px] w-full appearance-none rounded border border-slate-200 bg-white px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
+                className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-secondary-text"
               >
                 {flashCardDecks.length === 0 && (
                   <option value="">No areas available</option>
@@ -117,13 +117,13 @@ export default function FlashCardFormModal({
                   </option>
                 ))}
               </select>
-              <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-slate-500" />
+              <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-secondary-text" />
             </span>
           </label>
 
           <label
             htmlFor="flash-card-question"
-            className="block text-sm font-semibold text-slate-950"
+            className="block text-sm font-semibold text-primary-text"
           >
             Question
             <textarea
@@ -136,13 +136,13 @@ export default function FlashCardFormModal({
               rows={4}
               maxLength={2000}
               placeholder="Enter your question"
-              className="mt-2 w-full resize-none rounded border border-slate-200 px-4 py-3 text-base font-normal text-slate-900 outline-none placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+              className="mt-2 w-full resize-none rounded border border-border px-4 py-3 text-base font-normal text-primary-text outline-none placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             />
           </label>
 
           <label
             htmlFor="flash-card-answer"
-            className="block text-sm font-semibold text-slate-950"
+            className="block text-sm font-semibold text-primary-text"
           >
             Answer
             <textarea
@@ -154,12 +154,12 @@ export default function FlashCardFormModal({
               rows={4}
               maxLength={1000}
               placeholder="Enter the answer"
-              className="mt-2 w-full resize-none rounded border border-slate-200 px-4 py-3 text-base font-normal text-slate-900 outline-none placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+              className="mt-2 w-full resize-none rounded border border-border px-4 py-3 text-base font-normal text-primary-text outline-none placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             />
           </label>
 
           {formError && (
-            <p role="alert" className="text-sm text-red-500">
+            <p role="alert" className="text-sm text-error">
               {formError}
             </p>
           )}
@@ -167,7 +167,7 @@ export default function FlashCardFormModal({
           <button
             type="submit"
             disabled={isSaving || flashCardDecks.length === 0}
-            className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSaving ? (
               <LoaderCircle className="h-5 w-5 animate-spin" />

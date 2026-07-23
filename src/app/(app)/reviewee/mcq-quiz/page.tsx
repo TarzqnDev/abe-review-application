@@ -15,8 +15,8 @@ export default function RevieweeMcqQuizPage() {
   return (
     <section>
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-900">MCQ Quizzes</h1>
-        <p className="mt-1 text-base text-slate-500">
+        <h1 className="text-2xl font-semibold text-primary-text">MCQ Quizzes</h1>
+        <p className="mt-1 text-base text-secondary-text">
           Choose a game to start answering quizzes
         </p>
       </header>

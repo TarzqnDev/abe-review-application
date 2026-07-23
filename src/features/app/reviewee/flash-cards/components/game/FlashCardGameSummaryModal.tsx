@@ -43,7 +43,7 @@ export default function FlashCardGameSummaryModal(
       />
 
       <div className="px-6 py-9 sm:px-10 sm:pb-10 sm:pt-10">
-        <p className="text-center text-base font-medium text-slate-950">
+        <p className="text-center text-base font-medium text-primary-text">
           Your score percentage was:
         </p>
 
@@ -53,65 +53,65 @@ export default function FlashCardGameSummaryModal(
           role="img"
           style={{ background: donutBackground }}
         >
-          <div className="flex h-[88px] w-[88px] flex-col items-center justify-center rounded-full bg-white">
-            <span className="text-xl font-semibold leading-5 text-slate-950">
+          <div className="flex h-[88px] w-[88px] flex-col items-center justify-center rounded-full bg-surface">
+            <span className="text-xl font-semibold leading-5 text-primary-text">
               {scorePercentage}%
             </span>
-            <span className="text-xs text-slate-500">Correct</span>
+            <span className="text-xs text-secondary-text">Correct</span>
           </div>
         </div>
 
-        <p className="mt-3 text-center text-sm font-medium text-[#009d8f]">
+        <p className="mt-3 text-center text-sm font-medium text-primary-accent">
           {performanceMessage}
         </p>
 
         <section className="mt-6" aria-labelledby="flash-card-score-summary-heading">
           <h3
             id="flash-card-score-summary-heading"
-            className="text-sm font-medium text-slate-950"
+            className="text-sm font-medium text-primary-text"
           >
             Score Summary
           </h3>
 
           <dl className="mt-1 grid grid-cols-2 gap-2.5">
-            <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-slate-200 bg-slate-50 px-2 text-center">
-              <dt className="order-2 mt-1 text-[13px] text-slate-500">
+            <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-border bg-secondary-bg px-2 text-center">
+              <dt className="order-2 mt-1 text-[13px] text-secondary-text">
                 Flash Cards Answered
               </dt>
-              <dd className="order-1 text-xl font-semibold text-slate-500">
+              <dd className="order-1 text-xl font-semibold text-secondary-text">
                 {props.summary.answered}/{props.summary.totalQuestions}
               </dd>
             </div>
-            <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-slate-200 bg-slate-50 px-2 text-center">
-              <dt className="order-2 mt-1 text-[13px] text-slate-500">
+            <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-border bg-secondary-bg px-2 text-center">
+              <dt className="order-2 mt-1 text-[13px] text-secondary-text">
                 Game Duration
               </dt>
-              <dd className="order-1 text-xl font-semibold text-slate-500">
+              <dd className="order-1 text-xl font-semibold text-secondary-text">
                 {duration}
               </dd>
             </div>
           </dl>
 
           <dl className="mt-2.5 grid grid-cols-3 gap-2.5">
-            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-[#009d8f] bg-teal-50 px-1 text-center">
-              <dt className="order-2 mt-0.5 text-[13px] text-[#009d8f]">
+            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-primary-accent bg-teal-50 px-1 text-center">
+              <dt className="order-2 mt-0.5 text-[13px] text-primary-accent">
                 Correct
               </dt>
-              <dd className="order-1 text-base font-medium text-[#009d8f]">
+              <dd className="order-1 text-base font-medium text-primary-accent">
                 {props.summary.correct}
               </dd>
             </div>
-            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-red-500 bg-red-50 px-1 text-center">
-              <dt className="order-2 mt-0.5 text-[13px] text-red-500">Wrong</dt>
-              <dd className="order-1 text-base font-medium text-red-500">
+            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-error bg-red-50 px-1 text-center">
+              <dt className="order-2 mt-0.5 text-[13px] text-error">Wrong</dt>
+              <dd className="order-1 text-base font-medium text-error">
                 {props.summary.incorrect}
               </dd>
             </div>
-            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-amber-500 bg-amber-50 px-1 text-center">
-              <dt className="order-2 mt-0.5 text-[13px] text-amber-500">
+            <div className="flex min-h-[75px] flex-col items-center justify-center rounded border border-warning bg-amber-50 px-1 text-center">
+              <dt className="order-2 mt-0.5 text-[13px] text-warning">
                 Timed Out
               </dt>
-              <dd className="order-1 text-base font-medium text-amber-500">
+              <dd className="order-1 text-base font-medium text-warning">
                 {props.summary.timedOut}
               </dd>
             </div>
@@ -122,7 +122,7 @@ export default function FlashCardGameSummaryModal(
           ref={closeButtonRef}
           type="button"
           onClick={props.onClose}
-          className="mt-5 h-[50px] w-full cursor-pointer rounded bg-[#009d8f] text-base font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+          className="mt-5 h-[50px] w-full cursor-pointer rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
           Back to Flash Cards
         </button>

@@ -35,7 +35,7 @@ export default function NoQuestionsModal(props: NoQuestionsModalProps) {
         ref={closeButtonRef}
         type="button"
         onClick={props.onClose}
-        className="absolute top-5 right-5 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+        className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
         aria-label="Close no questions notice"
       >
         <XMarkIcon className="h-6 w-6" />
@@ -47,11 +47,11 @@ export default function NoQuestionsModal(props: NoQuestionsModalProps) {
         </div>
         <h2
           id="no-questions-title"
-          className="text-xl font-semibold text-slate-900"
+          className="text-xl font-semibold text-primary-text"
         >
           No Questions Available
         </h2>
-        <p className="mt-3 text-sm leading-6 text-slate-500">{props.message}</p>
+        <p className="mt-3 text-sm leading-6 text-secondary-text">{props.message}</p>
       </div>
     </QuizModalShell>
   );

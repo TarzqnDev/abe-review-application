@@ -8,7 +8,7 @@ type QuizCardProps = {
 
 export default function QuizCard({ onStart, quizGame }: QuizCardProps) {
   return (
-    <article className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+    <article className="overflow-hidden rounded-lg border border-border bg-surface">
       <div className="relative h-[150px] w-full overflow-hidden">
         <Image
           src={quizGame.image}
@@ -20,16 +20,16 @@ export default function QuizCard({ onStart, quizGame }: QuizCardProps) {
       </div>
 
       <div className="p-5 pt-3">
-        <h2 className="text-base font-medium text-slate-950">
+        <h2 className="text-base font-medium text-primary-text">
           {quizGame.title}
         </h2>
-        <p className="mt-0.5 min-h-10 text-sm leading-5 text-slate-500">
+        <p className="mt-0.5 min-h-10 text-sm leading-5 text-secondary-text">
           {quizGame.description}
         </p>
         <button
           type="button"
           onClick={() => onStart(quizGame)}
-          className="mt-3 flex w-full items-center justify-center rounded bg-teal-600 px-4 py-2 text-base font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
+          className="mt-3 flex w-full items-center justify-center rounded bg-primary-accent px-4 py-2 text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
         >
           Start Game
         </button>

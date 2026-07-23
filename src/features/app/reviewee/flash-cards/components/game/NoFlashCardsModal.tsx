@@ -32,7 +32,7 @@ export default function NoFlashCardsModal(props: NoFlashCardsModalProps) {
         ref={closeButtonRef}
         type="button"
         onClick={props.onClose}
-        className="absolute top-5 right-5 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+        className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
         aria-label="Close no flash cards notice"
       >
         <XMarkIcon className="h-6 w-6" />
@@ -44,11 +44,11 @@ export default function NoFlashCardsModal(props: NoFlashCardsModalProps) {
         </div>
         <h2
           id="no-flash-cards-title"
-          className="text-xl font-semibold text-slate-900"
+          className="text-xl font-semibold text-primary-text"
         >
           No Flash Cards Available
         </h2>
-        <p className="mt-3 text-sm leading-6 text-slate-500">
+        <p className="mt-3 text-sm leading-6 text-secondary-text">
           {props.message}
         </p>
       </div>

@@ -18,8 +18,8 @@ export default function TriviaPagination({
   totalTrivias,
 }: TriviaPaginationProps) {
   return (
-    <div className="mt-5 flex flex-col gap-4 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-slate-500">
+    <div className="mt-5 flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm text-secondary-text">
         Showing {firstTriviaNumber} to {lastTriviaNumber} of {totalTrivias}{" "}
         {totalTrivias === 1 ? "trivia" : "trivias"}
       </p>
@@ -30,7 +30,7 @@ export default function TriviaPagination({
             type="button"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-slate-200 text-slate-500 transition-colors hover:border-teal-600 hover:text-teal-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 disabled:cursor-not-allowed disabled:opacity-35"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-border text-secondary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-35"
             aria-label="Previous page"
           >
             <ChevronLeftIcon className="h-4 w-4" />
@@ -43,10 +43,10 @@ export default function TriviaPagination({
                 type="button"
                 onClick={() => onPageChange(pageNumber)}
                 aria-current={pageNumber === currentPage ? "page" : undefined}
-                className={`flex h-8 min-w-8 cursor-pointer items-center justify-center rounded px-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 ${
+                className={`flex h-8 min-w-8 cursor-pointer items-center justify-center rounded px-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent ${
                   pageNumber === currentPage
-                    ? "bg-teal-600 text-white"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-teal-600 hover:text-teal-600"
+                    ? "bg-primary-accent text-surface"
+                    : "border border-border bg-surface text-slate-600 hover:border-primary-accent hover:text-primary-accent"
                 }`}
               >
                 {pageNumber}
@@ -58,7 +58,7 @@ export default function TriviaPagination({
             type="button"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-slate-200 text-slate-500 transition-colors hover:border-teal-600 hover:text-teal-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 disabled:cursor-not-allowed disabled:opacity-35"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-border text-secondary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-35"
             aria-label="Next page"
           >
             <ChevronRightIcon className="h-4 w-4" />

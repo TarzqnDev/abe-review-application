@@ -23,7 +23,7 @@ export default function FlashCardListPagination({
   if (!totalFlashCards) return null;
 
   return (
-    <div className="mt-6 flex flex-col gap-4 text-sm font-medium text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mt-6 flex flex-col gap-4 text-sm font-medium text-secondary-text sm:flex-row sm:items-center sm:justify-between">
       <p>
         Showing {firstFlashCardNumber} to {lastFlashCardNumber} of{" "}
         {totalFlashCards} flash cards
@@ -34,7 +34,7 @@ export default function FlashCardListPagination({
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-slate-300 bg-white text-slate-500 transition-colors hover:border-teal-600 hover:text-teal-600 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-slate-300 bg-surface text-secondary-text transition-colors hover:border-primary-accent hover:text-primary-accent disabled:cursor-not-allowed disabled:border-border disabled:text-slate-300"
           aria-label="Previous page"
         >
           <ChevronLeftIcon className="h-5 w-5" />
@@ -51,8 +51,8 @@ export default function FlashCardListPagination({
             aria-current={page === currentPage ? "page" : undefined}
             className={`h-9 min-w-9 cursor-pointer rounded px-2 text-sm font-semibold transition-colors ${
               page === currentPage
-                ? "bg-teal-600 text-white"
-                : "border border-slate-300 bg-white text-slate-500 hover:border-teal-600 hover:text-teal-600"
+                ? "bg-primary-accent text-surface"
+                : "border border-slate-300 bg-surface text-secondary-text hover:border-primary-accent hover:text-primary-accent"
             }`}
           >
             {page}
@@ -63,7 +63,7 @@ export default function FlashCardListPagination({
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-slate-300 bg-white text-slate-500 transition-colors hover:border-teal-600 hover:text-teal-600 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-slate-300 bg-surface text-secondary-text transition-colors hover:border-primary-accent hover:text-primary-accent disabled:cursor-not-allowed disabled:border-border disabled:text-slate-300"
           aria-label="Next page"
         >
           <ChevronRightIcon className="h-5 w-5" />

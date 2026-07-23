@@ -51,18 +51,18 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
       labelledBy="history-details-title"
       onBackdropMouseDown={handleBackdropMouseDown}
     >
-      <header className="shrink-0 border-b border-slate-200 px-5 py-5 sm:px-7">
+      <header className="shrink-0 border-b border-border px-5 py-5 sm:px-7">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 id="history-details-title" className="text-xl font-semibold text-slate-950">
+              <h2 id="history-details-title" className="text-xl font-semibold text-primary-text">
                 Activity Details
               </h2>
               {history && (
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-medium ${
                     history.status === "completed"
-                      ? "bg-teal-50 text-teal-700"
+                      ? "bg-teal-50 text-primary-dark"
                       : history.status === "exited"
                         ? "bg-amber-50 text-amber-700"
                         : "bg-slate-100 text-slate-600"
@@ -73,7 +73,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
               )}
             </div>
             {history && (
-              <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
+              <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-secondary-text">
                 <span className="font-medium text-slate-700">{history.areaName}</span>
                 <span aria-hidden="true">·</span>
                 <span>
@@ -101,7 +101,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
             type="button"
             onClick={handleClose}
             aria-label="Close activity details"
-            className="shrink-0 cursor-pointer rounded p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+            className="shrink-0 cursor-pointer rounded p-1 text-secondary-text transition-colors hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
           >
             <XMarkIcon className="h-7 w-7" />
           </button>
@@ -117,7 +117,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
             <button
               type="button"
               onClick={() => void loadDetails()}
-              className="mt-4 flex cursor-pointer items-center gap-2 rounded border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+              className="mt-4 flex cursor-pointer items-center gap-2 rounded border border-red-300 bg-surface px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error"
             >
               <ArrowPathIcon className="h-4 w-4" />
               Try Again
@@ -130,10 +130,10 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
             <section className="mt-7" aria-labelledby="activity-items-title">
               <div className="flex items-end justify-between gap-3">
                 <div>
-                  <h3 id="activity-items-title" className="text-base font-semibold text-slate-950">
+                  <h3 id="activity-items-title" className="text-base font-semibold text-primary-text">
                     {history.sessionType === "flash_cards" ? "Flash Cards" : "Questions"}
                   </h3>
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-secondary-text">
                     {details.items.length} {details.items.length === 1 ? "item" : "items"}
                   </p>
                 </div>
@@ -150,7 +150,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
                   )}
                 </div>
               ) : (
-                <div className="mt-4 rounded border border-slate-200 bg-slate-50 px-5 py-10 text-center">
+                <div className="mt-4 rounded border border-border bg-secondary-bg px-5 py-10 text-center">
                   <p className="text-sm font-medium text-slate-700">
                     {history.status === "cancelled"
                       ? "This activity was cancelled before the game started."

@@ -77,7 +77,7 @@ export default function Sidebar({ role }: SidebarProps) {
   const links = role === "admin" ? adminLinks : role === "reviewee" ? revieweeLinks : [];
 
   return (
-    <nav className="h-fit rounded-md border border-slate-200 bg-white p-4">
+    <nav className="h-fit rounded-md border border-border bg-surface p-4">
       <div className="flex flex-col gap-1">
         {links.map((link) => {
           const isActive = link.matchPath(pathname);
@@ -88,8 +88,8 @@ export default function Sidebar({ role }: SidebarProps) {
               href={link.href}
               className={`flex items-center gap-2 rounded px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-teal-50 text-teal-600"
-                  : "text-slate-500 hover:bg-slate-50"
+                  ? "bg-teal-50 text-primary-accent"
+                  : "text-secondary-text hover:bg-secondary-bg"
               }`}
             >
               <Image

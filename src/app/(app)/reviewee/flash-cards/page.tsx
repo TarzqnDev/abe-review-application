@@ -22,8 +22,8 @@ export default function RevieweeFlashCardsPage() {
       <FlashCardSuccessBanner message={flashCardsPage.successMessage} />
 
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-900">My Flash Cards</h1>
-        <p className="mt-1 text-base text-slate-500">
+        <h1 className="text-2xl font-semibold text-primary-text">My Flash Cards</h1>
+        <p className="mt-1 text-base text-secondary-text">
           Create and review your custom study cards
         </p>
       </header>
@@ -31,7 +31,7 @@ export default function RevieweeFlashCardsPage() {
       <button
         type="button"
         onClick={flashCardsPage.openCreateFlashCardModal}
-        className="mb-7 inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded bg-teal-600 px-5 text-sm font-medium text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+        className="mb-7 inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded bg-primary-accent px-5 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
       >
         <PlusIcon className="h-4 w-4" />
         Create Flash Card

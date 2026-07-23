@@ -62,17 +62,17 @@ export default function ActivityHistoryOverview({
         return (
           <article
             key={overviewItem.label}
-            className="rounded-lg border border-slate-200 bg-white p-5"
+            className="rounded-lg border border-border bg-surface p-5"
           >
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-teal-50 text-teal-600">
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-teal-50 text-primary-accent">
                 <Icon className="h-5 w-5" />
               </span>
               <div>
-                <p className="text-xs font-medium text-slate-500">
+                <p className="text-xs font-medium text-secondary-text">
                   {overviewItem.label}
                 </p>
-                <p className="mt-0.5 text-xl font-semibold text-slate-950">
+                <p className="mt-0.5 text-xl font-semibold text-primary-text">
                   {overviewItem.value}
                 </p>
               </div>

@@ -41,11 +41,11 @@ export default function ActivityHistoryFilters({
   statusFilter,
 }: ActivityHistoryFiltersProps) {
   return (
-    <section className="mb-6 rounded-lg border border-slate-200 bg-white p-5">
+    <section className="mb-6 rounded-lg border border-border bg-surface p-5">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div className="space-y-4">
           <div>
-            <h2 className="mb-2 text-sm font-semibold text-slate-900">
+            <h2 className="mb-2 text-sm font-semibold text-primary-text">
               Activity Type
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -56,8 +56,8 @@ export default function ActivityHistoryFilters({
                   onClick={() => onActivityTypeFilterChange(option.value)}
                   className={`h-[30px] cursor-pointer rounded border px-4 text-xs font-medium transition-colors ${
                     activityTypeFilter === option.value
-                      ? "border-teal-600 bg-teal-600 text-white"
-                      : "border-slate-200 bg-white text-slate-700 hover:border-teal-600"
+                      ? "border-primary-accent bg-primary-accent text-surface"
+                      : "border-border bg-surface text-slate-700 hover:border-primary-accent"
                   }`}
                 >
                   {option.label}
@@ -67,7 +67,7 @@ export default function ActivityHistoryFilters({
           </div>
 
           <div>
-            <h2 className="mb-2 text-sm font-semibold text-slate-900">
+            <h2 className="mb-2 text-sm font-semibold text-primary-text">
               Session Status
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -78,8 +78,8 @@ export default function ActivityHistoryFilters({
                   onClick={() => onStatusFilterChange(option.value)}
                   className={`h-[30px] cursor-pointer rounded border px-4 text-xs font-medium transition-colors ${
                     statusFilter === option.value
-                      ? "border-teal-600 bg-teal-600 text-white"
-                      : "border-slate-200 bg-white text-slate-700 hover:border-teal-600"
+                      ? "border-primary-accent bg-primary-accent text-surface"
+                      : "border-border bg-surface text-slate-700 hover:border-primary-accent"
                   }`}
                 >
                   {option.label}
@@ -97,7 +97,7 @@ export default function ActivityHistoryFilters({
             onChange={(event) => onSearchQueryChange(event.target.value)}
             placeholder="Search area, game, or difficulty"
             aria-label="Search activity history"
-            className="h-10 w-full rounded-full border border-slate-200 bg-white pr-4 pl-10 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-300 focus:border-teal-600"
+            className="h-10 w-full rounded-full border border-border bg-surface pr-4 pl-10 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-300 focus:border-primary-accent"
           />
         </div>
       </div>

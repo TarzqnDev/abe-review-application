@@ -51,10 +51,10 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
   const timerIsCritical = remainingSeconds <= 3;
 
   const answerFieldClassName = resultIsCorrect
-    ? "border-teal-500 bg-teal-50 text-teal-700"
+    ? "border-primary-light bg-teal-50 text-primary-dark"
     : resultIsIncorrect
       ? "border-red-400 bg-red-50 text-red-600"
-      : "border-slate-200 bg-white text-slate-900";
+      : "border-border bg-surface text-primary-text";
 
   return (
     <>
@@ -69,25 +69,25 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
         <button
           type="button"
           onClick={handleOpenExitConfirmation}
-          className="absolute top-5 right-5 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 sm:top-8 sm:right-8"
+          className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light sm:top-8 sm:right-8"
           aria-label="End flash card game"
         >
           <XMarkIcon className="h-7 w-7" />
         </button>
 
-        <header className="border-b border-slate-200 pb-5 pr-10">
+        <header className="border-b border-border pb-5 pr-10">
           <div className="flex flex-wrap items-center gap-2">
             <h2
               id="flash-card-game-title"
-              className="text-xl font-semibold text-slate-900"
+              className="text-xl font-semibold text-primary-text"
             >
               {props.preparedSession.areaName}
             </h2>
-            <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-600">
+            <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-primary-accent">
               Flash Cards
             </span>
           </div>
-          <p className="mt-2 text-base text-slate-500">
+          <p className="mt-2 text-base text-secondary-text">
             {props.preparedSession.totalFlashCards} Flash Cards
           </p>
         </header>
@@ -101,14 +101,14 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
               aria-hidden={!showTimer}
             >
               <div
-                className="flex h-[46px] items-center gap-2 rounded border border-slate-200 bg-slate-50 px-4 text-base text-slate-500 transition-opacity duration-300"
+                className="flex h-[46px] items-center gap-2 rounded border border-border bg-secondary-bg px-4 text-base text-secondary-text transition-opacity duration-300"
                 aria-label={`${remainingSeconds} seconds remaining`}
               >
                 <ClockIcon className="h-5 w-5" />
                 <span>Timer:</span>
                 <span
                   className={`font-semibold tabular-nums ${
-                    timerIsCritical ? "text-red-500" : "text-teal-600"
+                    timerIsCritical ? "text-error" : "text-primary-accent"
                   }`}
                 >
                   {remainingSeconds}{" "}
@@ -119,7 +119,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
             <p
               className={`absolute inset-0 flex items-center justify-center text-center text-base font-semibold transition-opacity duration-300 ${
                 showResult ? "opacity-100" : "opacity-0"
-              } ${resultIsCorrect ? "text-teal-600" : "text-red-500"}`}
+              } ${resultIsCorrect ? "text-primary-accent" : "text-error"}`}
               role="status"
               aria-live="polite"
               aria-hidden={!showResult}
@@ -130,7 +130,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
             </p>
           </div>
 
-          <span className="self-center rounded-full bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-600 md:absolute md:top-1/2 md:right-0 md:-translate-y-1/2">
+          <span className="self-center rounded-full bg-teal-50 px-4 py-2 text-sm font-semibold text-primary-accent md:absolute md:top-1/2 md:right-0 md:-translate-y-1/2">
             {currentTiming.cardOrder}/{props.preparedSession.totalFlashCards}{" "}
             Flash Cards
           </span>
@@ -142,10 +142,10 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
           }`}
         >
           <div>
-            <h3 className="mb-2 text-base font-semibold text-slate-900">
+            <h3 className="mb-2 text-base font-semibold text-primary-text">
               Question
             </h3>
-            <div className="min-h-[125px] whitespace-pre-wrap rounded border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-900 sm:p-5">
+            <div className="min-h-[125px] whitespace-pre-wrap rounded border border-border bg-secondary-bg p-4 text-sm leading-6 text-primary-text sm:p-5">
               {currentFlashCard.questionText}
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
           <div className="mt-5">
             <label
               htmlFor="flash-card-game-answer"
-              className="mb-2 block text-base font-semibold text-slate-900"
+              className="mb-2 block text-base font-semibold text-primary-text"
             >
               Answer
             </label>
@@ -165,12 +165,12 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
               disabled={isAnswerLocked}
               maxLength={2000}
               rows={3}
-              className={`min-h-[75px] w-full resize-y rounded border p-4 text-sm leading-6 outline-none transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 disabled:resize-none disabled:opacity-100 ${answerFieldClassName}`}
+              className={`min-h-[75px] w-full resize-y rounded border p-4 text-sm leading-6 outline-none transition-colors focus:border-primary-light focus:ring-2 focus:ring-primary-light/20 disabled:resize-none disabled:opacity-100 ${answerFieldClassName}`}
             />
 
             {resultIsIncorrect && answerReveal && (
               <p
-                className="mt-3 rounded border border-teal-400 bg-teal-50 px-4 py-3 text-sm leading-6 text-teal-700"
+                className="mt-3 rounded border border-teal-400 bg-teal-50 px-4 py-3 text-sm leading-6 text-primary-dark"
                 role="status"
               >
                 <span className="font-semibold">Correct:</span>{" "}
@@ -202,7 +202,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
             type="button"
             onClick={handleSubmitAnswer}
             disabled={!answer.trim() || phase !== "answering"}
-            className="mt-5 flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {phase === "checking"
               ? "Checking Answer..."

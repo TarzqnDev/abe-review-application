@@ -53,7 +53,7 @@ export default function GameSelectionModal(
       <div className="mb-8 flex items-center justify-between gap-5">
         <h2
           id="game-selection-title"
-          className="text-xl font-semibold text-slate-900"
+          className="text-xl font-semibold text-primary-text"
         >
           {props.gameType}
         </h2>
@@ -61,7 +61,7 @@ export default function GameSelectionModal(
           type="button"
           onClick={handleClose}
           disabled={isPreparing}
-          className="cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="Close game selection"
         >
           <XMarkIcon className="h-7 w-7" />
@@ -69,7 +69,7 @@ export default function GameSelectionModal(
       </div>
 
       <div className="space-y-5">
-        <label className="block text-sm font-semibold text-slate-900">
+        <label className="block text-sm font-semibold text-primary-text">
           Select Area
           <span className="relative mt-2 block">
             <select
@@ -81,7 +81,7 @@ export default function GameSelectionModal(
                 isPreparing ||
                 areas.length === 0
               }
-              className="h-[50px] w-full appearance-none rounded border border-slate-200 bg-white px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+              className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-light focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-slate-400"
             >
               {isLoadingAreas ? (
                 <option value="">Loading areas...</option>
@@ -95,11 +95,11 @@ export default function GameSelectionModal(
                 ))
               )}
             </select>
-            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-slate-500" />
+            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-secondary-text" />
           </span>
         </label>
 
-        <label className="block text-sm font-semibold text-slate-900">
+        <label className="block text-sm font-semibold text-primary-text">
           Select Difficulty
           <span className="relative mt-2 block">
             <select
@@ -108,7 +108,7 @@ export default function GameSelectionModal(
                 setDifficulty(event.target.value as typeof difficulty)
               }
               disabled={isPreparing}
-              className="h-[50px] w-full appearance-none rounded border border-slate-200 bg-white px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+              className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-light focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             >
               {quizDifficulties.map((difficultyOption) => (
                 <option key={difficultyOption} value={difficultyOption}>
@@ -116,7 +116,7 @@ export default function GameSelectionModal(
                 </option>
               ))}
             </select>
-            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-slate-500" />
+            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-secondary-text" />
           </span>
         </label>
 
@@ -134,7 +134,7 @@ export default function GameSelectionModal(
             isPreparing ||
             !selectedAreaId
           }
-          className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPreparing ? (
             <LoaderCircle className="h-5 w-5 animate-spin" />

@@ -59,7 +59,7 @@ export default function SubjectDetailsModal({
         ></div>
 
         <div
-          className={`relative max-h-[88vh] w-full max-w-[935px] overflow-y-auto rounded-md bg-white p-10 shadow-xl transition-all duration-300 ease-out ${
+          className={`relative max-h-[88vh] w-full max-w-[935px] overflow-y-auto rounded-md bg-surface p-10 shadow-xl transition-all duration-300 ease-out ${
             isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
@@ -70,14 +70,14 @@ export default function SubjectDetailsModal({
             onClick={() => closeWithAnimation(handleCloseSubjectDetails)}
             className="absolute top-10 right-9 cursor-pointer"
           >
-            <XMarkIcon className="h-7 w-7 text-slate-500" />
+            <XMarkIcon className="h-7 w-7 text-secondary-text" />
           </button>
 
-          <div className="mb-6 border-b border-slate-200 pb-6">
-            <h2 className="pr-10 text-xl font-semibold text-slate-950">
+          <div className="mb-6 border-b border-border pb-6">
+            <h2 className="pr-10 text-xl font-semibold text-primary-text">
               {subject?.name}
             </h2>
-            <p className="mt-3 text-base text-slate-500">
+            <p className="mt-3 text-base text-secondary-text">
               {selectedSubjectTotalQuestions}{" "}
               {selectedSubjectTotalQuestions === 1 ? "Question" : "Questions"}
             </p>
@@ -86,7 +86,7 @@ export default function SubjectDetailsModal({
           <button
             type="button"
             onClick={() => handleOpenCreateQuestionModal(null)}
-            className="mb-5 h-10 w-full cursor-pointer rounded border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition-colors hover:border-teal-600 hover:text-teal-600"
+            className="mb-5 h-10 w-full cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent"
           >
             + Add Question
           </button>
@@ -101,22 +101,22 @@ export default function SubjectDetailsModal({
             <div className="flex flex-col gap-6">
               {selectedSubjectSummariesByDifficulty.map((summaryGroup) => (
                 <section key={summaryGroup.difficulty}>
-                  <h3 className="mb-2 text-sm font-semibold text-slate-950">
+                  <h3 className="mb-2 text-sm font-semibold text-primary-text">
                     {summaryGroup.difficulty}
                   </h3>
                   <div className="grid gap-3 md:grid-cols-3">
                     {summaryGroup.summaries.map((summary) => (
                       <div
                         key={`${summary.difficulty}-${summary.gameType}`}
-                        className="flex min-h-[135px] flex-col rounded border border-slate-200 bg-slate-50 px-2.5 py-4 text-center"
+                        className="flex min-h-[135px] flex-col rounded border border-border bg-secondary-bg px-2.5 py-4 text-center"
                       >
-                        <h4 className="text-sm font-medium text-slate-950">
+                        <h4 className="text-sm font-medium text-primary-text">
                           {summary.gameType}
                         </h4>
-                        <p className="mt-3 text-sm font-medium text-teal-600">
+                        <p className="mt-3 text-sm font-medium text-primary-accent">
                           {summary.questionCount}
                         </p>
-                        <p className="mt-2 text-xs text-slate-500">Questions</p>
+                        <p className="mt-2 text-xs text-secondary-text">Questions</p>
 
                         {summary.questionCount > 0 && (
                           <div className="mt-2">
@@ -125,7 +125,7 @@ export default function SubjectDetailsModal({
                               onClick={() =>
                                 handleOpenQuestionListModal(summary)
                               }
-                              className="h-[30px] w-full cursor-pointer rounded bg-teal-600 text-xs font-medium text-white transition-colors hover:bg-teal-700"
+                              className="h-[30px] w-full cursor-pointer rounded bg-primary-accent text-xs font-medium text-surface transition-colors hover:bg-primary-dark"
                             >
                               View Questions
                             </button>

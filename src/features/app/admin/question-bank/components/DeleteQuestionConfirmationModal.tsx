@@ -47,7 +47,7 @@ export default function DeleteQuestionConfirmationModal({
 
       <form
         onSubmit={handleDeleteQuestion}
-        className={`relative w-full max-w-[430px] rounded-md bg-white p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -58,7 +58,7 @@ export default function DeleteQuestionConfirmationModal({
           onClick={() => closeWithAnimation(onClose)}
           className="absolute top-6 right-6 cursor-pointer"
         >
-          <XMarkIcon className="h-6 w-6 text-slate-500" />
+          <XMarkIcon className="h-6 w-6 text-secondary-text" />
         </button>
 
         <input type="hidden" name="questionId" value={question?.id ?? ""} />
@@ -69,39 +69,39 @@ export default function DeleteQuestionConfirmationModal({
         />
 
         <div className="pr-9">
-          <h2 className="text-xl font-semibold text-slate-950">
+          <h2 className="text-xl font-semibold text-primary-text">
             Delete Question
           </h2>
-          <p className="mt-3 text-sm leading-6 text-slate-500">
+          <p className="mt-3 text-sm leading-6 text-secondary-text">
             Are you sure you want to delete this question? This action cannot be
             undone.
           </p>
         </div>
 
         {question && (
-          <div className="mt-5 rounded border border-slate-200 bg-slate-50 p-4">
-            <p className="line-clamp-3 text-sm font-medium leading-6 text-slate-950">
+          <div className="mt-5 rounded border border-border bg-secondary-bg p-4">
+            <p className="line-clamp-3 text-sm font-medium leading-6 text-primary-text">
               {question.question_text}
             </p>
           </div>
         )}
 
         {deleteQuestionError && (
-          <p className="mt-4 text-sm text-red-500">{deleteQuestionError}</p>
+          <p className="mt-4 text-sm text-error">{deleteQuestionError}</p>
         )}
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => closeWithAnimation(onClose)}
-            className="h-11 cursor-pointer rounded border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition-colors hover:border-teal-600 hover:text-teal-600"
+            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isDeletingQuestion}
-            className="flex h-11 cursor-pointer items-center justify-center rounded bg-teal-600 text-sm font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-11 cursor-pointer items-center justify-center rounded bg-primary-accent text-sm font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isDeletingQuestion ? (
               <LoaderCircle className="animate-spin" />

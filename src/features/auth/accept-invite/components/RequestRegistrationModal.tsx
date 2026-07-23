@@ -22,8 +22,8 @@ export default function RequestRegistrationModal({
             : "pointer-events-none -top-24 opacity-0"
         }`}
       >
-        <div className="rounded-lg border border-teal-700 bg-teal-800 px-5 py-4 shadow-lg">
-          <p className="text-center font-medium text-white">
+        <div className="rounded-lg border border-primary-dark bg-teal-800 px-5 py-4 shadow-lg">
+          <p className="text-center font-medium text-surface">
             {modal.successBannerMessage}
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function RequestRegistrationModal({
           onClick={modal.handleClose}
         />
         <div
-          className={`relative w-full max-w-xl rounded-lg bg-white p-6 shadow-xl transition-all duration-300 ease-out ${
+          className={`relative w-full max-w-xl rounded-lg bg-surface p-6 shadow-xl transition-all duration-300 ease-out ${
             isOpen
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
@@ -55,7 +55,7 @@ export default function RequestRegistrationModal({
             aria-label="Close request access modal"
             className="absolute top-3 right-3 cursor-pointer"
           >
-            <XMarkIcon className="size-5 text-slate-500" />
+            <XMarkIcon className="size-5 text-secondary-text" />
           </button>
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">
@@ -80,13 +80,13 @@ export default function RequestRegistrationModal({
                   value={modal.formData.email}
                   onChange={modal.handleInput}
                   autoComplete="email"
-                  className="h-12 w-full rounded-sm border border-slate-200 px-4 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15"
+                  className="h-12 w-full rounded-sm border border-border px-4 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
                 />
               </div>
               <button
                 type="submit"
                 disabled={modal.isSubmitting}
-                className="flex h-12 cursor-pointer items-center justify-center rounded-sm bg-teal-600 px-4 font-medium text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="flex h-12 cursor-pointer items-center justify-center rounded-sm bg-primary-accent px-4 font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {modal.isSubmitting ? (
                   <LoaderCircle className="animate-spin" />
@@ -95,7 +95,7 @@ export default function RequestRegistrationModal({
                 )}
               </button>
               {modal.error && (
-                <p className="text-sm text-red-500">{modal.error}</p>
+                <p className="text-sm text-error">{modal.error}</p>
               )}
             </form>
           </div>

@@ -5,7 +5,7 @@ export function Skeleton({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="skeleton"
-      className={`${skeletonStyles.skeleton} relative overflow-hidden rounded-md bg-slate-200 ${className ?? ""}`}
+      className={`${skeletonStyles.skeleton} relative overflow-hidden rounded-md bg-border ${className ?? ""}`}
       {...props}
     />
   );

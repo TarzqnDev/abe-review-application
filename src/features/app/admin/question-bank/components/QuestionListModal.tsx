@@ -93,18 +93,18 @@ export default function QuestionListModal({
         ></div>
 
         <div
-          className={`relative max-h-[88vh] w-full max-w-[935px] overflow-y-auto rounded-md bg-white p-10 shadow-xl transition-all duration-300 ease-out ${
+          className={`relative max-h-[88vh] w-full max-w-[935px] overflow-y-auto rounded-md bg-surface p-10 shadow-xl transition-all duration-300 ease-out ${
             isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
           }`}
         >
-          <div className="mb-5 flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+          <div className="mb-5 flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">
+              <h2 className="text-xl font-semibold text-primary-text">
                 {selectedSubject?.name}
               </h2>
-              <p className="mt-2 text-base font-medium text-slate-500">
+              <p className="mt-2 text-base font-medium text-secondary-text">
                 {activeQuestionSummary?.gameType} ({activeQuestionSummary?.difficulty}){" "}
                 • {activeQuestionSetQuestions.length}{" "}
                 {activeQuestionSetQuestions.length === 1
@@ -122,13 +122,13 @@ export default function QuestionListModal({
                   value={searchQuery}
                   onChange={handleSearchQueryChange}
                   placeholder="Search a question"
-                  className="h-10 w-full rounded-full border border-slate-200 bg-white pr-4 pl-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#009688] focus:ring-2 focus:ring-[#E0F2F1]"
+                  className="h-10 w-full rounded-full border border-border bg-surface pr-4 pl-10 text-sm text-primary-text outline-none placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-[#E0F2F1]"
                 />
               </label>
               <button
                 type="button"
                 onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
-                className="shrink-0 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
+                className="shrink-0 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent"
                 aria-label="Close question list"
               >
                 <XMarkIcon className="h-7 w-7" />
@@ -139,7 +139,7 @@ export default function QuestionListModal({
           <button
             type="button"
             onClick={handleAddQuestion}
-            className="mb-5 flex h-10 w-full cursor-pointer items-center justify-center rounded border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition-colors hover:border-[#009688] hover:text-[#009688] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
+            className="mb-5 flex h-10 w-full cursor-pointer items-center justify-center rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent"
           >
             + Add Question
           </button>
@@ -158,17 +158,17 @@ export default function QuestionListModal({
               return (
                 <article
                   key={question.id}
-                  className="rounded border border-slate-200 bg-slate-50 p-5"
+                  className="rounded border border-border bg-secondary-bg p-5"
                 >
                   <div className="mb-3 flex items-start justify-between gap-4">
-                    <h3 className="text-sm font-semibold text-slate-950">
+                    <h3 className="text-sm font-semibold text-primary-text">
                       Question # {questionNumber}
                     </h3>
                     <div className="flex shrink-0 items-center gap-3">
                       <button
                         type="button"
                         onClick={() => handleOpenEditQuestion(question)}
-                        className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-[#009688] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009688]"
+                        className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text transition-colors hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent"
                         aria-label={`Edit question ${questionNumber}`}
                       >
                         <PencilSquareIcon className="h-4 w-4" />
@@ -177,7 +177,7 @@ export default function QuestionListModal({
                       <button
                         type="button"
                         onClick={() => handleOpenDeleteConfirmation(question)}
-                        className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                        className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error"
                         aria-label={`Delete question ${questionNumber}`}
                       >
                         <TrashIcon className="h-4 w-4" />
@@ -186,16 +186,16 @@ export default function QuestionListModal({
                     </div>
                   </div>
 
-                  <p className="whitespace-pre-wrap text-sm leading-5 text-slate-950">
+                  <p className="whitespace-pre-wrap text-sm leading-5 text-primary-text">
                     {question.question_text}
                   </p>
 
                   <div className="mt-5">
-                    <p className="mb-2 text-sm font-semibold text-slate-950">
+                    <p className="mb-2 text-sm font-semibold text-primary-text">
                       Answer:
                     </p>
                     {correctOption ? (
-                      <div className="rounded border border-[#009688] bg-[#E0F2F1] px-3 py-2 text-sm font-medium text-[#009688]">
+                      <div className="rounded border border-primary-accent bg-[#E0F2F1] px-3 py-2 text-sm font-medium text-primary-accent">
                         <span className="mr-2 font-semibold">
                           {
                             QUESTION_BANK_OPTION_LABELS[
@@ -216,7 +216,7 @@ export default function QuestionListModal({
               );
               })
             ) : (
-              <div className="rounded border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">
+              <div className="rounded border border-border bg-secondary-bg p-5 text-sm text-secondary-text">
                 {searchQuery.trim()
                   ? "No questions match your search."
                   : "No questions yet."}

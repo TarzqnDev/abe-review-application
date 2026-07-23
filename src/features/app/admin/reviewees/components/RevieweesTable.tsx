@@ -18,10 +18,10 @@ const formatDate = (date: string) => {
 const formatMode = (mode: string) => mode.toLowerCase() === "in-house" ? "In-House" : "Online";
 
 export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }: RevieweesTableProps) => (
-  <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+  <div className="overflow-x-auto rounded-lg border border-border bg-surface">
     <table className="w-full min-w-[880px] text-sm">
       <thead>
-        <tr className="border-b border-slate-200 text-slate-500">
+        <tr className="border-b border-border text-secondary-text">
           <th className="px-5 py-4 text-left font-medium">Name</th>
           <th className="px-5 py-4 text-left font-medium">Email Address</th>
           <th className="px-4 py-4 text-left font-medium">Status</th>
@@ -35,11 +35,11 @@ export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }
         {isLoading ? (
           <RevieweesTableSkeleton />
         ) : users.length ? users.map((user) => (
-          <tr key={user.user_id} className="border-b border-slate-200 last:border-b-0">
-            <td className="whitespace-nowrap px-5 py-3 font-medium text-slate-900">{user.full_name}</td>
+          <tr key={user.user_id} className="border-b border-border last:border-b-0">
+            <td className="whitespace-nowrap px-5 py-3 font-medium text-primary-text">{user.full_name}</td>
             <td className="px-5 py-3 text-slate-800">{user.email}</td>
             <td className="px-4 py-3">
-              <span className={`inline-flex min-w-[60px] justify-center rounded-full px-3 py-1 text-[10px] font-medium ${user.status.toLowerCase() === "active" ? "bg-teal-50 text-teal-600" : "bg-amber-50 text-amber-500"}`}>
+              <span className={`inline-flex min-w-[60px] justify-center rounded-full px-3 py-1 text-[10px] font-medium ${user.status.toLowerCase() === "active" ? "bg-teal-50 text-primary-accent" : "bg-amber-50 text-warning"}`}>
                 {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
               </span>
             </td>
@@ -52,10 +52,10 @@ export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }
                 </button>
               ) : <span className="text-slate-400">Unavailable</span>}
             </td>
-            <td className="px-4 py-3"><button type="button" className="cursor-pointer hover:text-teal-700">Edit</button></td>
+            <td className="px-4 py-3"><button type="button" className="cursor-pointer hover:text-primary-dark">Edit</button></td>
           </tr>
         )) : (
-          <tr><td colSpan={7} className="px-5 py-10 text-center text-slate-500">{emptyMessage}</td></tr>
+          <tr><td colSpan={7} className="px-5 py-10 text-center text-secondary-text">{emptyMessage}</td></tr>
         )}
       </tbody>
     </table>

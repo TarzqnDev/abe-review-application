@@ -7,7 +7,7 @@ export default function ActivityHistorySkeleton() {
         {Array.from({ length: 4 }, (_, index) => (
           <div
             key={index}
-            className="rounded-lg border border-slate-200 bg-white p-5"
+            className="rounded-lg border border-border bg-surface p-5"
           >
             <div className="flex items-center gap-3">
               <Skeleton className="h-10 w-10 rounded-md" />
@@ -20,7 +20,7 @@ export default function ActivityHistorySkeleton() {
         ))}
       </div>
 
-      <div className="mb-6 rounded-lg border border-slate-200 bg-white p-5">
+      <div className="mb-6 rounded-lg border border-border bg-surface p-5">
         <Skeleton className="h-4 w-28" />
         <div className="mt-3 flex gap-2">
           <Skeleton className="h-[30px] w-28 rounded" />
@@ -34,7 +34,7 @@ export default function ActivityHistorySkeleton() {
         {Array.from({ length: 4 }, (_, index) => (
           <div
             key={index}
-            className="rounded-lg border border-slate-200 bg-white p-5"
+            className="rounded-lg border border-border bg-surface p-5"
           >
             <div className="flex items-center gap-4">
               <Skeleton className="h-10 w-10 rounded-md" />

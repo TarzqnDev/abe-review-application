@@ -18,7 +18,7 @@ export default function ActivityHistoryError({
       <button
         type="button"
         onClick={onRetry}
-        className="mt-4 inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded border border-red-300 bg-white px-4 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
+        className="mt-4 inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded border border-red-300 bg-surface px-4 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
       >
         <ArrowPathIcon className="h-4 w-4" />
         Try Again

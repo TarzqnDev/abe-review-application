@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function QuestionBankLoadingSkeleton() {
   return (
     <div role="status" aria-label="Loading subject areas">
-      <div className="mb-12 rounded-md border border-slate-200 bg-white px-6 py-10">
+      <div className="mb-12 rounded-md border border-border bg-surface px-6 py-10">
         <div className="mx-auto flex max-w-xl flex-col items-center">
           <Skeleton className="h-24 w-24 rounded-full" />
           <Skeleton className="mt-5 h-6 w-48" />
@@ -12,7 +12,7 @@ export default function QuestionBankLoadingSkeleton() {
         </div>
       </div>
 
-      <div className="mb-5 flex items-center gap-3 border-b border-slate-200 pb-5">
+      <div className="mb-5 flex items-center gap-3 border-b border-border pb-5">
         <Skeleton className="h-6 w-32" />
         <Skeleton className="h-6 w-16 rounded-full" />
       </div>

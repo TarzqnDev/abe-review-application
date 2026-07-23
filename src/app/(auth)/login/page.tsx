@@ -18,7 +18,7 @@ export default function LoginPage() {
   } = useLogin();
 
   return (
-    <main className="flex min-h-screen bg-white">
+    <main className="flex min-h-screen bg-surface">
       <AuthImagePanel />
 
       <section className="flex min-h-screen w-full justify-center px-6 py-8 text-black sm:px-10 lg:w-2/5 lg:px-12 lg:py-16 xl:px-20">
@@ -27,10 +27,10 @@ export default function LoginPage() {
 
           <div className="my-auto py-14">
             <div className="mb-10">
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+              <h1 className="text-3xl font-semibold tracking-tight text-primary-text">
                 Grow Your Knowledge
               </h1>
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 sm:text-base">
+              <p className="mt-2 max-w-md text-sm leading-6 text-secondary-text sm:text-base">
                 A learning platform designed to help you grow at your own pace
                 through quizzes, flashcards, and reviews.
               </p>
@@ -48,7 +48,7 @@ export default function LoginPage() {
                   defaultValue={formData.email}
                   onChange={handleUserInput}
                   autoComplete="email"
-                  className="h-12 w-full rounded-sm border border-slate-200 px-4 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15"
+                  className="h-12 w-full rounded-sm border border-border px-4 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
                 />
               </div>
 
@@ -64,13 +64,13 @@ export default function LoginPage() {
                     defaultValue={formData.password}
                     onChange={handleUserInput}
                     autoComplete="current-password"
-                    className="h-12 w-full rounded-sm border border-slate-200 px-4 pr-12 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15"
+                    className="h-12 w-full rounded-sm border border-border px-4 pr-12 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
                   />
                   <button
                     type="button"
                     onClick={handlePasswordVisibility}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center text-slate-500"
+                    className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center text-secondary-text"
                   >
                     {showPassword ? (
                       <EyeSlashIcon className="size-5" />
@@ -89,11 +89,11 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoggingin}
-                className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-teal-600 font-medium text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isLoggingin ? <LoaderCircle className="animate-spin" /> : "Login"}
               </button>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+              {error && <p className="text-sm text-error">{error}</p>}
             </form>
           </div>
         </div>

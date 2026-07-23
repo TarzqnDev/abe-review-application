@@ -40,8 +40,8 @@ export default function AdminSubjectPage() {
       />
 
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-950">Question Bank</h1>
-        <p className="mt-1 text-base text-slate-500">
+        <h1 className="text-2xl font-semibold text-primary-text">Question Bank</h1>
+        <p className="mt-1 text-base text-secondary-text">
           Manage and organize your question sets by subject, area, and
           difficulty
         </p>
@@ -79,7 +79,7 @@ export default function AdminSubjectPage() {
               />
             ))
           ) : (
-            <div className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-500">
+            <div className="rounded-md border border-border bg-surface p-5 text-sm text-secondary-text">
               No subjects found.
             </div>
           )}

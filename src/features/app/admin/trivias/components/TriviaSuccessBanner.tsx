@@ -15,7 +15,7 @@ export default function TriviaSuccessBanner({
       role="status"
       aria-live="polite"
     >
-      <p className="rounded-lg bg-teal-700 px-5 py-4 text-center font-medium text-white shadow-lg">
+      <p className="rounded-lg bg-primary-dark px-5 py-4 text-center font-medium text-surface shadow-lg">
         {message}
       </p>
     </div>

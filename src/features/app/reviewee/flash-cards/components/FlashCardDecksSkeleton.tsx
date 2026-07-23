@@ -10,7 +10,7 @@ export default function FlashCardDecksSkeleton() {
       {Array.from({ length: 3 }, (_, skeletonIndex) => (
         <div
           key={skeletonIndex}
-          className="rounded-lg border border-slate-200 bg-white p-5"
+          className="rounded-lg border border-border bg-surface p-5"
         >
           <Skeleton className="h-5 w-20" />
           <div className="mt-5 flex items-center justify-between gap-4">

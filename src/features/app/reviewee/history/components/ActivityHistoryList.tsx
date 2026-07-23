@@ -12,7 +12,7 @@ type ActivityHistoryListProps = {
 };
 
 const statusStyles: Record<ActivityHistoryEntry["status"], string> = {
-  cancelled: "border-slate-200 bg-slate-50 text-slate-600",
+  cancelled: "border-border bg-secondary-bg text-slate-600",
   completed: "border-emerald-200 bg-emerald-50 text-emerald-700",
   exited: "border-amber-200 bg-amber-50 text-amber-700",
 };
@@ -55,17 +55,17 @@ export default function ActivityHistoryList({
         return (
           <article
             key={historyEntry.id}
-            className="rounded-lg border border-slate-200 bg-white p-5 transition-colors hover:border-slate-300"
+            className="rounded-lg border border-border bg-surface p-5 transition-colors hover:border-slate-300"
           >
             <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
               <div className="min-w-0 xl:w-[32%]">
                 <div className="flex items-start gap-3">
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-teal-50 text-teal-600">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-teal-50 text-primary-accent">
                     <TypeIcon className="h-5 w-5" />
                   </span>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="truncate text-base font-semibold text-slate-950">
+                      <h3 className="truncate text-base font-semibold text-primary-text">
                         {historyEntry.areaName}
                       </h3>
                       <span
@@ -74,7 +74,7 @@ export default function ActivityHistoryList({
                         {formatStatus(historyEntry.status)}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-secondary-text">
                       {isMcqQuiz
                         ? `MCQ Quiz · ${historyEntry.gameType}`
                         : historyEntry.gameType}
@@ -121,7 +121,7 @@ export default function ActivityHistoryList({
                     className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-100"
                   >
                     <div
-                      className="h-full rounded-full bg-teal-600"
+                      className="h-full rounded-full bg-primary-accent"
                       style={{
                         width: `${Math.min(100, historyEntry.completionPercentage)}%`,
                       }}
@@ -141,7 +141,7 @@ export default function ActivityHistoryList({
               <button
                 type="button"
                 onClick={() => onViewDetails(historyEntry)}
-                className="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded border border-teal-600 bg-white px-4 text-xs font-medium text-teal-600 transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+                className="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded border border-primary-accent bg-surface px-4 text-xs font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
               >
                 View Details
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />

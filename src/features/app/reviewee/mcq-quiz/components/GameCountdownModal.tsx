@@ -34,21 +34,21 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
       isVisible={isVisible}
       labelledBy="game-countdown-title"
     >
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">
+      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary-accent">
         Get ready
       </p>
       <h2
         id="game-countdown-title"
-        className="mt-3 text-xl font-semibold text-slate-900"
+        className="mt-3 text-xl font-semibold text-primary-text"
       >
         {props.preparedSession.gameType}
       </h2>
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-secondary-text">
         {props.preparedSession.areaName} · {props.preparedSession.difficulty}
       </p>
 
       <div
-        className="my-8 text-8xl font-semibold tabular-nums text-teal-600 transition-opacity duration-300"
+        className="my-8 text-8xl font-semibold tabular-nums text-primary-accent transition-opacity duration-300"
         aria-live="assertive"
         aria-atomic="true"
       >
@@ -71,7 +71,7 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
         type="button"
         onClick={handleCancel}
         disabled={isCancelling || isStarting}
-        className="flex h-11 w-full cursor-pointer items-center justify-center rounded border border-teal-600 bg-white text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-11 w-full cursor-pointer items-center justify-center rounded border border-primary-accent bg-surface text-sm font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isCancelling || isStarting ? (
           <LoaderCircle className="h-5 w-5 animate-spin" />

@@ -62,7 +62,7 @@ export default function DeleteTriviaConfirmationModal({
       <form
         ref={dialogRef}
         onSubmit={handleDeleteTrivia}
-        className={`relative w-full max-w-[430px] rounded-md bg-white p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -72,22 +72,22 @@ export default function DeleteTriviaConfirmationModal({
           type="button"
           onClick={() => closeWithAnimation(onClose)}
           disabled={isDeleting}
-          className="absolute top-6 right-6 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="absolute top-6 right-6 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="Close delete trivia confirmation"
         >
-          <XMarkIcon className="h-6 w-6 text-slate-500" />
+          <XMarkIcon className="h-6 w-6 text-secondary-text" />
         </button>
 
         <div className="pr-9">
           <h2
             id="delete-trivia-modal-title"
-            className="text-xl font-semibold text-slate-950"
+            className="text-xl font-semibold text-primary-text"
           >
             Delete Trivia
           </h2>
           <p
             id="delete-trivia-modal-description"
-            className="mt-3 text-sm leading-6 text-slate-500"
+            className="mt-3 text-sm leading-6 text-secondary-text"
           >
             Are you sure you want to delete this trivia? This action cannot be
             undone.
@@ -95,7 +95,7 @@ export default function DeleteTriviaConfirmationModal({
         </div>
 
         {trivia && (
-          <p className="mt-5 line-clamp-3 rounded border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-950">
+          <p className="mt-5 line-clamp-3 rounded border border-border bg-secondary-bg p-4 text-sm leading-6 text-primary-text">
             {trivia.content}
           </p>
         )}
@@ -112,14 +112,14 @@ export default function DeleteTriviaConfirmationModal({
             type="button"
             onClick={() => closeWithAnimation(onClose)}
             disabled={isDeleting}
-            className="h-11 cursor-pointer rounded border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition-colors hover:border-teal-600 hover:text-teal-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isDeleting}
-            className="flex h-11 cursor-pointer items-center justify-center rounded bg-red-600 text-sm font-semibold text-white transition-colors hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-11 cursor-pointer items-center justify-center rounded bg-red-600 text-sm font-semibold text-surface transition-colors hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isDeleting ? (
               <LoaderCircle className="h-5 w-5 animate-spin" aria-label="Deleting" />

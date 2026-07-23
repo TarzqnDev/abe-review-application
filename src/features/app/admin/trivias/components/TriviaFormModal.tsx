@@ -76,7 +76,7 @@ export default function TriviaFormModal({
 
       <div
         ref={dialogRef}
-        className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[560px] overflow-y-auto rounded-md bg-white p-7 shadow-xl transition-all duration-300 ease-out sm:p-9 ${
+        className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[560px] overflow-y-auto rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-9 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -86,7 +86,7 @@ export default function TriviaFormModal({
           type="button"
           onClick={handleClose}
           disabled={isSaving}
-          className="absolute top-7 right-7 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 disabled:cursor-not-allowed disabled:opacity-50 sm:top-9 sm:right-9"
+          className="absolute top-7 right-7 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50 sm:top-9 sm:right-9"
           aria-label={`Close ${modalTitle.toLowerCase()} modal`}
         >
           <XMarkIcon className="h-7 w-7" aria-hidden="true" />
@@ -94,7 +94,7 @@ export default function TriviaFormModal({
 
         <h2
           id="trivia-form-modal-title"
-          className="mb-8 pr-12 text-xl font-semibold text-slate-950"
+          className="mb-8 pr-12 text-xl font-semibold text-primary-text"
         >
           {modalTitle}
         </h2>
@@ -102,7 +102,7 @@ export default function TriviaFormModal({
         <form onSubmit={handleSaveTrivia} className="flex flex-col gap-5">
           <label
             htmlFor="trivia-content"
-            className="text-sm font-semibold text-slate-950"
+            className="text-sm font-semibold text-primary-text"
           >
             Trivia Content
             <textarea
@@ -114,14 +114,14 @@ export default function TriviaFormModal({
               rows={7}
               maxLength={1000}
               required
-              className="mt-2 w-full resize-none rounded border border-slate-200 px-4 py-3 text-sm font-normal leading-6 text-slate-950 outline-none transition-colors placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+              className="mt-2 w-full resize-none rounded border border-border px-4 py-3 text-sm font-normal leading-6 text-primary-text outline-none transition-colors placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
               placeholder="Share an interesting ABE fact or insight"
             />
           </label>
 
           <label
             htmlFor="trivia-publish-date"
-            className="text-sm font-semibold text-slate-950"
+            className="text-sm font-semibold text-primary-text"
           >
             Publish Date
             <input
@@ -132,7 +132,7 @@ export default function TriviaFormModal({
               onChange={(event) => setPublishDate(event.target.value)}
               disabled={isSaving}
               required
-              className="mt-2 h-[50px] w-full rounded border border-slate-200 bg-white px-4 text-base font-normal text-slate-700 outline-none transition-colors focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+              className="mt-2 h-[50px] w-full rounded border border-border bg-surface px-4 text-base font-normal text-slate-700 outline-none transition-colors focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             />
           </label>
 
@@ -148,7 +148,7 @@ export default function TriviaFormModal({
                 type="button"
                 onClick={() => onRequestDelete(request.trivia as AdminTrivia)}
                 disabled={isSaving}
-                className="flex h-[50px] cursor-pointer items-center justify-center gap-2 rounded border border-red-200 bg-white px-5 text-base font-semibold text-red-600 transition-colors hover:border-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-[50px] cursor-pointer items-center justify-center gap-2 rounded border border-red-200 bg-surface px-5 text-base font-semibold text-red-600 transition-colors hover:border-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
                 Delete Trivia
@@ -158,7 +158,7 @@ export default function TriviaFormModal({
             <button
               type="submit"
               disabled={isSaving}
-              className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isSaving ? (
                 <LoaderCircle className="h-5 w-5 animate-spin" aria-label="Saving" />

@@ -81,7 +81,7 @@ export default function QuestionFormModal({
       ></div>
 
       <div
-        className={`relative max-h-[88vh] w-full max-w-[760px] overflow-y-auto rounded-md bg-white p-9 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative max-h-[88vh] w-full max-w-[760px] overflow-y-auto rounded-md bg-surface p-9 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -92,14 +92,14 @@ export default function QuestionFormModal({
           onClick={() => closeWithAnimation(handleCloseQuestionFormModal)}
           className="absolute top-9 right-9 cursor-pointer"
         >
-          <XMarkIcon className="h-7 w-7 text-slate-500" />
+          <XMarkIcon className="h-7 w-7 text-secondary-text" />
         </button>
 
-        <div className="mb-6 border-b border-slate-200 pb-5">
-          <h2 className="text-xl font-semibold text-slate-950">
+        <div className="mb-6 border-b border-border pb-5">
+          <h2 className="text-xl font-semibold text-primary-text">
             {isEditMode ? "Edit Question" : "Add Question"}
           </h2>
-          <p className="mt-2 text-base font-medium text-slate-500">
+          <p className="mt-2 text-base font-medium text-secondary-text">
             {selectedSubject?.name}
           </p>
         </div>
@@ -119,11 +119,11 @@ export default function QuestionFormModal({
           )}
 
           {isEditMode && selectedEditQuestion && (
-            <div className="rounded border border-slate-200 bg-slate-50 px-4 py-3">
-              <p className="text-sm font-semibold text-slate-950">
+            <div className="rounded border border-border bg-secondary-bg px-4 py-3">
+              <p className="text-sm font-semibold text-primary-text">
                 Editing selected question
               </p>
-              <p className="mt-1 line-clamp-2 text-sm text-slate-500">
+              <p className="mt-1 line-clamp-2 text-sm text-secondary-text">
                 {selectedEditQuestion.question_text}
               </p>
             </div>
@@ -139,7 +139,7 @@ export default function QuestionFormModal({
                 name="gameType"
                 value={questionFormData.gameType}
                 onChange={handleQuestionInput}
-                className="h-[50px] rounded border border-slate-200 bg-white px-5 text-base outline-none focus:border-teal-600"
+                className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent"
               >
                 {QUESTION_BANK_GAME_TYPES.map((gameType) => (
                   <option key={gameType} value={gameType}>
@@ -158,7 +158,7 @@ export default function QuestionFormModal({
                 name="difficulty"
                 value={questionFormData.difficulty}
                 onChange={handleQuestionInput}
-                className="h-[50px] rounded border border-slate-200 bg-white px-5 text-base outline-none focus:border-teal-600"
+                className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent"
               >
                 {QUESTION_BANK_DIFFICULTIES.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
@@ -180,12 +180,12 @@ export default function QuestionFormModal({
               onChange={handleQuestionInput}
               rows={5}
               maxLength={1000}
-              className="resize-none rounded border border-slate-200 px-4 py-3 text-sm outline-none focus:border-teal-600"
+              className="resize-none rounded border border-border px-4 py-3 text-sm outline-none focus:border-primary-accent"
             />
           </div>
 
           <div>
-            <p className="mb-5 text-sm font-medium text-slate-500">
+            <p className="mb-5 text-sm font-medium text-secondary-text">
               Select the correct answer
             </p>
             <div className="grid gap-5 md:grid-cols-2">
@@ -197,7 +197,7 @@ export default function QuestionFormModal({
                   >
                     Option {QUESTION_BANK_OPTION_LABELS[optionNumber - 1]}
                   </label>
-                  <div className="flex h-[50px] items-center gap-3 rounded border border-slate-200 bg-white px-3 focus-within:border-teal-600">
+                  <div className="flex h-[50px] items-center gap-3 rounded border border-border bg-surface px-3 focus-within:border-primary-accent">
                     <input
                       type="radio"
                       name="correctOptionSortOrder"
@@ -207,7 +207,7 @@ export default function QuestionFormModal({
                         String(optionNumber)
                       }
                       onChange={handleQuestionInput}
-                      className="h-4 w-4 shrink-0 accent-teal-600"
+                      className="h-4 w-4 shrink-0 accent-primary-accent"
                     />
                     <input
                       id={`option${optionNumber}`}
@@ -231,7 +231,7 @@ export default function QuestionFormModal({
           <button
             type="submit"
             disabled={isSavingQuestion}
-            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSavingQuestion ? (
               <LoaderCircle className="animate-spin" />
@@ -243,7 +243,7 @@ export default function QuestionFormModal({
           </button>
 
           {questionFormError && (
-            <p className="text-sm text-red-500">{questionFormError}</p>
+            <p className="text-sm text-error">{questionFormError}</p>
           )}
         </form>
       </div>

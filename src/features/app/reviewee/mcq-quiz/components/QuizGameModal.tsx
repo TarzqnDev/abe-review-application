@@ -64,20 +64,20 @@ export default function QuizGameModal(props: QuizGameModalProps) {
         <button
           type="button"
           onClick={handleOpenExitConfirmation}
-          className="absolute top-5 right-5 cursor-pointer rounded text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 sm:top-8 sm:right-8"
+          className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light sm:top-8 sm:right-8"
           aria-label="End game"
         >
           <XMarkIcon className="h-7 w-7" />
         </button>
 
-        <header className="border-b border-slate-200 pb-5 pr-10">
+        <header className="border-b border-border pb-5 pr-10">
           <h2
             id="quiz-game-title"
-            className="text-xl font-semibold text-slate-900"
+            className="text-xl font-semibold text-primary-text"
           >
             {props.preparedSession.areaName} Quiz
           </h2>
-          <p className="mt-2 text-base text-slate-500">
+          <p className="mt-2 text-base text-secondary-text">
             {props.preparedSession.gameType} ({props.preparedSession.difficulty})
           </p>
         </header>
@@ -91,14 +91,14 @@ export default function QuizGameModal(props: QuizGameModalProps) {
               aria-hidden={!showTimer}
             >
               <div
-                className="flex h-[46px] items-center gap-2 rounded border border-slate-200 bg-slate-50 px-4 text-base text-slate-500 transition-opacity duration-300"
+                className="flex h-[46px] items-center gap-2 rounded border border-border bg-secondary-bg px-4 text-base text-secondary-text transition-opacity duration-300"
                 aria-label={`${remainingSeconds} seconds remaining`}
               >
                 <ClockIcon className="h-5 w-5" />
                 <span>Timer:</span>
                 <span
                   className={`font-semibold tabular-nums ${
-                    timerIsCritical ? "text-red-500" : "text-teal-600"
+                    timerIsCritical ? "text-error" : "text-primary-accent"
                   }`}
                 >
                   {remainingSeconds}{" "}
@@ -109,7 +109,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             <p
               className={`absolute inset-0 flex items-center justify-center text-center text-base font-semibold transition-opacity duration-300 ${
                 showResult ? "opacity-100" : "opacity-0"
-              } ${resultIsCorrect ? "text-teal-600" : "text-red-500"}`}
+              } ${resultIsCorrect ? "text-primary-accent" : "text-error"}`}
               role="status"
               aria-live="polite"
               aria-hidden={!showResult}
@@ -120,7 +120,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             </p>
           </div>
 
-          <span className="self-center rounded-full bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-600 md:absolute md:top-1/2 md:right-0 md:-translate-y-1/2">
+          <span className="self-center rounded-full bg-teal-50 px-4 py-2 text-sm font-semibold text-primary-accent md:absolute md:top-1/2 md:right-0 md:-translate-y-1/2">
             {currentTiming.questionOrder}/{props.preparedSession.totalQuestions}{" "}
             Questions
           </span>
@@ -133,20 +133,20 @@ export default function QuizGameModal(props: QuizGameModalProps) {
         >
           <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-base font-semibold text-slate-900">
+              <h3 className="text-base font-semibold text-primary-text">
                 Question
               </h3>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500">
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-secondary-text">
                 {currentQuestion.subjectName}
               </span>
             </div>
-            <div className="min-h-[130px] rounded border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-900 sm:min-h-[145px] sm:p-5">
+            <div className="min-h-[130px] rounded border border-border bg-surface p-4 text-sm leading-6 text-primary-text sm:min-h-[145px] sm:p-5">
               {currentQuestion.questionText}
             </div>
           </div>
 
           <div className="mt-5">
-            <p className="mb-4 text-sm font-medium text-slate-500">
+            <p className="mb-4 text-sm font-medium text-secondary-text">
               Select the correct answer
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -191,7 +191,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             disabled={
               selectedOptionId === null || phase !== "answering"
             }
-            className="mt-5 flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {phase === "checking"
               ? "Checking Answer..."

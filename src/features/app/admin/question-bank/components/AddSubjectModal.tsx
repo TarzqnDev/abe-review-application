@@ -57,7 +57,7 @@ export default function AddSubjectModal({
       ></div>
 
       <div
-        className={`relative w-full max-w-[525px] rounded-md bg-white p-9 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[525px] rounded-md bg-surface p-9 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -68,10 +68,10 @@ export default function AddSubjectModal({
           onClick={() => closeWithAnimation(handleCloseAddSubjectModal)}
           className="absolute top-9 right-9 cursor-pointer"
         >
-          <XMarkIcon className="h-7 w-7 text-slate-500" />
+          <XMarkIcon className="h-7 w-7 text-secondary-text" />
         </button>
 
-        <h2 className="mb-8 text-xl font-semibold text-slate-950">
+        <h2 className="mb-8 text-xl font-semibold text-primary-text">
           Add New Subject
         </h2>
 
@@ -87,7 +87,7 @@ export default function AddSubjectModal({
               type="text"
               value={selectedSubjectAreaName}
               readOnly
-              className="h-[50px] w-full cursor-default rounded border border-slate-200 bg-slate-50 px-5 text-base font-medium text-slate-700 outline-none"
+              className="h-[50px] w-full cursor-default rounded border border-border bg-secondary-bg px-5 text-base font-medium text-slate-700 outline-none"
             />
           </div>
 
@@ -103,18 +103,18 @@ export default function AddSubjectModal({
               onChange={handleSubjectInput}
               required
               maxLength={255}
-              className="h-[50px] w-full rounded border border-slate-200 px-5 text-base text-slate-950 outline-none focus:border-teal-600"
+              className="h-[50px] w-full rounded border border-border px-5 text-base text-primary-text outline-none focus:border-primary-accent"
             />
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-secondary-text">
             ✓ You can add questions to this subject after creating it
           </p>
 
           <button
             type="submit"
             disabled={isCreatingSubject}
-            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-teal-600 px-5 text-base font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isCreatingSubject ? (
               <LoaderCircle className="animate-spin" />
@@ -123,7 +123,7 @@ export default function AddSubjectModal({
             )}
           </button>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-error">{error}</p>}
         </form>
       </div>
     </div>

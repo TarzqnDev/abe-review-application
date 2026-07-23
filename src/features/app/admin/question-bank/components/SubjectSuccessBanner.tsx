@@ -13,8 +13,8 @@ export default function SubjectSuccessBanner({
         show ? "top-12 opacity-100" : "pointer-events-none -top-24 opacity-0"
       }`}
     >
-      <div className="rounded-md border border-teal-700 bg-teal-600 px-5 py-4 shadow-lg">
-        <p className="text-center text-sm font-medium text-white">{message}</p>
+      <div className="rounded-md border border-primary-dark bg-primary-accent px-5 py-4 shadow-lg">
+        <p className="text-center text-sm font-medium text-surface">{message}</p>
       </div>
     </div>
   );

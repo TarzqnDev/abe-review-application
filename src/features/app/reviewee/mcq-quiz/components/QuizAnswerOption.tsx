@@ -25,27 +25,27 @@ export default function QuizAnswerOption({
     answerReveal !== null && isSelected && !isCorrect;
 
   const stateClassName = isCorrect
-    ? "border-teal-500 bg-teal-50 text-teal-900"
+    ? "border-primary-light bg-teal-50 text-teal-900"
     : isSelectedIncorrect
       ? "border-red-400 bg-red-50 text-red-800"
       : isSelected
-        ? "border-teal-500 bg-teal-50 text-slate-900"
-        : "border-slate-200 bg-white text-slate-900 hover:border-teal-300";
+        ? "border-primary-light bg-teal-50 text-primary-text"
+        : "border-border bg-surface text-primary-text hover:border-teal-300";
 
   const radioClassName = isCorrect
-    ? "border-teal-600 bg-teal-600 ring-2 ring-white ring-inset"
+    ? "border-primary-accent bg-primary-accent ring-2 ring-surface ring-inset"
     : isSelectedIncorrect
-      ? "border-red-500 bg-red-500 ring-2 ring-white ring-inset"
+      ? "border-error bg-error ring-2 ring-surface ring-inset"
       : isSelected
-        ? "border-teal-600 bg-teal-600 ring-2 ring-white ring-inset"
-        : "border-slate-300 bg-white";
+        ? "border-primary-accent bg-primary-accent ring-2 ring-surface ring-inset"
+        : "border-slate-300 bg-surface";
 
   return (
     <button
       type="button"
       onClick={() => onSelect(option.id)}
       disabled={disabled}
-      className={`min-h-[58px] w-full cursor-pointer rounded border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-default ${stateClassName}`}
+      className={`min-h-[58px] w-full cursor-pointer rounded border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-default ${stateClassName}`}
       aria-pressed={isSelected}
     >
       <span className="flex items-start gap-3">

@@ -37,15 +37,15 @@ const summaryCards = (
     icon: CheckCircleIcon,
     label: "Correct",
     value: history.correct,
-    className: "border-teal-100 bg-teal-50 text-teal-700",
-    iconClassName: "text-teal-600",
+    className: "border-teal-100 bg-teal-50 text-primary-dark",
+    iconClassName: "text-primary-accent",
   },
   {
     icon: XCircleIcon,
     label: "Incorrect",
     value: history.incorrect,
     className: "border-red-100 bg-red-50 text-red-600",
-    iconClassName: "text-red-500",
+    iconClassName: "text-error",
   },
   {
     icon: ClockIcon,
@@ -58,8 +58,8 @@ const summaryCards = (
     icon: MinusCircleIcon,
     label: "Not Played",
     value: history.notPlayed,
-    className: "border-slate-200 bg-slate-50 text-slate-600",
-    iconClassName: "text-slate-500",
+    className: "border-border bg-secondary-bg text-slate-600",
+    iconClassName: "text-secondary-text",
   },
 ];
 
@@ -85,28 +85,28 @@ export default function HistoryDetailsSummary({
         })}
       </div>
 
-      <dl className="mt-4 grid gap-x-5 gap-y-4 rounded border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="mt-4 grid gap-x-5 gap-y-4 rounded border border-border bg-secondary-bg p-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <dt className="text-slate-500">Accuracy</dt>
-          <dd className="mt-1 font-semibold text-slate-900">
+          <dt className="text-secondary-text">Accuracy</dt>
+          <dd className="mt-1 font-semibold text-primary-text">
             {history.accuracyPercentage}%
           </dd>
         </div>
         <div>
-          <dt className="text-slate-500">Progress</dt>
-          <dd className="mt-1 font-semibold text-slate-900">
+          <dt className="text-secondary-text">Progress</dt>
+          <dd className="mt-1 font-semibold text-primary-text">
             {history.questionsReached}/{history.totalQuestions}
           </dd>
         </div>
         <div>
-          <dt className="text-slate-500">Completion</dt>
-          <dd className="mt-1 font-semibold text-slate-900">
+          <dt className="text-secondary-text">Completion</dt>
+          <dd className="mt-1 font-semibold text-primary-text">
             {history.completionPercentage}%
           </dd>
         </div>
         <div>
-          <dt className="text-slate-500">Duration</dt>
-          <dd className="mt-1 font-semibold text-slate-900">
+          <dt className="text-secondary-text">Duration</dt>
+          <dd className="mt-1 font-semibold text-primary-text">
             {formatDuration(history.durationSeconds)}
           </dd>
         </div>

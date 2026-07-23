@@ -11,7 +11,7 @@ export default function AuthImagePanel() {
         className="object-cover"
         priority
       />
-      <div className="absolute inset-0 bg-linear-to-r from-teal-600 via-teal-200 to-white opacity-60" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary-accent via-teal-200 to-surface opacity-60" />
     </section>
   );
 }

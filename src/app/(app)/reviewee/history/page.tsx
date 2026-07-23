@@ -16,10 +16,10 @@ export default function RevieweeHistoryPage() {
   return (
     <section>
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-900">
+        <h1 className="text-2xl font-semibold text-primary-text">
           Activity History
         </h1>
-        <p className="mt-1 text-base text-slate-500">
+        <p className="mt-1 text-base text-secondary-text">
           Review your quiz results, flash card sessions, and study progress
         </p>
       </header>
@@ -48,10 +48,10 @@ export default function RevieweeHistoryPage() {
             <>
               <div className="mb-3 flex items-end justify-between gap-4">
                 <div>
-                  <h2 className="text-base font-semibold text-slate-950">
+                  <h2 className="text-base font-semibold text-primary-text">
                     Recent Activities
                   </h2>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs text-secondary-text">
                     Showing{" "}
                     {historyPage.filteredHistoryCount.toLocaleString()} activities
                   </p>
