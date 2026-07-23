@@ -1,6 +1,10 @@
 "use client";
 
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import { ProofOfPaymentModal } from "@/features/app/admin/reviewees/components/ProofOfPaymentModal";
 import { RegisterUserModal } from "@/features/app/admin/reviewees/components/RegisterUserModal";
 import { RevieweesPagination } from "@/features/app/admin/reviewees/components/RevieweesPagination";
@@ -43,17 +47,33 @@ export default function AdminRevieweesPage() {
           Register User
         </button>
 
-        <label className="relative block w-full sm:max-w-[275px]">
-          <span className="sr-only">Search user</span>
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <input
-            type="search"
-            value={reviewees.searchQuery}
-            onChange={(event) => reviewees.setSearchQuery(event.target.value)}
-            placeholder="Search user"
-            className="h-10 w-full rounded-full border border-border bg-surface pl-10 pr-4 text-sm outline-none transition focus:border-primary-light focus:ring-2 focus:ring-teal-100"
-          />
-        </label>
+        <div className="flex w-full items-center gap-2 sm:max-w-[323px]">
+          <button
+            type="button"
+            onClick={reviewees.refreshUsers}
+            disabled={reviewees.isLoading}
+            aria-label="Refresh reviewees"
+            title="Refresh reviewees"
+            className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border bg-surface text-secondary-text transition-colors hover:border-slate-300 hover:bg-secondary-bg focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <ArrowPathIcon
+              className={`h-5 w-5 ${reviewees.isLoading ? "animate-spin" : ""}`}
+              aria-hidden="true"
+            />
+          </button>
+
+          <label className="relative block min-w-0 flex-1">
+            <span className="sr-only">Search user</span>
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              type="search"
+              value={reviewees.searchQuery}
+              onChange={(event) => reviewees.setSearchQuery(event.target.value)}
+              placeholder="Search user"
+              className="h-10 w-full rounded-full border border-border bg-surface pl-10 pr-4 text-sm outline-none transition focus:border-primary-light focus:ring-2 focus:ring-teal-100"
+            />
+          </label>
+        </div>
       </div>
 
       <RevieweesTable

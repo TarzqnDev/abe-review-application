@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchUsers } from "@/features/app/admin/reviewees/actions/fetch-users.action";
 import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
 
@@ -17,26 +17,16 @@ export const useAdminReviewees = () => {
   const [selectedRevieweeName, setSelectedRevieweeName] = useState("");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const requestSequence = useRef(0);
 
   const loadUsers = useCallback(async () => {
+    const requestId = ++requestSequence.current;
     setIsLoading(true);
-    const result = await fetchUsers();
 
-    if (!result.success) {
-      setUsers([]);
-      setUsersError(result.error ?? "Unable to fetch reviewees.");
-    } else {
-      setUsers(result.users as Reviewee[]);
-      setUsersError("");
-    }
+    try {
+      const result = await fetchUsers();
+      if (requestId !== requestSequence.current) return;
 
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    let isCurrentRequest = true;
-    void fetchUsers().then((result) => {
-      if (!isCurrentRequest) return;
       if (!result.success) {
         setUsers([]);
         setUsersError(result.error ?? "Unable to fetch reviewees.");
@@ -44,12 +34,30 @@ export const useAdminReviewees = () => {
         setUsers(result.users as Reviewee[]);
         setUsersError("");
       }
-      setIsLoading(false);
-    });
-    return () => {
-      isCurrentRequest = false;
-    };
+    } catch {
+      if (requestId !== requestSequence.current) return;
+      setUsers([]);
+      setUsersError("Unable to fetch reviewees.");
+    } finally {
+      if (requestId === requestSequence.current) {
+        setIsLoading(false);
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    let isCurrentEffect = true;
+    void Promise.resolve().then(() => {
+      if (isCurrentEffect) {
+        void loadUsers();
+      }
+    });
+
+    return () => {
+      isCurrentEffect = false;
+      requestSequence.current += 1;
+    };
+  }, [loadUsers]);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -112,6 +120,7 @@ export const useAdminReviewees = () => {
     openPaymentModal,
     openRegisterModal: () => setIsRegisterModalOpen(true),
     paginatedUsers,
+    refreshUsers: loadUsers,
     searchQuery,
     selectedPaymentPath,
     selectedRevieweeName,
