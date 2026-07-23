@@ -46,3 +46,4 @@
 - Application modals use stack-aware shared body scroll locking, while nested modal flows suspend their parent dialog's accessibility and focus handling until the child closes.
 - Design System: application colors use shared Tailwind theme tokens for brand, text, surfaces, backgrounds, borders, and semantic states.
 - Authentication: successful logins show the shared animated teal success banner on the designated dashboard, while authenticated visits to `/login` explain that the current account must be logged out before another account can sign in.
+- Authentication: login success notices preserve their message and complete their entrance and exit animation when users navigate through the persistent app layout; delayed notice cleanup now uses the current route and keeps unrelated query parameters.
