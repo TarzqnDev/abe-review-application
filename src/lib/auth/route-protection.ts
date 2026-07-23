@@ -3,4 +3,8 @@ export const protectedRoutes = {
   "/reviewee": ["reviewee"],
 };
 
-export const authRoutes = ["/login"];
+export const authRoutes = [
+  "/login",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+];

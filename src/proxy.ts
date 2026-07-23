@@ -34,13 +34,18 @@ export async function proxy(request: NextRequest) {
 
   // ✅ Already logged in, redirect to designated dashboard
   if (isAuthRoute && session) {
+    const authNotice = pathname.startsWith("/auth/forgot-password")
+      ? AUTH_NOTICES.forgotPasswordAlreadyLoggedIn
+      : pathname.startsWith("/auth/reset-password")
+        ? AUTH_NOTICES.resetPasswordAlreadyLoggedIn
+        : AUTH_NOTICES.alreadyLoggedIn;
     const redirectUrl = new URL(
       roles.includes("admin") ? "/admin" : "/reviewee",
       request.url,
     );
     redirectUrl.searchParams.set(
       AUTH_NOTICE_QUERY_PARAMETER,
-      AUTH_NOTICES.alreadyLoggedIn,
+      authNotice,
     );
 
     if (roles.includes("admin") || roles.includes("reviewee")) {
@@ -65,6 +70,8 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/auth/accept-invite",
+    "/auth/forgot-password",
+    "/auth/reset-password",
     "/login",
     "/admin/:path*",
     "/reviewee/:path*",
