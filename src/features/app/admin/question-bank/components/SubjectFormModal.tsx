@@ -1,46 +1,58 @@
 import type { Dispatch, SetStateAction } from "react";
 import { LoaderCircle } from "lucide-react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import type { AdminSubjectArea } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
-import { useAddSubjectModal } from "@/features/app/admin/question-bank/hooks/modals/useAddSubjectModal";
+import {
+  type AdminSubject,
+  type AdminSubjectArea,
+} from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
+import { useSubjectFormModal } from "@/features/app/admin/question-bank/hooks/modals/useSubjectFormModal";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
 
-type AddSubjectModalProps = {
+type SubjectFormModalProps = {
   areaId: number | null;
   loadSubjectAreas: () => Promise<void>;
   onClose: () => void;
+  onEditSuccess: () => void;
   setIsLoadingSubjectAreas: Dispatch<SetStateAction<boolean>>;
   showSuccessMessage: (message: string) => void;
+  subject: AdminSubject | null;
   subjectAreas: AdminSubjectArea[];
 };
 
-export default function AddSubjectModal({
+export default function SubjectFormModal({
   areaId,
   loadSubjectAreas,
   onClose,
+  onEditSuccess,
   setIsLoadingSubjectAreas,
   showSuccessMessage,
+  subject,
   subjectAreas,
-}: AddSubjectModalProps) {
+}: SubjectFormModalProps) {
   const {
     error,
-    handleCloseAddSubjectModal,
-    handleCreateSubject,
+    dialogRef,
+    handleCloseSubjectFormModal,
+    handleSaveSubject,
     handleSubjectInput,
-    isCreatingSubject,
-    openAddSubjectModal,
+    isEditing,
+    isSavingSubject,
+    openSubjectFormModal,
     selectedSubjectAreaName,
+    subjectNameInputRef,
     subjectFormData,
-  } = useAddSubjectModal({
+  } = useSubjectFormModal({
     areaId,
     loadSubjectAreas,
     onClose,
+    onEditSuccess,
     setIsLoadingSubjectAreas,
     showSuccessMessage,
+    subject,
     subjectAreas,
   });
   const { closeWithAnimation, isModalVisible } = useModalAnimation(
-    openAddSubjectModal,
+    openSubjectFormModal,
   );
 
   return (
@@ -50,13 +62,25 @@ export default function AddSubjectModal({
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="subject-form-modal-title"
+      aria-hidden={!isModalVisible}
     >
-      <div
-        className="absolute inset-0 bg-slate-950/30"
-        onClick={() => closeWithAnimation(handleCloseAddSubjectModal)}
-      ></div>
+      <button
+        type="button"
+        className="absolute inset-0 cursor-default bg-slate-950/30"
+        onClick={() => {
+          if (!isSavingSubject) {
+            closeWithAnimation(handleCloseSubjectFormModal);
+          }
+        }}
+        aria-label="Close subject form"
+        tabIndex={-1}
+      />
 
       <div
+        ref={dialogRef}
         className={`relative w-full max-w-[525px] rounded-md bg-surface p-9 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
@@ -65,18 +89,24 @@ export default function AddSubjectModal({
       >
         <button
           type="button"
-          onClick={() => closeWithAnimation(handleCloseAddSubjectModal)}
-          className="absolute top-9 right-9 cursor-pointer"
+          onClick={() => closeWithAnimation(handleCloseSubjectFormModal)}
+          disabled={isSavingSubject}
+          className="absolute top-9 right-9 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Close subject form"
         >
           <XMarkIcon className="h-7 w-7 text-secondary-text" />
         </button>
 
-        <h2 className="mb-8 text-xl font-semibold text-primary-text">
-          Add New Subject
+        <h2
+          id="subject-form-modal-title"
+          className="mb-8 text-xl font-semibold text-primary-text"
+        >
+          {isEditing ? "Edit Subject" : "Add New Subject"}
         </h2>
 
-        <form onSubmit={handleCreateSubject} className="flex flex-col gap-5">
+        <form onSubmit={handleSaveSubject} className="flex flex-col gap-5">
           <input type="hidden" name="areaId" value={subjectFormData.areaId} />
+          <input type="hidden" name="subjectId" value={subject?.id ?? ""} />
 
           <div className="flex flex-col gap-2">
             <label htmlFor="selectedArea" className="text-sm font-semibold">
@@ -97,6 +127,7 @@ export default function AddSubjectModal({
             </label>
             <input
               id="subjectName"
+              ref={subjectNameInputRef}
               name="subjectName"
               type="text"
               value={subjectFormData.subjectName}
@@ -108,22 +139,30 @@ export default function AddSubjectModal({
           </div>
 
           <p className="text-xs text-secondary-text">
-            ✓ You can add questions to this subject after creating it
+            {isEditing
+              ? "✓ Existing questions will stay linked to this subject"
+              : "✓ You can add questions to this subject after creating it"}
           </p>
 
           <button
             type="submit"
-            disabled={isCreatingSubject}
+            disabled={isSavingSubject}
             className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isCreatingSubject ? (
-              <LoaderCircle className="animate-spin" />
+            {isSavingSubject ? (
+              <LoaderCircle className="animate-spin" aria-label="Saving" />
+            ) : isEditing ? (
+              "Save Changes"
             ) : (
               "Create Subject"
             )}
           </button>
 
-          {error && <p className="text-sm text-error">{error}</p>}
+          {error && (
+            <p role="alert" className="text-sm text-error">
+              {error}
+            </p>
+          )}
         </form>
       </div>
     </div>

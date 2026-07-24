@@ -5,6 +5,7 @@ import {
   type AdminSubjectArea,
 } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
 import { updateSubjectArea } from "@/features/app/admin/question-bank/actions/update-subject-area.action";
+import type { SubjectAreaMode } from "@/features/app/admin/question-bank/components/SubjectAreaSection";
 
 export type SubjectAreaFilter = "all" | number;
 
@@ -32,9 +33,16 @@ export const useQuestionBank = () => {
   const [selectedAddSubjectAreaId, setSelectedAddSubjectAreaId] = useState<
     number | null
   >(null);
+  const [selectedEditSubject, setSelectedEditSubject] =
+    useState<AdminSubject | null>(null);
+  const [selectedSubjectToDelete, setSelectedSubjectToDelete] =
+    useState<AdminSubject | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<AdminSubject | null>(
     null,
   );
+  const [subjectAreaModes, setSubjectAreaModes] = useState<
+    Record<number, Exclude<SubjectAreaMode, null>>
+  >({});
 
   const showSuccessMessage = (message: string) => {
     setSuccessBannerMessage(message);
@@ -123,12 +131,54 @@ export const useQuestionBank = () => {
     setSelectedAddSubjectAreaId(null);
   };
 
-  const handleOpenSubjectDetails = (subject: AdminSubject) => {
+  const handleCloseSubjectFormModal = () => {
+    setSelectedAddSubjectAreaId(null);
+    setSelectedEditSubject(null);
+  };
+
+  const handleSubjectAreaModeChange = (
+    areaId: number,
+    mode: SubjectAreaMode,
+  ) => {
+    setSubjectAreaModes(() => {
+      if (mode === null) {
+        return {};
+      }
+
+      return {
+        [areaId]: mode,
+      };
+    });
+  };
+
+  const handleSubjectModeOperationSuccess = () => {
+    setSubjectAreaModes({});
+  };
+
+  const handleSelectSubject = (
+    subject: AdminSubject,
+    mode: SubjectAreaMode,
+  ) => {
+    if (mode === "edit") {
+      setSelectedEditSubject(subject);
+      return;
+    }
+
+    if (mode === "remove") {
+      setSelectedSubjectToDelete(subject);
+      return;
+    }
+
+    setSubjectAreaModes({});
     setSelectedSubject(subject);
   };
 
   const handleCloseSubjectDetails = () => {
     setSelectedSubject(null);
+  };
+
+  const handleCloseDeleteSubjectConfirmation = () => {
+    setSelectedSubjectToDelete(null);
   };
 
   const handleAreaNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,21 +243,28 @@ export const useQuestionBank = () => {
     handleAreaNameChange,
     handleCancelAreaEditing,
     handleCloseAddSubjectModal,
+    handleCloseDeleteSubjectConfirmation,
+    handleCloseSubjectFormModal,
     handleCloseSubjectDetails,
     handleHideSuccessBanner,
     handleOpenAddSubjectModal,
-    handleOpenSubjectDetails,
     handleSearchQueryChange,
+    handleSelectSubject,
     handleStartAreaEditing,
+    handleSubjectAreaModeChange,
+    handleSubjectModeOperationSuccess,
     handleUpdateArea,
     isLoadingSubjectAreas,
     isUpdatingArea,
     searchQuery,
     selectedAddSubjectAreaId,
+    selectedEditSubject,
     selectedSubject,
+    selectedSubjectToDelete,
     showSuccessBanner,
     showSuccessMessage,
     subjectAreas,
+    subjectAreaModes,
     subjectAreasError,
     successBannerMessage,
     loadSubjectAreas,

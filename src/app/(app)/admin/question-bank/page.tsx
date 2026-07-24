@@ -1,10 +1,11 @@
 "use client";
 
-import AddSubjectModal from "@/features/app/admin/question-bank/components/AddSubjectModal";
+import DeleteSubjectConfirmationModal from "@/features/app/admin/question-bank/components/DeleteSubjectConfirmationModal";
 import QuestionBankLoadingSkeleton from "@/features/app/admin/question-bank/components/QuestionBankLoadingSkeleton";
 import SubjectAreaSection from "@/features/app/admin/question-bank/components/SubjectAreaSection";
 import SubjectDetailsModal from "@/features/app/admin/question-bank/components/SubjectDetailsModal";
 import SubjectFilters from "@/features/app/admin/question-bank/components/SubjectFilters";
+import SubjectFormModal from "@/features/app/admin/question-bank/components/SubjectFormModal";
 import SubjectIntroCard from "@/features/app/admin/question-bank/components/SubjectIntroCard";
 import SubjectSuccessBanner from "@/features/app/admin/question-bank/components/SubjectSuccessBanner";
 import { useQuestionBank } from "@/features/app/admin/question-bank/hooks/useQuestionBank";
@@ -14,20 +15,26 @@ export default function AdminSubjectPage() {
     activeAreaFilter,
     filteredSubjectAreas,
     handleAreaFilterChange,
+    handleCloseDeleteSubjectConfirmation,
     handleCloseSubjectDetails,
-    handleCloseAddSubjectModal,
+    handleCloseSubjectFormModal,
     handleOpenAddSubjectModal,
-    handleOpenSubjectDetails,
     handleSearchQueryChange,
+    handleSelectSubject,
+    handleSubjectAreaModeChange,
+    handleSubjectModeOperationSuccess,
     isLoadingSubjectAreas,
     loadSubjectAreas,
     searchQuery,
     selectedAddSubjectAreaId,
+    selectedEditSubject,
     selectedSubject,
+    selectedSubjectToDelete,
     setIsLoadingSubjectAreas,
     showSuccessBanner,
     showSuccessMessage,
     subjectAreas,
+    subjectAreaModes,
     subjectAreasError,
     successBannerMessage,
   } = useQuestionBank();
@@ -74,7 +81,16 @@ export default function AdminSubjectPage() {
             filteredSubjectAreas.map((subjectArea) => (
               <SubjectAreaSection
                 key={subjectArea.id}
-                onOpenSubjectDetails={handleOpenSubjectDetails}
+                mode={subjectAreaModes[subjectArea.id] ?? null}
+                onModeChange={(mode) =>
+                  handleSubjectAreaModeChange(subjectArea.id, mode)
+                }
+                onSelectSubject={(subject) =>
+                  handleSelectSubject(
+                    subject,
+                    subjectAreaModes[subjectArea.id] ?? null,
+                  )
+                }
                 subjectArea={subjectArea}
               />
             ))
@@ -87,14 +103,31 @@ export default function AdminSubjectPage() {
       )}
 
       {/* Modals Section */}
-      <AddSubjectModal
-        key={selectedAddSubjectAreaId ?? "add-subject-modal"}
-        areaId={selectedAddSubjectAreaId}
+      <SubjectFormModal
+        key={
+          selectedEditSubject
+            ? `edit-subject-${selectedEditSubject.id}`
+            : selectedAddSubjectAreaId
+              ? `add-subject-${selectedAddSubjectAreaId}`
+              : "subject-form-modal"
+        }
+        areaId={selectedEditSubject?.area_id ?? selectedAddSubjectAreaId}
         loadSubjectAreas={loadSubjectAreas}
-        onClose={handleCloseAddSubjectModal}
+        onClose={handleCloseSubjectFormModal}
+        onEditSuccess={handleSubjectModeOperationSuccess}
         setIsLoadingSubjectAreas={setIsLoadingSubjectAreas}
         showSuccessMessage={showSuccessMessage}
+        subject={selectedEditSubject}
         subjectAreas={subjectAreas}
+      />
+
+      <DeleteSubjectConfirmationModal
+        key={selectedSubjectToDelete?.id ?? "delete-subject-modal"}
+        loadSubjectAreas={loadSubjectAreas}
+        onClose={handleCloseDeleteSubjectConfirmation}
+        onDeleteSuccess={handleSubjectModeOperationSuccess}
+        showSuccessMessage={showSuccessMessage}
+        subject={selectedSubjectToDelete}
       />
 
       <SubjectDetailsModal
