@@ -19,6 +19,7 @@ export const useForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [error, setError] = useState("");
+  const [isEmailNotRegistered, setIsEmailNotRegistered] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendCooldownSeconds, setResendCooldownSeconds] = useState(0);
@@ -81,8 +82,17 @@ export const useForgotPassword = () => {
         const result = await requestPasswordReset(formData);
 
         if (!result.success) {
+          if (
+            "reason" in result &&
+            result.reason === "email_not_registered"
+          ) {
+            setSubmittedEmail(normalizedEmail);
+            setIsEmailNotRegistered(true);
+            return;
+          }
+
           setError(
-            result.error ??
+            ("error" in result ? result.error : undefined) ??
               "Unable to send the reset email right now. Please try again.",
           );
           return;
@@ -130,6 +140,7 @@ export const useForgotPassword = () => {
   };
 
   const handleUseDifferentEmail = () => {
+    setIsEmailNotRegistered(false);
     setIsEmailSent(false);
     setError("");
     resendCooldownDeadlineRef.current = 0;
@@ -144,6 +155,7 @@ export const useForgotPassword = () => {
     handleResend,
     handleSubmission,
     handleUseDifferentEmail,
+    isEmailNotRegistered,
     isEmailSent,
     isSubmitting,
     resendCooldownSeconds,

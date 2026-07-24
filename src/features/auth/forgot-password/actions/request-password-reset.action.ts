@@ -1,11 +1,39 @@
 "use server";
 
+import { createSupabaseServerActionAdminClient } from "@/lib/supabase/server-action";
 import type { Database } from "@/types/database.types";
 import { createClient } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LOCAL_DEVELOPMENT_ORIGIN = "http://localhost:3000";
+const AUTH_USERS_PAGE_SIZE = 1000;
+
+const isRegisteredAuthEmail = async (email: string) => {
+  const supabaseAdmin = createSupabaseServerActionAdminClient();
+  let page = 1;
+
+  while (true) {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+      page,
+      perPage: AUTH_USERS_PAGE_SIZE,
+    });
+
+    if (error) throw error;
+
+    if (
+      data.users.some(
+        (user) => user.email?.trim().toLowerCase() === email,
+      )
+    ) {
+      return true;
+    }
+
+    if (!data.nextPage) return false;
+
+    page = data.nextPage;
+  }
+};
 
 const getValidOrigin = (url: string | undefined) => {
   if (!url) return null;
@@ -51,6 +79,15 @@ export const requestPasswordReset = async (formData: FormData) => {
   }
 
   try {
+    const isEmailRegistered = await isRegisteredAuthEmail(email);
+
+    if (!isEmailRegistered) {
+      return {
+        success: false,
+        reason: "email_not_registered" as const,
+      };
+    }
+
     const supabase = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

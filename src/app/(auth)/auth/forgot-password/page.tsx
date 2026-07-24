@@ -8,6 +8,7 @@ import {
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import AuthBrand from "@/features/auth/components/AuthBrand";
+import EmailNotRegistered from "@/features/auth/forgot-password/components/EmailNotRegistered";
 import { useForgotPassword } from "@/features/auth/forgot-password/hooks/useForgotPassword";
 
 export default function ForgotPasswordPage() {
@@ -18,12 +19,14 @@ export default function ForgotPasswordPage() {
     handleResend,
     handleSubmission,
     handleUseDifferentEmail,
+    isEmailNotRegistered,
     isEmailSent,
     isSubmitting,
     resendCooldownSeconds,
     resendSuccessMessage,
     submittedEmail,
   } = useForgotPassword();
+
   const resendCooldownMinutes = Math.floor(resendCooldownSeconds / 60);
   const resendCooldownRemainingSeconds = String(
     resendCooldownSeconds % 60,
@@ -37,7 +40,12 @@ export default function ForgotPasswordPage() {
         </div>
 
         <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-border/60 sm:p-10">
-          {isEmailSent ? (
+          {isEmailNotRegistered ? (
+            <EmailNotRegistered
+              email={submittedEmail}
+              onUseDifferentEmail={handleUseDifferentEmail}
+            />
+          ) : isEmailSent ? (
             <div className="flex flex-col items-center text-center">
               <div className="relative flex size-16 items-center justify-center rounded-full bg-teal-50">
                 <EnvelopeIcon className="size-8 text-primary-accent" />
@@ -49,11 +57,11 @@ export default function ForgotPasswordPage() {
                   Check Your Email
                 </h1>
                 <p className="mt-3 text-sm leading-6 text-secondary-text sm:text-base">
-                  If an account exists for{" "}
+                  We sent a password reset link to{" "}
                   <span className="font-medium text-primary-text">
                     {submittedEmail}
                   </span>
-                  , we sent a link to reset its password.
+                  .
                 </p>
               </div>
 

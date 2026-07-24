@@ -50,3 +50,4 @@
 - Manage Reviewees: administrators can refresh the reviewee listing in place from the search toolbar without reloading the page.
 - Authentication: the centered `/auth/forgot-password` flow supports password-reset emails with a five-minute minutes-and-seconds resend countdown; verified recovery links store a signed, expiring user ID cookie, and password changes use `auth.admin.updateUserById` without creating Supabase recovery session cookies.
 - Authentication: authenticated visits to `/auth/forgot-password` or `/auth/reset-password` redirect to the account's designated dashboard and explain that the user must log out before requesting or completing a password reset.
+- Authentication: forgot-password requests verify the submitted email against Supabase Auth before sending a reset link and direct unregistered users to request email registration from an administrator.
