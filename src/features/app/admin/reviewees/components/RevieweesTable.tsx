@@ -5,6 +5,8 @@ import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
 type RevieweesTableProps = {
   emptyMessage: string;
   isLoading: boolean;
+  onEdit: (user: Reviewee) => void;
+  onResendInvitation: (user: Reviewee) => void;
   onViewPayment: (user: Reviewee) => void;
   users: Reviewee[];
 };
@@ -17,7 +19,7 @@ const formatDate = (date: string) => {
 
 const formatMode = (mode: string) => mode.toLowerCase() === "in-house" ? "In-House" : "Online";
 
-export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }: RevieweesTableProps) => (
+export const RevieweesTable = ({ emptyMessage, isLoading, onEdit, onResendInvitation, onViewPayment, users }: RevieweesTableProps) => (
   <div className="overflow-x-auto rounded-lg border border-border bg-surface">
     <table className="w-full min-w-[880px] text-sm">
       <thead>
@@ -39,7 +41,13 @@ export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }
             <td className="whitespace-nowrap px-5 py-3 font-medium text-primary-text">{user.full_name}</td>
             <td className="px-5 py-3 text-slate-800">{user.email}</td>
             <td className="px-4 py-3">
-              <span className={`inline-flex min-w-[60px] justify-center rounded-full px-3 py-1 text-[10px] font-medium ${user.status.toLowerCase() === "active" ? "bg-teal-50 text-primary-accent" : "bg-amber-50 text-warning"}`}>
+              <span className={`inline-flex min-w-[60px] justify-center rounded-full px-3 py-1 text-[10px] font-medium ${
+                user.status.toLowerCase() === "active"
+                  ? "bg-teal-50 text-primary-accent"
+                  : user.status.toLowerCase() === "pending"
+                    ? "bg-amber-50 text-warning"
+                    : "bg-slate-200 text-secondary-text"
+              }`}>
                 {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
               </span>
             </td>
@@ -52,7 +60,27 @@ export const RevieweesTable = ({ emptyMessage, isLoading, onViewPayment, users }
                 </button>
               ) : <span className="text-slate-400">Unavailable</span>}
             </td>
-            <td className="px-4 py-3"><button type="button" className="cursor-pointer hover:text-primary-dark">Edit</button></td>
+            <td className="px-4 py-3">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => onEdit(user)}
+                  className="cursor-pointer hover:text-primary-dark"
+                >
+                  Edit
+                </button>
+                {user.status.toLowerCase() === "pending" && (
+                  <button
+                    type="button"
+                    onClick={() => onResendInvitation(user)}
+                    title="Resend Email Invitation"
+                    className="cursor-pointer text-primary-accent hover:text-primary-dark"
+                  >
+                    Resend
+                  </button>
+                )}
+              </div>
+            </td>
           </tr>
         )) : (
           <tr><td colSpan={7} className="px-5 py-10 text-center text-secondary-text">{emptyMessage}</td></tr>

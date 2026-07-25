@@ -5,10 +5,12 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
+import { LoaderCircle } from "lucide-react";
 import { ProofOfPaymentModal } from "@/features/app/admin/reviewees/components/ProofOfPaymentModal";
-import { RegisterUserModal } from "@/features/app/admin/reviewees/components/RegisterUserModal";
+import { ResendInvitationConfirmationModal } from "@/features/app/admin/reviewees/components/ResendInvitationConfirmationModal";
 import { RevieweesPagination } from "@/features/app/admin/reviewees/components/RevieweesPagination";
 import { RevieweesTable } from "@/features/app/admin/reviewees/components/RevieweesTable";
+import { UserFormModal } from "@/features/app/admin/reviewees/components/UserFormModal";
 import { useAdminReviewees } from "@/features/app/admin/reviewees/hooks/useAdminReviewees";
 
 export default function AdminRevieweesPage() {
@@ -18,13 +20,13 @@ export default function AdminRevieweesPage() {
     <section>
       <div
         className={`fixed left-1/2 z-60 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 transition-all duration-500 ${
-          reviewees.successMessage
+          reviewees.noticeMessage
             ? "top-8 opacity-100"
             : "pointer-events-none -top-24 opacity-0"
         }`}
       >
         <p className="rounded-lg bg-primary-dark px-5 py-4 text-center font-medium text-surface shadow-lg">
-          {reviewees.successMessage}
+          {reviewees.noticeMessage}
         </p>
       </div>
 
@@ -56,10 +58,14 @@ export default function AdminRevieweesPage() {
             title="Refresh reviewees"
             className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border bg-surface text-secondary-text transition-colors hover:border-slate-300 hover:bg-secondary-bg focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <ArrowPathIcon
-              className={`h-5 w-5 ${reviewees.isLoading ? "animate-spin" : ""}`}
-              aria-hidden="true"
-            />
+            {reviewees.isLoading ? (
+              <LoaderCircle
+                className="h-5 w-5 animate-spin"
+                aria-label="Loading reviewees"
+              />
+            ) : (
+              <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />
+            )}
           </button>
 
           <label className="relative block min-w-0 flex-1">
@@ -80,6 +86,8 @@ export default function AdminRevieweesPage() {
         users={reviewees.paginatedUsers}
         isLoading={reviewees.isLoading}
         emptyMessage={reviewees.emptyMessage}
+        onEdit={reviewees.openEditModal}
+        onResendInvitation={reviewees.openResendInvitationModal}
         onViewPayment={reviewees.openPaymentModal}
       />
 
@@ -93,10 +101,16 @@ export default function AdminRevieweesPage() {
       />
 
       {/* Modals */}
-      <RegisterUserModal
-        isOpen={reviewees.isRegisterModalOpen}
-        onClose={reviewees.closeRegisterModal}
-        onRegistered={reviewees.handleRegistered}
+      <UserFormModal
+        isOpen={reviewees.isUserFormModalOpen}
+        onClose={reviewees.closeUserFormModal}
+        onSaved={reviewees.handleUserSaved}
+        reviewee={reviewees.revieweeToEdit}
+      />
+      <ResendInvitationConfirmationModal
+        reviewee={reviewees.revieweeToResend}
+        onClose={reviewees.closeResendInvitationModal}
+        onNotice={reviewees.showNotice}
       />
       <ProofOfPaymentModal
         isOpen={reviewees.isPaymentModalOpen}

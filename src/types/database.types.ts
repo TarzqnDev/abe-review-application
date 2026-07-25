@@ -496,6 +496,39 @@ export type Database = {
           },
         ]
       }
+      reviewee_invitation_email_logs: {
+        Row: {
+          delivery_status: string
+          email: string
+          id: number
+          invitation_type: string
+          requested_at: string
+          requested_by: string
+          sent_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          delivery_status?: string
+          email: string
+          id?: number
+          invitation_type: string
+          requested_at?: string
+          requested_by: string
+          sent_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          delivery_status?: string
+          email?: string
+          id?: number
+          invitation_type?: string
+          requested_at?: string
+          requested_by?: string
+          sent_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       permissions: {
         Row: {
           created_at: string | null
@@ -830,6 +863,23 @@ export type Database = {
       cancel_quiz_session: {
         Args: { selected_session_id: string }
         Returns: Json
+      }
+      claim_reviewee_invitation: {
+        Args: {
+          selected_email: string
+          selected_invitation_type: string
+          selected_requested_by: string
+          selected_user_id: string | null
+        }
+        Returns: Json
+      }
+      complete_reviewee_invitation: {
+        Args: {
+          selected_log_id: number
+          selected_user_id: string | null
+          was_sent: boolean
+        }
+        Returns: undefined
       }
       exit_flash_card_session: {
         Args: { selected_session_id: string }

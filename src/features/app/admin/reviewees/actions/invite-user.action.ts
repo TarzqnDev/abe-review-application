@@ -5,6 +5,10 @@ import {
   createSupabaseServerActionAdminClient,
   createSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
+import {
+  formatInvitationCooldown,
+  parseInvitationClaim,
+} from "@/features/app/admin/reviewees/utils/invitationCooldown";
 import { randomUUID } from "crypto";
 import { headers } from "next/headers";
 
@@ -17,7 +21,9 @@ const PAYMENT_IMAGE_EXTENSIONS: Record<string, string> = {
 const REVIEW_MODES = ["online", "in-house"] as const;
 
 export const inviteUser = async (formData: FormData) => {
+  let emailWasSent = false;
   let invitedUserId: string | null = null;
+  let invitationLogId: number | null = null;
   let paymentImagePath: string | null = null;
   const supabaseAdmin = createSupabaseServerActionAdminClient();
 
@@ -70,10 +76,57 @@ export const inviteUser = async (formData: FormData) => {
       throw new Error("You are not authorized to invite users");
     }
 
+    const { data: matchingProfiles, error: matchingProfilesError } =
+      await supabaseAdmin
+        .from("users")
+        .select("email")
+        .ilike("email", email);
+
+    if (matchingProfilesError) {
+      throw new Error(matchingProfilesError.message);
+    }
+
+    if (
+      matchingProfiles.some(
+        (profile) => profile.email.trim().toLowerCase() === email,
+      )
+    ) {
+      throw new Error(
+        "This email is already registered. Use Resend for a pending reviewee.",
+      );
+    }
+
     const headerStore = await headers();
     const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "";
     const protocol = headerStore.get("x-forwarded-proto") ?? "http";
     const origin = headerStore.get("origin") ?? `${protocol}://${host}`;
+
+    const { data: claimData, error: claimError } = await supabaseAdmin.rpc(
+      "claim_reviewee_invitation",
+      {
+        selected_email: email,
+        selected_invitation_type: "initial",
+        selected_requested_by: currentUser.id,
+        selected_user_id: null,
+      },
+    );
+    if (claimError) throw new Error(claimError.message);
+
+    const claim = parseInvitationClaim(claimData);
+    if (!claim.allowed) {
+      return {
+        success: false,
+        reason: "cooldown" as const,
+        message: "Invitation not sent",
+        error: `Please wait ${formatInvitationCooldown(claim.retryAfterSeconds)} before sending another email invitation to this reviewee.`,
+      };
+    }
+
+    if (!claim.logId) {
+      throw new Error("Unable to record the invitation");
+    }
+
+    invitationLogId = claim.logId;
 
     const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       data: { full_name: fullName },
@@ -81,9 +134,22 @@ export const inviteUser = async (formData: FormData) => {
     });
 
     if (error) throw new Error(error.message);
+    emailWasSent = true;
 
     invitedUserId = data.user?.id ?? null;
     if (!invitedUserId) throw new Error("Unable to create the invited user");
+
+    const { error: completeLogError } = await supabaseAdmin.rpc(
+      "complete_reviewee_invitation",
+      {
+        selected_log_id: invitationLogId,
+        selected_user_id: invitedUserId,
+        was_sent: true,
+      },
+    );
+    if (completeLogError) throw new Error(completeLogError.message);
+
+    invitationLogId = null;
 
     const { error: updateUserError } = await supabaseAdmin.auth.admin.updateUserById(
       invitedUserId,
@@ -136,13 +202,16 @@ export const inviteUser = async (formData: FormData) => {
 
     return { success: true, message: "Invite sent successfully" };
   } catch (error: unknown) {
-    if (paymentImagePath) {
-      await supabaseAdmin.storage.from("payments").remove([paymentImagePath]);
+    if (invitationLogId) {
+      await supabaseAdmin.rpc("complete_reviewee_invitation", {
+        selected_log_id: invitationLogId,
+        selected_user_id: emailWasSent ? invitedUserId : null,
+        was_sent: emailWasSent,
+      });
     }
 
-    if (invitedUserId) {
-      await supabaseAdmin.from("users").delete().eq("user_id", invitedUserId);
-      await supabaseAdmin.auth.admin.deleteUser(invitedUserId);
+    if (paymentImagePath) {
+      await supabaseAdmin.storage.from("payments").remove([paymentImagePath]);
     }
 
     console.error(error);

@@ -70,7 +70,9 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={handlePasswordVisibility}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center text-secondary-text"
                   >
                     {showPassword ? (
@@ -83,7 +85,7 @@ export default function LoginPage() {
                 <div className="flex justify-end">
                   <Link
                     href="/auth/forgot-password"
-                    className="cursor-pointer font-medium"
+                    className="cursor-pointer font-medium text-primary-accent"
                   >
                     Forgot Password?
                   </Link>
@@ -95,7 +97,11 @@ export default function LoginPage() {
                 disabled={isLoggingin}
                 className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isLoggingin ? <LoaderCircle className="animate-spin" /> : "Login"}
+                {isLoggingin ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  "Login"
+                )}
               </button>
               {error && <p className="text-sm text-error">{error}</p>}
             </form>

@@ -10,13 +10,17 @@ export const useAdminReviewees = () => {
   const [usersError, setUsersError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isUserFormModalOpen, setIsUserFormModalOpen] = useState(false);
+  const [revieweeToEdit, setRevieweeToEdit] = useState<Reviewee | null>(null);
+  const [revieweeToResend, setRevieweeToResend] = useState<Reviewee | null>(
+    null,
+  );
   const [selectedPaymentPath, setSelectedPaymentPath] = useState<string | null>(
     null,
   );
   const [selectedRevieweeName, setSelectedRevieweeName] = useState("");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [noticeMessage, setNoticeMessage] = useState("");
   const requestSequence = useRef(0);
 
   const loadUsers = useCallback(async () => {
@@ -60,10 +64,10 @@ export const useAdminReviewees = () => {
   }, [loadUsers]);
 
   useEffect(() => {
-    if (!successMessage) return;
-    const timeout = window.setTimeout(() => setSuccessMessage(""), 3000);
+    if (!noticeMessage) return;
+    const timeout = window.setTimeout(() => setNoticeMessage(""), 5000);
     return () => window.clearTimeout(timeout);
-  }, [successMessage]);
+  }, [noticeMessage]);
 
   const filteredUsers = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -87,11 +91,24 @@ export const useAdminReviewees = () => {
     startIndex + ITEMS_PER_PAGE,
   );
 
-  const handleRegistered = async (message: string) => {
-    setIsRegisterModalOpen(false);
-    setSuccessMessage(message);
+  const handleUserSaved = async (message: string) => {
+    setIsUserFormModalOpen(false);
+    setRevieweeToEdit(null);
+    setNoticeMessage(message);
     await loadUsers();
   };
+
+  const openRegisterModal = () => {
+    setRevieweeToEdit(null);
+    setIsUserFormModalOpen(true);
+  };
+
+  const openEditModal = (user: Reviewee) => {
+    setRevieweeToEdit(user);
+    setIsUserFormModalOpen(true);
+  };
+
+  const closeUserFormModal = () => setIsUserFormModalOpen(false);
 
   const openPaymentModal = (user: Reviewee) => {
     setSelectedPaymentPath(user.payment_image_path);
@@ -103,7 +120,8 @@ export const useAdminReviewees = () => {
 
   return {
     closePaymentModal,
-    closeRegisterModal: () => setIsRegisterModalOpen(false),
+    closeResendInvitationModal: () => setRevieweeToResend(null),
+    closeUserFormModal,
     currentPage: safeCurrentPage,
     emptyMessage:
       usersError ||
@@ -112,15 +130,20 @@ export const useAdminReviewees = () => {
         : "No users have been registered yet."),
     filteredUsers,
     firstItem: filteredUsers.length ? startIndex + 1 : 0,
-    handleRegistered,
+    handleUserSaved,
     isLoading,
     isPaymentModalOpen,
-    isRegisterModalOpen,
+    isUserFormModalOpen,
     lastItem: Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length),
+    noticeMessage,
+    openEditModal,
     openPaymentModal,
-    openRegisterModal: () => setIsRegisterModalOpen(true),
+    openRegisterModal,
+    openResendInvitationModal: setRevieweeToResend,
     paginatedUsers,
     refreshUsers: loadUsers,
+    revieweeToEdit,
+    revieweeToResend,
     searchQuery,
     selectedPaymentPath,
     selectedRevieweeName,
@@ -129,7 +152,7 @@ export const useAdminReviewees = () => {
       setSearchQuery(query);
       setCurrentPage(1);
     },
-    successMessage,
+    showNotice: setNoticeMessage,
     totalPages,
   };
 };
