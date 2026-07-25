@@ -26,9 +26,9 @@ export default function SubjectAreaSection({
 }: SubjectAreaSectionProps) {
   const subjectButtonClassName =
     mode === "edit"
-      ? "border-info hover:border-[#2563eb]"
+      ? "border-border hover:border-warning"
       : mode === "remove"
-        ? "border-warning hover:border-[#d97706]"
+        ? "border-border hover:border-error"
         : "border-border hover:border-primary-accent";
 
   return (
@@ -97,9 +97,9 @@ export default function SubjectAreaSection({
             >
               <span>{subject.name}</span>
               {mode === "edit" ? (
-                <PencilSquareIcon className="h-5 w-5 text-info" />
+                <PencilSquareIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-warning" />
               ) : mode === "remove" ? (
-                <TrashIcon className="h-5 w-5 text-warning" />
+                <TrashIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-error" />
               ) : (
                 <ArrowTopRightOnSquareIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-primary-accent" />
               )}
