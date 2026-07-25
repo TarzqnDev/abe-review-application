@@ -25,6 +25,7 @@
 - ABE Trivia: administrators can load, create, edit, and delete database-backed trivia through a reusable create/edit form modal with a nested delete confirmation; trivia is grouped by publish month and paginated four items per page.
 - Flash Cards: reviewees can manage database-backed flash cards grouped by subject area, create and edit cards through one reusable form, search cards in an area list, and delete cards after confirmation.
 - Flash Card Games: Play Now prepares a randomized server-side snapshot of the selected area's cards, runs a three-second countdown and timed free-text game, records correct, incorrect, timed-out, and early-exit results, and ends with a persisted summary.
+- Flash Card Games: each newly prepared flash card allows 15 seconds for an answer while preserving historical 10-second sessions.
 - Flash Card Games: correct answers use green feedback, incorrect answers use red feedback and reveal the saved answer in green, and timed-out cards advance without revealing the answer.
 - Reviewee Quiz Games: MCQ Quiz game cards open an area and difficulty selection flow, preload randomized eligible questions across the selected area's subjects, and run difficulty-specific timed games with countdown, answer feedback, timeout, exit confirmation, and summary states.
 - Reviewee Quiz Games: game attempts and each assigned question result are persisted for completed and early-exit sessions while correct answers remain hidden until server-side validation.
@@ -54,3 +55,6 @@
 - Authentication: authenticated visits to `/auth/forgot-password` or `/auth/reset-password` redirect to the account's designated dashboard and explain that the user must log out before requesting or completing a password reset.
 - Authentication: forgot-password requests verify the submitted email against Supabase Auth before sending a reset link and direct unregistered users to request email registration from an administrator.
 - Question Bank: subject management allows one active edit or remove mode across all areas at a time, cancels that mode when a subject in another area is opened, and clears all area modes after a successful subject edit or deletion; administrators can rename subjects through the reusable subject form and permanently delete subjects with their associated questions after confirmation.
+- Authentication: the initial route sends unauthenticated visitors to `/login` and redirects authenticated users to the admin or reviewee dashboard based on roles decoded from their Supabase access token.
+- App Layout: the shared admin and reviewee navbar and sidebar remain fixed in the viewport while only the main dashboard content scrolls.
+- Authentication: unavailable invitation links now use the reset-link unavailable layout and direct users to ask an administrator to register the account or resend the email invitation.

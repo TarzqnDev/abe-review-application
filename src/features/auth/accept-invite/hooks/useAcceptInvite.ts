@@ -25,8 +25,6 @@ export const useAcceptInvite = () => {
     boolean | null
   >(null);
   const [accountSetupStatusError, setAccountSetupStatusError] = useState("");
-  const [isRequestAccessModalOpen, setIsRequestAccessModalOpen] =
-    useState(false);
   const [isCompletingAccountSetup, setIsCompletingAccountSetup] =
     useState(false);
   const [showAccountSetupSuccessBanner, setShowAccountSetupSuccessBanner] =
@@ -193,30 +191,19 @@ export const useAcceptInvite = () => {
     }
   };
 
-  const handleOpenRequestAccessModal = () => {
-    setIsRequestAccessModalOpen(true);
-  };
-
-  const handleCloseRequestAccessModal = () => {
-    setIsRequestAccessModalOpen(false);
-  };
-
   return {
     accountSetupStatusError,
     accountSetupSuccessBannerMessage,
     error,
     formData,
-    handleCloseRequestAccessModal,
     handleCompleteAccountSetup,
     handleConfirmPasswordVisibility,
     handleGoToDashboard,
-    handleOpenRequestAccessModal,
     handlePasswordVisibility,
     handleUserInput,
     hasInviteSession,
     isAccountSetupCompleted,
     isCompletingAccountSetup,
-    isRequestAccessModalOpen,
     showAccountSetupSuccessBanner,
     showConfirmPassword,
     showPassword,

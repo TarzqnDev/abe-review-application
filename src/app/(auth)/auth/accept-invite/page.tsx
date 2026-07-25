@@ -2,12 +2,12 @@
 
 import {
   CheckCircleIcon,
+  ExclamationTriangleIcon,
   EyeIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
 import AuthBrand from "@/features/auth/components/AuthBrand";
-import RequestRegistrationModal from "@/features/auth/accept-invite/components/RequestRegistrationModal";
 import { useAcceptInvite } from "@/features/auth/accept-invite/hooks/useAcceptInvite";
 import { useAuth } from "@/providers/AuthProvider";
 import Link from "next/link";
@@ -19,17 +19,14 @@ export default function AcceptInvitePage() {
     accountSetupSuccessBannerMessage,
     error,
     formData,
-    handleCloseRequestAccessModal,
     handleCompleteAccountSetup,
     handleConfirmPasswordVisibility,
     handleGoToDashboard,
-    handleOpenRequestAccessModal,
     handlePasswordVisibility,
     handleUserInput,
     hasInviteSession,
     isAccountSetupCompleted,
     isCompletingAccountSetup,
-    isRequestAccessModalOpen,
     showAccountSetupSuccessBanner,
     showConfirmPassword,
     showPassword,
@@ -72,35 +69,18 @@ export default function AcceptInvitePage() {
                 </p>
               </div>
             ) : !hasInviteSession ? (
-              <div className="flex flex-col gap-5 text-center">
-                <div>
-                  <h1 className="text-3xl font-semibold tracking-tight text-primary-text">
-                    Invitation Unavailable
-                  </h1>
-                  <p className="mt-2 text-sm leading-6 text-secondary-text sm:text-base">
-                    We could not verify this invitation.
-                  </p>
+              <div className="flex flex-col items-center text-center">
+                <div className="flex size-16 items-center justify-center rounded-full bg-red-50">
+                  <ExclamationTriangleIcon className="size-9 text-error" />
                 </div>
-                <div className="rounded-sm border border-red-200 bg-red-50 p-4 text-red-700">
-                  Your invite link is invalid or has expired.
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    onClick={handleOpenRequestAccessModal}
-                    className="h-12 cursor-pointer rounded-sm bg-primary-accent px-4 font-medium text-surface transition hover:bg-primary-dark w-full mb-2"
-                  >
-                    Request Registration Access
-                  </button>
-
-                  <Link
-                    href="/login"
-                    className="mt-4 text-sm font-medium text-secondary-text transition hover:text-primary-accent"
-                  >
-                    Login account
-                  </Link>
-                </div>
+                <h1 className="mt-6 text-3xl font-semibold tracking-tight text-primary-text">
+                  Invitation Unavailable
+                </h1>
+                <p className="mt-3 max-w-md text-sm leading-6 text-secondary-text sm:text-base">
+                  This invitation link is invalid, expired, or has already been
+                  used. Please ask an administrator to register your account or
+                  send a new email invitation.
+                </p>
               </div>
             ) : accountSetupStatusError ? (
               <div className="flex flex-col gap-5 text-center">
@@ -256,12 +236,6 @@ export default function AcceptInvitePage() {
               </div>
             )}
           </div>
-
-          {/* Modals */}
-          <RequestRegistrationModal
-            isOpen={isRequestAccessModalOpen}
-            onClose={handleCloseRequestAccessModal}
-          />
         </section>
       </main>
     </>

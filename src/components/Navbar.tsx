@@ -21,7 +21,7 @@ export default function Navbar({ role }: NavbarProps) {
   } = useNavbar(role);
 
   return (
-    <header className="border-b border-border bg-surface">
+    <header className="sticky top-0 z-40 shrink-0 border-b border-border bg-surface">
       <div className="mx-auto flex h-[100px] w-full max-w-[1200px] items-center justify-between px-5">
         <div className="flex items-center gap-3">
           <div className="flex h-[50px] w-[50px] items-center justify-center rounded bg-teal-50 text-primary-accent">

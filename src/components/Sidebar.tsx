@@ -74,10 +74,11 @@ const revieweeLinks: SidebarLink[] = [
 
 export default function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
-  const links = role === "admin" ? adminLinks : role === "reviewee" ? revieweeLinks : [];
+  const links =
+    role === "admin" ? adminLinks : role === "reviewee" ? revieweeLinks : [];
 
   return (
-    <nav className="h-fit rounded-md border border-border bg-surface p-4">
+    <nav className="sticky top-0 h-fit rounded-md border border-border bg-surface p-4 mt-10">
       <div className="flex flex-col gap-1">
         {links.map((link) => {
           const isActive = link.matchPath(pathname);
