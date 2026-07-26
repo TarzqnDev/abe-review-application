@@ -27,7 +27,9 @@ export default function FlashCardDeckCard({
   return (
     <article className="rounded-lg border border-border bg-surface p-5">
       <h2 className="text-base font-semibold text-primary-text">
-        {flashCardDeck.areaName}
+        {flashCardDeck.areaName === "PAES Series"
+          ? "PAES"
+          : flashCardDeck.areaName}
       </h2>
 
       <div className="mt-5 flex items-center justify-between gap-4 text-sm text-secondary-text">

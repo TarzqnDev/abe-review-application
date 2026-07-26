@@ -17,6 +17,11 @@ export type QuestionBankSummary = {
 };
 
 export const QUESTION_BANK_OPTION_LABELS = ["A", "B", "C", "D"] as const;
+export const PAES_AREA_NAME = "PAES Series";
+export const PAES_GAME_TYPE = "PAES";
+
+export const isPaesSubjectArea = (areaName: string) =>
+  areaName.trim().toLocaleLowerCase() === PAES_AREA_NAME.toLocaleLowerCase();
 
 export const createEmptyQuestionBankSummaries = (): QuestionBankSummary[] =>
   QUESTION_BANK_DIFFICULTIES.flatMap((difficulty) =>

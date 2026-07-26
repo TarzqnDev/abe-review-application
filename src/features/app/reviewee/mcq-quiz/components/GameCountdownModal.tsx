@@ -44,7 +44,10 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
         {props.preparedSession.gameType}
       </h2>
       <p className="mt-1 text-sm text-secondary-text">
-        {props.preparedSession.areaName} · {props.preparedSession.difficulty}
+        {props.preparedSession.areaName}
+        {props.preparedSession.difficulty
+          ? ` · ${props.preparedSession.difficulty}`
+          : ""}
       </p>
 
       <div

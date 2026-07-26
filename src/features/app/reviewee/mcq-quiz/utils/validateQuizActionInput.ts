@@ -7,6 +7,7 @@ const QUIZ_GAME_TYPES: QuizGameType[] = [
   "Guess the Word",
   "AB-Solution",
   "Situationship",
+  "PAES",
 ];
 
 const QUIZ_DIFFICULTIES: QuizDifficulty[] = ["Easy", "Medium", "Hard"];

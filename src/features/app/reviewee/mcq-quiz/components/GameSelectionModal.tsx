@@ -11,7 +11,7 @@ export type GameSelectionModalProps = {
   gameType: QuizGameType | null;
   isOpen: boolean;
   onClose: () => void;
-  onNoQuestions: () => void;
+  onNoQuestions: (message?: string) => void;
   onPrepared: (session: PreparedQuizSession) => void;
 };
 
@@ -20,18 +20,19 @@ export default function GameSelectionModal(
 ) {
   const {
     areaSelectRef,
-    areas,
     difficulty,
     error,
     handleClose,
     handleStartNow,
     isLoadingAreas,
     isPreparing,
+    isPaesGame,
     modalAccessibility,
     quizDifficulties,
-    selectedAreaId,
+    selectedOptionId,
+    selectionOptions,
     setDifficulty,
-    setSelectedAreaId,
+    setSelectedOptionId,
   } = useGameSelectionModal(props);
   const {
     dialogRef,
@@ -70,27 +71,31 @@ export default function GameSelectionModal(
 
       <div className="space-y-5">
         <label className="block text-sm font-semibold text-primary-text">
-          Select Area
+          {isPaesGame ? "Select PAES Subject" : "Select Area"}
           <span className="relative mt-2 block">
             <select
               ref={areaSelectRef}
-              value={selectedAreaId}
-              onChange={(event) => setSelectedAreaId(event.target.value)}
+              value={selectedOptionId}
+              onChange={(event) => setSelectedOptionId(event.target.value)}
               disabled={
                 isLoadingAreas ||
                 isPreparing ||
-                areas.length === 0
+                selectionOptions.length === 0
               }
               className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-light focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-slate-400"
             >
               {isLoadingAreas ? (
-                <option value="">Loading areas...</option>
-              ) : areas.length === 0 ? (
-                <option value="">No areas available</option>
+                <option value="">
+                  Loading {isPaesGame ? "PAES subjects" : "areas"}...
+                </option>
+              ) : selectionOptions.length === 0 ? (
+                <option value="">
+                  No {isPaesGame ? "PAES subjects" : "areas"} available
+                </option>
               ) : (
-                areas.map((area) => (
-                  <option key={area.id} value={area.id}>
-                    {area.name}
+                selectionOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
                   </option>
                 ))
               )}
@@ -99,26 +104,28 @@ export default function GameSelectionModal(
           </span>
         </label>
 
-        <label className="block text-sm font-semibold text-primary-text">
-          Select Difficulty
-          <span className="relative mt-2 block">
-            <select
-              value={difficulty}
-              onChange={(event) =>
-                setDifficulty(event.target.value as typeof difficulty)
-              }
-              disabled={isPreparing}
-              className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-light focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
-            >
-              {quizDifficulties.map((difficultyOption) => (
-                <option key={difficultyOption} value={difficultyOption}>
-                  {difficultyOption}
-                </option>
-              ))}
-            </select>
-            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-secondary-text" />
-          </span>
-        </label>
+        {!isPaesGame && (
+          <label className="block text-sm font-semibold text-primary-text">
+            Select Difficulty
+            <span className="relative mt-2 block">
+              <select
+                value={difficulty}
+                onChange={(event) =>
+                  setDifficulty(event.target.value as typeof difficulty)
+                }
+                disabled={isPreparing}
+                className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-light focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
+              >
+                {quizDifficulties.map((difficultyOption) => (
+                  <option key={difficultyOption} value={difficultyOption}>
+                    {difficultyOption}
+                  </option>
+                ))}
+              </select>
+              <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-secondary-text" />
+            </span>
+          </label>
+        )}
 
         {error && (
           <p role="alert" className="text-sm text-red-600">
@@ -132,7 +139,7 @@ export default function GameSelectionModal(
           disabled={
             isLoadingAreas ||
             isPreparing ||
-            !selectedAreaId
+            !selectedOptionId
           }
           className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >

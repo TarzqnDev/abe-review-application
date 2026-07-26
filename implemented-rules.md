@@ -20,3 +20,6 @@
 - Subject areas and subjects remain readable by authenticated users, while their create, update, and delete operations are restricted to administrators through row-level security.
 - Activity-history retention is enforced in the database on the first terminal transition across both game modes: each user keeps the newest 20 completed, exited, or cancelled `game_sessions`, older session items and answer keys are cascade-deleted, and ready or in-progress sessions are excluded.
 - Activity-history overview cards use `reviewee_activity_stats` for lifetime totals; the visible history list stays limited to the newest 20 detailed terminal `game_sessions`.
+- PAES question sets use `game_type = 'PAES'` with a null difficulty, and PAES Series area and subject immutability is enforced by both the admin interface and subject-management server actions.
+- Predefined PAES Series subject data is supplied as an idempotent timestamped script under `supabase/seeds` for manual execution in the Supabase SQL Editor.
+- `PAES Series` remains the canonical database area name; only its subject-area card title on the reviewee flash-card page is shortened to `PAES`.

@@ -1,13 +1,16 @@
 import type { AdminSubjectArea } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
+import { isPaesSubjectArea } from "@/features/app/admin/question-bank/constants/questionBank";
 import BookPileIconImage from "@/public/book-pile.png";
 import Image from "next/image";
 
 type SubjectIntroCardProps = {
+  onAddPaesQuestion: () => void;
   onAddSubject: (areaId: number) => void;
   subjectAreas: AdminSubjectArea[];
 };
 
 export default function SubjectIntroCard({
+  onAddPaesQuestion,
   onAddSubject,
   subjectAreas,
 }: SubjectIntroCardProps) {
@@ -26,17 +29,25 @@ export default function SubjectIntroCard({
         <p className="mt-3 text-sm text-secondary-text">
           Choose an Area and create a new subject
         </p>
-        <div className="mt-8 grid w-full gap-4 sm:grid-cols-3">
-          {subjectAreas.map((subjectArea) => (
-            <button
-              key={subjectArea.id}
-              type="button"
-              onClick={() => onAddSubject(subjectArea.id)}
-              className="cursor-pointer rounded bg-primary-accent px-5 py-3 text-sm font-medium text-surface transition-colors hover:bg-primary-dark"
-            >
-              Add to {subjectArea.name}
-            </button>
-          ))}
+        <div className="mt-8 grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {subjectAreas.map((subjectArea) => {
+            const isPaesArea = isPaesSubjectArea(subjectArea.name);
+
+            return (
+              <button
+                key={subjectArea.id}
+                type="button"
+                onClick={() =>
+                  isPaesArea
+                    ? onAddPaesQuestion()
+                    : onAddSubject(subjectArea.id)
+                }
+                className="cursor-pointer rounded bg-primary-accent px-5 py-3 text-sm font-medium text-surface transition-colors hover:bg-primary-dark"
+              >
+                Add to {isPaesArea ? "PAES" : subjectArea.name}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

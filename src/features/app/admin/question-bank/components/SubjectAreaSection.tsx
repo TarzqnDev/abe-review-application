@@ -12,6 +12,7 @@ import {
 export type SubjectAreaMode = "edit" | "remove" | null;
 
 type SubjectAreaSectionProps = {
+  isPredefined?: boolean;
   mode: SubjectAreaMode;
   onModeChange: (mode: SubjectAreaMode) => void;
   onSelectSubject: (subject: AdminSubject) => void;
@@ -19,15 +20,17 @@ type SubjectAreaSectionProps = {
 };
 
 export default function SubjectAreaSection({
+  isPredefined = false,
   mode,
   onModeChange,
   onSelectSubject,
   subjectArea,
 }: SubjectAreaSectionProps) {
+  const activeMode = isPredefined ? null : mode;
   const subjectButtonClassName =
-    mode === "edit"
+    activeMode === "edit"
       ? "border-border hover:border-warning"
-      : mode === "remove"
+      : activeMode === "remove"
         ? "border-border hover:border-error"
         : "border-border hover:border-primary-accent";
 
@@ -44,45 +47,47 @@ export default function SubjectAreaSection({
           </span>
         </div>
 
-        <div className="flex items-center gap-3 text-sm text-secondary-text">
-          <button
-            type="button"
-            onClick={() => onModeChange(mode === "edit" ? null : "edit")}
-            className="flex cursor-pointer items-center gap-1 transition-colors hover:text-slate-700"
-            aria-pressed={mode === "edit"}
-          >
-            {mode === "edit" ? (
-              <>
-                <XMarkIcon className="h-4 w-4" />
-                Cancel
-              </>
-            ) : (
-              <>
-                <PencilSquareIcon className="h-4 w-4" />
-                Edit
-              </>
-            )}
-          </button>
+        {!isPredefined && (
+          <div className="flex items-center gap-3 text-sm text-secondary-text">
+            <button
+              type="button"
+              onClick={() => onModeChange(mode === "edit" ? null : "edit")}
+              className="flex cursor-pointer items-center gap-1 transition-colors hover:text-slate-700"
+              aria-pressed={mode === "edit"}
+            >
+              {mode === "edit" ? (
+                <>
+                  <XMarkIcon className="h-4 w-4" />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <PencilSquareIcon className="h-4 w-4" />
+                  Edit
+                </>
+              )}
+            </button>
 
-          <button
-            type="button"
-            onClick={() => onModeChange(mode === "remove" ? null : "remove")}
-            className="flex cursor-pointer items-center gap-1 transition-colors hover:text-slate-700"
-            aria-pressed={mode === "remove"}
-          >
-            {mode === "remove" ? (
-              <>
-                <XMarkIcon className="h-4 w-4" />
-                Cancel
-              </>
-            ) : (
-              <>
-                <TrashIcon className="h-4 w-4" />
-                Remove
-              </>
-            )}
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() => onModeChange(mode === "remove" ? null : "remove")}
+              className="flex cursor-pointer items-center gap-1 transition-colors hover:text-slate-700"
+              aria-pressed={mode === "remove"}
+            >
+              {mode === "remove" ? (
+                <>
+                  <XMarkIcon className="h-4 w-4" />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <TrashIcon className="h-4 w-4" />
+                  Remove
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-3">
@@ -92,13 +97,17 @@ export default function SubjectAreaSection({
               key={subject.id}
               type="button"
               onClick={() => onSelectSubject(subject)}
-              className={`group flex min-h-12 w-full cursor-pointer items-center justify-between rounded border bg-surface px-5 text-left text-base font-medium text-primary-text transition-colors ${subjectButtonClassName}`}
-              aria-label={`${mode === "edit" ? "Edit" : mode === "remove" ? "Remove" : "Open"} ${subject.name}`}
+              className={`group flex min-h-12 w-full cursor-pointer items-center justify-between rounded border bg-surface px-5 text-left text-base font-medium text-primary-text transition-colors ${
+                isPredefined
+                  ? "border-border hover:border-primary-accent"
+                  : subjectButtonClassName
+              }`}
+              aria-label={`${activeMode === "edit" ? "Edit" : activeMode === "remove" ? "Remove" : "Open"} ${subject.name}`}
             >
               <span>{subject.name}</span>
-              {mode === "edit" ? (
+              {activeMode === "edit" ? (
                 <PencilSquareIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-warning" />
-              ) : mode === "remove" ? (
+              ) : activeMode === "remove" ? (
                 <TrashIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-error" />
               ) : (
                 <ArrowTopRightOnSquareIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-primary-accent" />

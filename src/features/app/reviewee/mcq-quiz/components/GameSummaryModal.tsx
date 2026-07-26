@@ -31,7 +31,13 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
       labelledBy="game-summary-title"
     >
       <GameSummaryHeader
-        metadata={`${props.summary.areaName} • ${props.summary.gameType} • ${props.summary.difficulty}`}
+        metadata={[
+          props.summary.areaName,
+          props.summary.gameType,
+          props.summary.difficulty,
+        ]
+          .filter(Boolean)
+          .join(" • ")}
         title={
           props.summary.endReason === "completed"
             ? "MCQ Quiz Complete!"

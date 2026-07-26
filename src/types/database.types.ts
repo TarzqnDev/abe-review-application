@@ -539,7 +539,7 @@ export type Database = {
       question_sets: {
         Row: {
           created_at: string
-          difficulty: string
+          difficulty: string | null
           game_type: string
           id: number
           subject_id: number
@@ -547,7 +547,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          difficulty: string
+          difficulty?: string | null
           game_type: string
           id?: number
           subject_id: number
@@ -555,7 +555,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          difficulty?: string
+          difficulty?: string | null
           game_type?: string
           id?: number
           subject_id?: number
@@ -858,6 +858,10 @@ export type Database = {
       }
       prepare_flash_card_session: {
         Args: { selected_area_id: number }
+        Returns: Json
+      }
+      prepare_paes_quiz_session: {
+        Args: { selected_subject_id: number }
         Returns: Json
       }
       prepare_quiz_session: {

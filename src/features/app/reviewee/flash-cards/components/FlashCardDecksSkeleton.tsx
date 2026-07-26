@@ -7,7 +7,7 @@ export default function FlashCardDecksSkeleton() {
       aria-label="Loading flash card areas"
       role="status"
     >
-      {Array.from({ length: 3 }, (_, skeletonIndex) => (
+      {Array.from({ length: 4 }, (_, skeletonIndex) => (
         <div
           key={skeletonIndex}
           className="rounded-lg border border-border bg-surface p-5"

@@ -10,6 +10,7 @@ export const fetchQuizAreas = async () => {
     const { data, error } = await supabase
       .from("subject_areas")
       .select("id, name")
+      .neq("name", "PAES Series")
       .order("id");
 
     if (error) {

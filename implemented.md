@@ -60,3 +60,7 @@
 - Authentication: unavailable invitation links now use the reset-link unavailable layout and direct users to ask an administrator to register the account or resend the email invitation.
 - Activity History: each reviewee retains their newest 20 completed, exited, or cancelled MCQ and flash-card sessions; the database automatically prunes older terminal sessions and their item and answer-key snapshots when a session first becomes terminal, without counting ready or in-progress sessions.
 - Activity History: lifetime overview metrics are stored in a per-reviewee aggregate stats table so total sessions, completed sessions, average accuracy, and study time remain accurate even after older detailed sessions are pruned.
+- Question Bank: PAES Series is displayed as a predefined area whose subjects cannot be added, renamed, or removed; administrators manage difficulty-free PAES questions through a dedicated reusable subject-aware add/edit form and searchable question-list modal with confirmed deletion.
+- PAES Series: a repeatable Supabase SQL Editor seed adds the predefined PAES Series area and PAES 100, 200, 300, 400, and 500 Series subjects without duplicating existing records.
+- Flash Cards: the database-backed `PAES Series` area card is titled `PAES` on the reviewee flash-card page without changing its stored name or its labels elsewhere.
+- Activity History: PAES MCQ sessions use the existing generic MCQ history pipeline, including nullable difficulty, session summaries, filtering, pagination, and item details.

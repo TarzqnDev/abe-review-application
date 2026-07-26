@@ -1,11 +1,11 @@
 "use server";
 
-import { createAdminSubjectActionClient } from "@/features/app/admin/question-bank/utils/assertAdminSession";
-import { validateQuestionForm } from "@/features/app/admin/question-bank/utils/validateQuestionForm";
 import { PAES_GAME_TYPE } from "@/features/app/admin/question-bank/constants/questionBank";
-import { assertStandardQuestionBankSubject } from "@/features/app/admin/question-bank/utils/assertPaesSubject";
+import { createAdminSubjectActionClient } from "@/features/app/admin/question-bank/utils/assertAdminSession";
+import { assertPaesSubject } from "@/features/app/admin/question-bank/utils/assertPaesSubject";
+import { validatePaesQuestionForm } from "@/features/app/admin/question-bank/utils/validatePaesQuestionForm";
 
-export const updateQuestion = async (formData: FormData) => {
+export const updatePaesQuestion = async (formData: FormData) => {
   try {
     const questionId = Number(formData.get("questionId"));
 
@@ -13,9 +13,9 @@ export const updateQuestion = async (formData: FormData) => {
       throw new Error("A valid question is required");
     }
 
-    const validatedForm = validateQuestionForm(formData);
+    const validatedForm = validatePaesQuestionForm(formData);
     const supabase = await createAdminSubjectActionClient();
-    await assertStandardQuestionBankSubject(supabase, validatedForm.subjectId);
+    await assertPaesSubject(supabase, validatedForm.subjectId);
 
     const { data: existingQuestion, error: questionLookupError } = await supabase
       .from("questions")
@@ -31,16 +31,16 @@ export const updateQuestion = async (formData: FormData) => {
       ? existingQuestion.question_sets[0]
       : existingQuestion.question_sets;
 
-    if (existingQuestionSet?.game_type === PAES_GAME_TYPE) {
-      throw new Error("PAES questions must use the PAES question form");
+    if (existingQuestionSet?.game_type !== PAES_GAME_TYPE) {
+      throw new Error("The selected question is not a PAES question");
     }
 
     const { data: questionSet, error: questionSetError } = await supabase
       .from("question_sets")
       .upsert(
         {
-          difficulty: validatedForm.difficulty,
-          game_type: validatedForm.gameType,
+          difficulty: null,
+          game_type: PAES_GAME_TYPE,
           subject_id: validatedForm.subjectId,
         },
         {
@@ -90,16 +90,18 @@ export const updateQuestion = async (formData: FormData) => {
 
     return {
       success: true,
-      message: "Question updated successfully",
+      message: "PAES question updated successfully",
     };
   } catch (error: unknown) {
     console.error(error);
 
     return {
       success: false,
-      message: "Unable to update question",
+      message: "Unable to update PAES question",
       error:
-        error instanceof Error ? error.message : "Unable to update question",
+        error instanceof Error
+          ? error.message
+          : "Unable to update PAES question",
     };
   }
 };

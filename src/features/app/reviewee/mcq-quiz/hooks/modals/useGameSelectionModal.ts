@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { fetchPaesSubjects } from "@/features/app/reviewee/mcq-quiz/actions/fetch-paes-subjects.action";
 import { fetchQuizAreas } from "@/features/app/reviewee/mcq-quiz/actions/fetch-quiz-areas.action";
+import { preparePaesQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/prepare-paes-quiz-session.action";
 import { prepareQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/prepare-quiz-session.action";
 import type {
   PreparedQuizSession,
@@ -13,7 +15,7 @@ type UseGameSelectionModalOptions = {
   gameType: QuizGameType | null;
   isOpen: boolean;
   onClose: () => void;
-  onNoQuestions: () => void;
+  onNoQuestions: (message?: string) => void;
   onPrepared: (session: PreparedQuizSession) => void;
 };
 
@@ -28,8 +30,8 @@ export const useGameSelectionModal = ({
 }: UseGameSelectionModalOptions) => {
   const areaSelectRef = useRef<HTMLSelectElement>(null);
   const requestIdRef = useRef(0);
-  const [areas, setAreas] = useState<QuizArea[]>([]);
-  const [selectedAreaId, setSelectedAreaId] = useState("");
+  const [selectionOptions, setSelectionOptions] = useState<QuizArea[]>([]);
+  const [selectedOptionId, setSelectedOptionId] = useState("");
   const [difficulty, setDifficulty] = useState<QuizDifficulty>("Easy");
   const [isLoadingAreas, setIsLoadingAreas] = useState(false);
   const [isPreparing, setIsPreparing] = useState(false);
@@ -39,33 +41,40 @@ export const useGameSelectionModal = ({
     isOpen,
     onClose: isPreparing ? undefined : onClose,
   });
+  const isPaesGame = gameType === "PAES";
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !gameType) return;
 
     const activeRequestId = requestIdRef.current + 1;
     requestIdRef.current = activeRequestId;
     void Promise.resolve().then(async () => {
       setIsLoadingAreas(true);
       setError("");
-      const result = await fetchQuizAreas();
+      const result = isPaesGame
+        ? await fetchPaesSubjects()
+        : await fetchQuizAreas();
 
       if (requestIdRef.current !== activeRequestId) return;
 
       if (!result.success) {
-        setAreas([]);
-        setSelectedAreaId("");
-        setError(result.error ?? "Unable to load quiz areas.");
+        setSelectionOptions([]);
+        setSelectedOptionId("");
+        setError(
+          result.error ??
+            `Unable to load ${isPaesGame ? "PAES subjects" : "quiz areas"}.`,
+        );
       } else {
-        setAreas(result.areas);
-        setSelectedAreaId((currentAreaId) => {
-          const areaStillExists = result.areas.some(
-            (area) => String(area.id) === currentAreaId,
+        const options = "subjects" in result ? result.subjects : result.areas;
+        setSelectionOptions(options);
+        setSelectedOptionId((currentOptionId) => {
+          const optionStillExists = options.some(
+            (option) => String(option.id) === currentOptionId,
           );
 
-          return areaStillExists
-            ? currentAreaId
-            : String(result.areas[0]?.id ?? "");
+          return optionStillExists
+            ? currentOptionId
+            : String(options[0]?.id ?? "");
         });
       }
 
@@ -75,7 +84,7 @@ export const useGameSelectionModal = ({
     return () => {
       requestIdRef.current += 1;
     };
-  }, [isOpen]);
+  }, [gameType, isOpen, isPaesGame]);
 
   useEffect(() => {
     if (isOpen) return;
@@ -97,20 +106,22 @@ export const useGameSelectionModal = ({
   const handleStartNow = async () => {
     if (!gameType || isPreparing) return;
 
-    const areaId = Number(selectedAreaId);
+    const selectedId = Number(selectedOptionId);
 
-    if (!Number.isInteger(areaId) || areaId <= 0) {
-      setError("Please select an area.");
+    if (!Number.isInteger(selectedId) || selectedId <= 0) {
+      setError(`Please select ${isPaesGame ? "a PAES subject" : "an area"}.`);
       return;
     }
 
     setError("");
     setIsPreparing(true);
-    const result = await prepareQuizSession({
-      areaId,
-      difficulty,
-      gameType,
-    });
+    const result = isPaesGame
+      ? await preparePaesQuizSession({ subjectId: selectedId })
+      : await prepareQuizSession({
+          areaId: selectedId,
+          difficulty,
+          gameType,
+        });
 
     if (!result.success) {
       setError(result.error ?? "Unable to prepare this game.");
@@ -119,7 +130,11 @@ export const useGameSelectionModal = ({
     }
 
     if (result.noQuestions || !result.preparedSession) {
-      onNoQuestions();
+      onNoQuestions(
+        isPaesGame
+          ? "There are no questions available for this PAES subject yet."
+          : undefined,
+      );
       setIsPreparing(false);
       return;
     }
@@ -130,7 +145,6 @@ export const useGameSelectionModal = ({
 
   return {
     areaSelectRef,
-    areas,
     difficulty,
     error,
     handleClose,
@@ -138,9 +152,11 @@ export const useGameSelectionModal = ({
     isLoadingAreas,
     isPreparing,
     modalAccessibility,
+    isPaesGame,
     quizDifficulties: QUIZ_DIFFICULTIES,
-    selectedAreaId,
+    selectedOptionId,
+    selectionOptions,
     setDifficulty,
-    setSelectedAreaId,
+    setSelectedOptionId,
   };
 };

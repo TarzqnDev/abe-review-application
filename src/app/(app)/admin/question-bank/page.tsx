@@ -2,6 +2,8 @@
 
 import DeleteSubjectConfirmationModal from "@/features/app/admin/question-bank/components/DeleteSubjectConfirmationModal";
 import QuestionBankLoadingSkeleton from "@/features/app/admin/question-bank/components/QuestionBankLoadingSkeleton";
+import PaesQuestionFormModal from "@/features/app/admin/question-bank/components/PaesQuestionFormModal";
+import PaesQuestionListModal from "@/features/app/admin/question-bank/components/PaesQuestionListModal";
 import SubjectAreaSection from "@/features/app/admin/question-bank/components/SubjectAreaSection";
 import SubjectDetailsModal from "@/features/app/admin/question-bank/components/SubjectDetailsModal";
 import SubjectFilters from "@/features/app/admin/question-bank/components/SubjectFilters";
@@ -9,6 +11,7 @@ import SubjectFormModal from "@/features/app/admin/question-bank/components/Subj
 import SubjectIntroCard from "@/features/app/admin/question-bank/components/SubjectIntroCard";
 import SubjectSuccessBanner from "@/features/app/admin/question-bank/components/SubjectSuccessBanner";
 import { useQuestionBank } from "@/features/app/admin/question-bank/hooks/useQuestionBank";
+import { isPaesSubjectArea } from "@/features/app/admin/question-bank/constants/questionBank";
 
 export default function AdminSubjectPage() {
   const {
@@ -16,19 +19,24 @@ export default function AdminSubjectPage() {
     filteredSubjectAreas,
     handleAreaFilterChange,
     handleCloseDeleteSubjectConfirmation,
+    handleClosePaesQuestionFormModal,
+    handleClosePaesQuestionList,
     handleCloseSubjectDetails,
     handleCloseSubjectFormModal,
     handleOpenAddSubjectModal,
+    handleOpenAddPaesQuestionModal,
     handleSearchQueryChange,
     handleSelectSubject,
     handleSubjectAreaModeChange,
     handleSubjectModeOperationSuccess,
     isLoadingSubjectAreas,
     loadSubjectAreas,
+    paesQuestionFormRequest,
     searchQuery,
     selectedAddSubjectAreaId,
     selectedEditSubject,
     selectedSubject,
+    selectedPaesSubject,
     selectedSubjectToDelete,
     setIsLoadingSubjectAreas,
     showSuccessBanner,
@@ -64,6 +72,7 @@ export default function AdminSubjectPage() {
         <>
           <div className="mb-12">
             <SubjectIntroCard
+              onAddPaesQuestion={handleOpenAddPaesQuestionModal}
               onAddSubject={handleOpenAddSubjectModal}
               subjectAreas={subjectAreas}
             />
@@ -81,6 +90,7 @@ export default function AdminSubjectPage() {
             filteredSubjectAreas.map((subjectArea) => (
               <SubjectAreaSection
                 key={subjectArea.id}
+                isPredefined={isPaesSubjectArea(subjectArea.name)}
                 mode={subjectAreaModes[subjectArea.id] ?? null}
                 onModeChange={(mode) =>
                   handleSubjectAreaModeChange(subjectArea.id, mode)
@@ -103,6 +113,34 @@ export default function AdminSubjectPage() {
       )}
 
       {/* Modals Section */}
+      <PaesQuestionFormModal
+        key={
+          paesQuestionFormRequest?.requestId ??
+          "standalone-paes-question-form-modal"
+        }
+        onClose={handleClosePaesQuestionFormModal}
+        request={paesQuestionFormRequest}
+        showSuccessMessage={showSuccessMessage}
+        subjects={
+          subjectAreas.find((subjectArea) =>
+            isPaesSubjectArea(subjectArea.name),
+          )?.subjects ?? []
+        }
+      />
+
+      <PaesQuestionListModal
+        key={selectedPaesSubject?.id ?? "paes-question-list-modal"}
+        onClose={handleClosePaesQuestionList}
+        open={selectedPaesSubject !== null}
+        showSuccessMessage={showSuccessMessage}
+        subject={selectedPaesSubject}
+        subjects={
+          subjectAreas.find((subjectArea) =>
+            isPaesSubjectArea(subjectArea.name),
+          )?.subjects ?? []
+        }
+      />
+
       <SubjectFormModal
         key={
           selectedEditSubject

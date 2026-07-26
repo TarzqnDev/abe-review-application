@@ -29,7 +29,7 @@ export default function QuizCard({ onStart, quizGame }: QuizCardProps) {
         <button
           type="button"
           onClick={() => onStart(quizGame)}
-          className="mt-3 flex w-full items-center justify-center rounded bg-primary-accent px-4 py-2 text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
+          className="mt-3 flex w-full items-center justify-center rounded bg-primary-accent px-4 py-2 text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent cursor-pointer"
         >
           Start Game
         </button>

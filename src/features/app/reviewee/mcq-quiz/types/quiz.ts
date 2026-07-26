@@ -1,11 +1,17 @@
 export type QuizGameType =
   | "Guess the Word"
   | "AB-Solution"
-  | "Situationship";
+  | "Situationship"
+  | "PAES";
 
 export type QuizDifficulty = "Easy" | "Medium" | "Hard";
 
 export type QuizArea = {
+  id: number;
+  name: string;
+};
+
+export type QuizSubject = {
   id: number;
   name: string;
 };
@@ -29,7 +35,7 @@ export type PreparedQuizSession = {
   areaId: number;
   areaName: string;
   gameType: QuizGameType;
-  difficulty: QuizDifficulty;
+  difficulty: QuizDifficulty | null;
   timerSeconds: number;
   totalQuestions: number;
   questions: PreparedQuizQuestion[];
@@ -74,7 +80,7 @@ export type QuizSummary = {
   areaId: number | null;
   areaName: string;
   gameType: QuizGameType;
-  difficulty: QuizDifficulty;
+  difficulty: QuizDifficulty | null;
   totalQuestions: number;
   correct: number;
   incorrect: number;

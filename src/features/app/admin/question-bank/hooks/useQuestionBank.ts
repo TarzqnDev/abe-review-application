@@ -6,6 +6,8 @@ import {
 } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
 import { updateSubjectArea } from "@/features/app/admin/question-bank/actions/update-subject-area.action";
 import type { SubjectAreaMode } from "@/features/app/admin/question-bank/components/SubjectAreaSection";
+import { isPaesSubjectArea } from "@/features/app/admin/question-bank/constants/questionBank";
+import type { PaesQuestionFormRequest } from "@/features/app/admin/question-bank/hooks/modals/usePaesQuestionFormModal";
 
 export type SubjectAreaFilter = "all" | number;
 
@@ -40,6 +42,10 @@ export const useQuestionBank = () => {
   const [selectedSubject, setSelectedSubject] = useState<AdminSubject | null>(
     null,
   );
+  const [selectedPaesSubject, setSelectedPaesSubject] =
+    useState<AdminSubject | null>(null);
+  const [paesQuestionFormRequest, setPaesQuestionFormRequest] =
+    useState<PaesQuestionFormRequest | null>(null);
   const [subjectAreaModes, setSubjectAreaModes] = useState<
     Record<number, Exclude<SubjectAreaMode, null>>
   >({});
@@ -124,7 +130,26 @@ export const useQuestionBank = () => {
   };
 
   const handleOpenAddSubjectModal = (areaId: number) => {
+    const selectedArea = subjectAreas.find(
+      (subjectArea) => subjectArea.id === areaId,
+    );
+
+    if (selectedArea && isPaesSubjectArea(selectedArea.name)) {
+      return;
+    }
+
     setSelectedAddSubjectAreaId(areaId);
+  };
+
+  const handleOpenAddPaesQuestionModal = () => {
+    setPaesQuestionFormRequest({
+      mode: "create",
+      requestId: Date.now(),
+    });
+  };
+
+  const handleClosePaesQuestionFormModal = () => {
+    setPaesQuestionFormRequest(null);
   };
 
   const handleCloseAddSubjectModal = () => {
@@ -140,6 +165,14 @@ export const useQuestionBank = () => {
     areaId: number,
     mode: SubjectAreaMode,
   ) => {
+    const selectedArea = subjectAreas.find(
+      (subjectArea) => subjectArea.id === areaId,
+    );
+
+    if (selectedArea && isPaesSubjectArea(selectedArea.name)) {
+      return;
+    }
+
     setSubjectAreaModes(() => {
       if (mode === null) {
         return {};
@@ -159,6 +192,16 @@ export const useQuestionBank = () => {
     subject: AdminSubject,
     mode: SubjectAreaMode,
   ) => {
+    const selectedArea = subjectAreas.find(
+      (subjectArea) => subjectArea.id === subject.area_id,
+    );
+
+    if (selectedArea && isPaesSubjectArea(selectedArea.name)) {
+      setSubjectAreaModes({});
+      setSelectedPaesSubject(subject);
+      return;
+    }
+
     if (mode === "edit") {
       setSelectedEditSubject(subject);
       return;
@@ -175,6 +218,10 @@ export const useQuestionBank = () => {
 
   const handleCloseSubjectDetails = () => {
     setSelectedSubject(null);
+  };
+
+  const handleClosePaesQuestionList = () => {
+    setSelectedPaesSubject(null);
   };
 
   const handleCloseDeleteSubjectConfirmation = () => {
@@ -244,10 +291,13 @@ export const useQuestionBank = () => {
     handleCancelAreaEditing,
     handleCloseAddSubjectModal,
     handleCloseDeleteSubjectConfirmation,
+    handleClosePaesQuestionFormModal,
+    handleClosePaesQuestionList,
     handleCloseSubjectFormModal,
     handleCloseSubjectDetails,
     handleHideSuccessBanner,
     handleOpenAddSubjectModal,
+    handleOpenAddPaesQuestionModal,
     handleSearchQueryChange,
     handleSelectSubject,
     handleStartAreaEditing,
@@ -257,9 +307,11 @@ export const useQuestionBank = () => {
     isLoadingSubjectAreas,
     isUpdatingArea,
     searchQuery,
+    paesQuestionFormRequest,
     selectedAddSubjectAreaId,
     selectedEditSubject,
     selectedSubject,
+    selectedPaesSubject,
     selectedSubjectToDelete,
     showSuccessBanner,
     showSuccessMessage,

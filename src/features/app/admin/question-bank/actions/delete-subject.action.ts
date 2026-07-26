@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminSubjectActionClient } from "@/features/app/admin/question-bank/utils/assertAdminSession";
+import { PAES_AREA_NAME } from "@/features/app/admin/question-bank/constants/questionBank";
 
 type DeleteSubjectInput = {
   areaId: number;
@@ -22,6 +23,20 @@ export const deleteSubject = async ({
     }
 
     const supabase = await createAdminSubjectActionClient();
+    const { data: subjectArea, error: subjectAreaError } = await supabase
+      .from("subject_areas")
+      .select("name")
+      .eq("id", areaId)
+      .single();
+
+    if (subjectAreaError) {
+      throw new Error(subjectAreaError.message);
+    }
+
+    if (subjectArea.name === PAES_AREA_NAME) {
+      throw new Error("PAES Series subjects cannot be deleted");
+    }
+
     const { data: deletedSubject, error } = await supabase
       .from("subjects")
       .delete()

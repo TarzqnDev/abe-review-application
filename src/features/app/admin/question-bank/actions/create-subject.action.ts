@@ -2,6 +2,7 @@
 
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import { PAES_AREA_NAME } from "@/features/app/admin/question-bank/constants/questionBank";
 
 const validateSubjectName = (subjectName: string) => {
   if (!subjectName) return "Subject name is required";
@@ -40,6 +41,20 @@ export const createSubject = async (formData: FormData) => {
 
     if (!roles.includes("admin")) {
       throw new Error("You are not authorized to create subjects");
+    }
+
+    const { data: subjectArea, error: subjectAreaError } = await supabase
+      .from("subject_areas")
+      .select("name")
+      .eq("id", areaId)
+      .single();
+
+    if (subjectAreaError) {
+      throw new Error(subjectAreaError.message);
+    }
+
+    if (subjectArea.name === PAES_AREA_NAME) {
+      throw new Error("PAES Series subjects are predefined");
     }
 
     const { error } = await supabase.from("subjects").insert({

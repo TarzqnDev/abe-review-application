@@ -13,6 +13,9 @@ export type RevieweeMcqQuizStage =
   | "playing"
   | "summary";
 
+const DEFAULT_NO_QUESTIONS_MESSAGE =
+  "There are no questions available for this area and difficulty yet.";
+
 export const useRevieweeMcqQuiz = () => {
   const [selectedGameType, setSelectedGameType] =
     useState<QuizGameType | null>(null);
@@ -24,8 +27,7 @@ export const useRevieweeMcqQuiz = () => {
   const [summary, setSummary] = useState<QuizSummary | null>(null);
   const [noQuestions, setNoQuestions] = useState({
     isOpen: false,
-    message:
-      "There are no questions available for this area and difficulty yet.",
+    message: DEFAULT_NO_QUESTIONS_MESSAGE,
   });
 
   const resetMcqQuizGame = useCallback(() => {
@@ -58,11 +60,11 @@ export const useRevieweeMcqQuiz = () => {
     setStage("countdown");
   }, []);
 
-  const handleNoQuestions = useCallback(() => {
-    setNoQuestions((currentState) => ({
-      ...currentState,
+  const handleNoQuestions = useCallback((message?: string) => {
+    setNoQuestions({
       isOpen: true,
-    }));
+      message: message ?? DEFAULT_NO_QUESTIONS_MESSAGE,
+    });
   }, []);
 
   const closeNoQuestions = useCallback(() => {

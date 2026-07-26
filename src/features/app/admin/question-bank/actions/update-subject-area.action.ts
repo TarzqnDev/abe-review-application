@@ -2,6 +2,7 @@
 
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import { PAES_AREA_NAME } from "@/features/app/admin/question-bank/constants/questionBank";
 
 const validateSubjectAreaName = (subjectAreaName: string) => {
   if (!subjectAreaName) return "Area name is required";
@@ -40,6 +41,20 @@ export const updateSubjectArea = async (formData: FormData) => {
 
     if (!roles.includes("admin")) {
       throw new Error("You are not authorized to update subject areas");
+    }
+
+    const { data: subjectArea, error: subjectAreaLookupError } = await supabase
+      .from("subject_areas")
+      .select("name")
+      .eq("id", areaId)
+      .single();
+
+    if (subjectAreaLookupError) {
+      throw new Error(subjectAreaLookupError.message);
+    }
+
+    if (subjectArea.name === PAES_AREA_NAME) {
+      throw new Error("PAES Series cannot be edited");
     }
 
     const { error } = await supabase

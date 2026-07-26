@@ -78,7 +78,10 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             {props.preparedSession.areaName} Quiz
           </h2>
           <p className="mt-2 text-base text-secondary-text">
-            {props.preparedSession.gameType} ({props.preparedSession.difficulty})
+            {props.preparedSession.gameType}
+            {props.preparedSession.difficulty
+              ? ` (${props.preparedSession.difficulty})`
+              : ""}
           </p>
         </header>
 

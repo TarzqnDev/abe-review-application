@@ -34,4 +34,11 @@ export const quizGames: QuizGame[] = [
     image: SituationshipCardImage,
     imageAlt: "Magnifying glass selecting a person for the Situationship quiz",
   },
+  {
+    title: "PAES",
+    description: "Answer questions using PAES standards.",
+    gameType: "PAES",
+    image: AbSolutionCardImage,
+    imageAlt: "Engineering problem solving illustrations for the PAES quiz",
+  },
 ];
