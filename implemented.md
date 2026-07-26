@@ -38,7 +38,7 @@
 - Flash Cards and Manage Reviewees: list views use ten-item frontend pagination, including visible disabled controls when a non-empty flash-card list or search result fits on one page.
 - Question Bank: question list answer states now use the reference teal palette, and success banners render above every nested question-bank modal.
 - Activity History: reviewees can view latest-first MCQ and flash-card sessions with overview metrics, activity-type and status filters, search, pagination, and complete session details in a modal.
-- Activity History: terminal game sessions are synchronized into a dedicated, backfilled history table while item-level answers remain in their mode-specific session tables and are exposed only through an ownership-checked details function.
+- Activity History: terminal MCQ and flash-card sessions are read directly from `game_sessions`, summary metrics are derived from their mode-specific session items, and item-level answers are exposed only through an ownership-checked details function using the game session UUID.
 - MCQ and flash-card game summaries now use the score-focused reference layout with a segmented result donut, performance feedback, answered and duration cards, and compact result totals while preserving early-exit results and existing return actions.
 - MCQ and flash-card game summaries include completion headers with mode-specific titles and session metadata.
 - MCQ and flash-card games use mode-specific exit notices with responsive reference-matched confirmation actions.

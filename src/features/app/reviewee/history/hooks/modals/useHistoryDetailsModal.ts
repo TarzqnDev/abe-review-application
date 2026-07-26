@@ -4,13 +4,13 @@ import type { ActivityHistoryDetails } from "@/features/app/reviewee/history/typ
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
 
 type UseHistoryDetailsModalProps = {
-  historyId: number | null;
+  sessionId: string | null;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export const useHistoryDetailsModal = ({
-  historyId,
+  sessionId,
   isOpen,
   onClose,
 }: UseHistoryDetailsModalProps) => {
@@ -30,13 +30,13 @@ export const useHistoryDetailsModal = ({
   });
 
   const loadDetails = useCallback(async () => {
-    if (!isOpen || historyId === null) return;
+    if (!isOpen || sessionId === null) return;
 
     const requestId = ++requestIdRef.current;
     setIsLoading(true);
     setError("");
 
-    const result = await fetchActivityHistoryDetails({ historyId });
+    const result = await fetchActivityHistoryDetails({ sessionId });
 
     if (requestId !== requestIdRef.current) return;
 
@@ -49,10 +49,10 @@ export const useHistoryDetailsModal = ({
 
     setDetails(result.details);
     setIsLoading(false);
-  }, [historyId, isOpen]);
+  }, [sessionId, isOpen]);
 
   useEffect(() => {
-    if (!isOpen || historyId === null) {
+    if (!isOpen || sessionId === null) {
       requestIdRef.current += 1;
       return;
     }
@@ -62,7 +62,7 @@ export const useHistoryDetailsModal = ({
     return () => {
       requestIdRef.current += 1;
     };
-  }, [historyId, isOpen, loadDetails]);
+  }, [sessionId, isOpen, loadDetails]);
 
   return {
     closeButtonRef,

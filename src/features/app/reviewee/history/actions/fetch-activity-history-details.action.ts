@@ -11,27 +11,40 @@ import {
 import { createRevieweeHistoryActionClient } from "@/features/app/reviewee/history/utils/createRevieweeHistoryActionClient";
 
 export type FetchActivityHistoryDetailsInput = {
-  historyId: number;
+  sessionId: string;
 };
 
 export const fetchActivityHistoryDetails = async ({
-  historyId,
+  sessionId,
 }: FetchActivityHistoryDetailsInput): Promise<FetchActivityHistoryDetailsResult> => {
   try {
-    if (!Number.isSafeInteger(historyId) || historyId <= 0) {
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        sessionId,
+      )
+    ) {
       throw new Error("A valid activity history entry is required");
     }
 
     const supabase = await createRevieweeHistoryActionClient();
-    const [historyResult, detailsResult] = await Promise.all([
-      supabase.from("activity_history").select("*").eq("id", historyId).single(),
+    const [sessionResult, detailsResult] = await Promise.all([
+      supabase
+        .from("game_sessions")
+        .select(`
+          *,
+          game_session_flash_cards(status, result),
+          game_session_questions(status, result)
+        `)
+        .eq("id", sessionId)
+        .in("status", ["completed", "exited", "cancelled"])
+        .single(),
       supabase.rpc("get_activity_history_details", {
-        selected_history_id: historyId,
+        selected_session_id: sessionId,
       }),
     ]);
 
-    if (historyResult.error) {
-      throw new Error(historyResult.error.message);
+    if (sessionResult.error) {
+      throw new Error(sessionResult.error.message);
     }
 
     if (detailsResult.error) {
@@ -45,7 +58,7 @@ export const fetchActivityHistoryDetails = async ({
     return {
       success: true,
       details: mapActivityHistoryDetails(
-        historyResult.data,
+        sessionResult.data,
         detailsResult.data as unknown as Parameters<
           typeof mapActivityHistoryDetails
         >[1],

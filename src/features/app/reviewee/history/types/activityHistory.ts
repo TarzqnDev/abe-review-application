@@ -10,8 +10,7 @@ export type ActivityHistoryEndReason =
 export type ActivityHistoryDifficulty = "Easy" | "Medium" | "Hard";
 
 export type ActivityHistoryEntry = {
-  id: number;
-  gameSessionId: string;
+  id: string;
   sessionType: ActivityHistorySessionType;
   areaId: number | null;
   areaName: string;
@@ -32,7 +31,6 @@ export type ActivityHistoryEntry = {
   preparedAt: string;
   startedAt: string | null;
   terminalAt: string;
-  updatedAt: string;
 };
 
 export type ActivityHistoryOption = {

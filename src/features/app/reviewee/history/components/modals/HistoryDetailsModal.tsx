@@ -7,7 +7,7 @@ import { useHistoryDetailsModal } from "@/features/app/reviewee/history/hooks/mo
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 
 export type HistoryDetailsModalProps = {
-  historyId: number | null;
+  sessionId: string | null;
   isOpen: boolean;
   onClose: () => void;
 };

@@ -81,7 +81,7 @@ export default function RevieweeHistoryPage() {
 
       {/* Modals Section */}
       <HistoryDetailsModal
-        historyId={historyPage.selectedHistory?.id ?? null}
+        sessionId={historyPage.selectedHistory?.id ?? null}
         isOpen={historyPage.selectedHistory !== null}
         onClose={historyPage.closeHistoryDetails}
       />

@@ -11,9 +11,14 @@ export const fetchActivityHistory = async (): Promise<FetchActivityHistoryResult
   try {
     const supabase = await createRevieweeHistoryActionClient();
     const { data, error } = await supabase
-      .from("activity_history")
-      .select("*")
-      .order("terminal_at", { ascending: false })
+      .from("game_sessions")
+      .select(`
+        *,
+        game_session_flash_cards(status, result),
+        game_session_questions(status, result)
+      `)
+      .in("status", ["completed", "exited", "cancelled"])
+      .order("ended_at", { ascending: false, nullsFirst: false })
       .order("id", { ascending: false });
 
     if (error) {
