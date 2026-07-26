@@ -52,8 +52,9 @@ export default function RevieweeHistoryPage() {
                     Recent Activities
                   </h2>
                   <p className="mt-0.5 text-xs text-secondary-text">
-                    Showing{" "}
-                    {historyPage.filteredHistoryCount.toLocaleString()} activities
+                    Showing your latest{" "}
+                    {historyPage.filteredHistoryCount.toLocaleString()} saved
+                    activities
                   </p>
                 </div>
               </div>

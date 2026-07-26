@@ -2,10 +2,19 @@ import type {
   ActivityHistoryDetails,
   ActivityHistoryEntry,
   ActivityHistoryItem,
+  ActivityHistoryOverviewStats,
 } from "@/features/app/reviewee/history/types/activityHistory";
 import type { Database } from "@/types/database.types";
 
 type GameSessionRow = Database["public"]["Tables"]["game_sessions"]["Row"];
+type RevieweeActivityStatsRow = Pick<
+  Database["public"]["Tables"]["reviewee_activity_stats"]["Row"],
+  | "completed_sessions"
+  | "total_answered_items"
+  | "total_correct_answers"
+  | "total_sessions"
+  | "total_study_seconds"
+>;
 type GameSessionItemSummary = {
   result: string | null;
   status: string;
@@ -85,6 +94,29 @@ export const mapActivityHistoryRow = (
     preparedAt: session.prepared_at,
     startedAt: session.started_at,
     terminalAt: session.ended_at ?? session.prepared_at,
+  };
+};
+
+export const emptyActivityHistoryOverviewStats: ActivityHistoryOverviewStats = {
+  averageAccuracy: 0,
+  completedSessions: 0,
+  totalSessions: 0,
+  totalStudySeconds: 0,
+};
+
+export const mapActivityHistoryOverviewStats = (
+  stats: RevieweeActivityStatsRow | null,
+): ActivityHistoryOverviewStats => {
+  if (!stats) return emptyActivityHistoryOverviewStats;
+
+  return {
+    averageAccuracy: calculatePercentage(
+      stats.total_correct_answers,
+      stats.total_answered_items,
+    ),
+    completedSessions: stats.completed_sessions,
+    totalSessions: stats.total_sessions,
+    totalStudySeconds: stats.total_study_seconds,
   };
 };
 

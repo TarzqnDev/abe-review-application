@@ -294,6 +294,7 @@ export type Database = {
       }
       game_sessions: {
         Row: {
+          activity_stats_recorded_at: string | null
           area_id: number | null
           area_name: string
           current_question_order: number
@@ -312,6 +313,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          activity_stats_recorded_at?: string | null
           area_id?: number | null
           area_name: string
           current_question_order?: number
@@ -330,6 +332,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          activity_stats_recorded_at?: string | null
           area_id?: number | null
           area_name?: string
           current_question_order?: number
@@ -366,6 +369,47 @@ export type Database = {
             foreignKeyName: "game_sessions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      reviewee_activity_stats: {
+        Row: {
+          completed_sessions: number
+          created_at: string
+          total_answered_items: number
+          total_correct_answers: number
+          total_sessions: number
+          total_study_seconds: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_sessions?: number
+          created_at?: string
+          total_answered_items?: number
+          total_correct_answers?: number
+          total_sessions?: number
+          total_study_seconds?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_sessions?: number
+          created_at?: string
+          total_answered_items?: number
+          total_correct_answers?: number
+          total_sessions?: number
+          total_study_seconds?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviewee_activity_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["user_id"]
           },

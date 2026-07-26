@@ -58,3 +58,5 @@
 - Authentication: the initial route sends unauthenticated visitors to `/login` and redirects authenticated users to the admin or reviewee dashboard based on roles decoded from their Supabase access token.
 - App Layout: the shared admin and reviewee navbar and sidebar remain fixed in the viewport while only the main dashboard content scrolls.
 - Authentication: unavailable invitation links now use the reset-link unavailable layout and direct users to ask an administrator to register the account or resend the email invitation.
+- Activity History: each reviewee retains their newest 20 completed, exited, or cancelled MCQ and flash-card sessions; the database automatically prunes older terminal sessions and their item and answer-key snapshots when a session first becomes terminal, without counting ready or in-progress sessions.
+- Activity History: lifetime overview metrics are stored in a per-reviewee aggregate stats table so total sessions, completed sessions, average accuracy, and study time remain accurate even after older detailed sessions are pruned.

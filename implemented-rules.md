@@ -18,3 +18,5 @@
 - All successful application operations use the established animated teal success banner that slides down into view and slides back up after completion.
 - Password recovery uses cloud-managed Supabase Auth and email-template settings, stores only a signed and expiring user ID recovery cookie, and never persists a Supabase recovery session in cookies.
 - Subject areas and subjects remain readable by authenticated users, while their create, update, and delete operations are restricted to administrators through row-level security.
+- Activity-history retention is enforced in the database on the first terminal transition across both game modes: each user keeps the newest 20 completed, exited, or cancelled `game_sessions`, older session items and answer keys are cascade-deleted, and ready or in-progress sessions are excluded.
+- Activity-history overview cards use `reviewee_activity_stats` for lifetime totals; the visible history list stays limited to the newest 20 detailed terminal `game_sessions`.

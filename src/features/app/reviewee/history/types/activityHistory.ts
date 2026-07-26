@@ -76,9 +76,25 @@ export type ActivityHistoryDetails = {
   items: ActivityHistoryItem[];
 };
 
+export type ActivityHistoryOverviewStats = {
+  averageAccuracy: number;
+  completedSessions: number;
+  totalSessions: number;
+  totalStudySeconds: number;
+};
+
 export type FetchActivityHistoryResult =
-  | { success: true; history: ActivityHistoryEntry[] }
-  | { success: false; history: []; error: string };
+  | {
+      success: true;
+      history: ActivityHistoryEntry[];
+      overviewStats: ActivityHistoryOverviewStats;
+    }
+  | {
+      success: false;
+      history: [];
+      overviewStats: ActivityHistoryOverviewStats;
+      error: string;
+    };
 
 export type FetchActivityHistoryDetailsResult =
   | { success: true; details: ActivityHistoryDetails }

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchActivityHistory } from "@/features/app/reviewee/history/actions/fetch-activity-history.action";
-import type { ActivityHistoryEntry } from "@/features/app/reviewee/history/types/activityHistory";
+import type {
+  ActivityHistoryEntry,
+  ActivityHistoryOverviewStats,
+} from "@/features/app/reviewee/history/types/activityHistory";
 
 export type ActivityTypeFilter = "all" | "mcq_quiz" | "flash_cards";
 export type ActivityStatusFilter =
@@ -10,9 +13,17 @@ export type ActivityStatusFilter =
   | "cancelled";
 
 const HISTORY_PAGE_SIZE = 8;
+const EMPTY_OVERVIEW_STATS: ActivityHistoryOverviewStats = {
+  averageAccuracy: 0,
+  completedSessions: 0,
+  totalSessions: 0,
+  totalStudySeconds: 0,
+};
 
 export const useRevieweeHistory = () => {
   const [history, setHistory] = useState<ActivityHistoryEntry[]>([]);
+  const [overviewStats, setOverviewStats] =
+    useState<ActivityHistoryOverviewStats>(EMPTY_OVERVIEW_STATS);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [historyError, setHistoryError] = useState("");
   const [activityTypeFilter, setActivityTypeFilter] =
@@ -31,9 +42,11 @@ export const useRevieweeHistory = () => {
 
     if (result.success) {
       setHistory(result.history);
+      setOverviewStats(result.overviewStats);
       setHistoryError("");
     } else {
       setHistory([]);
+      setOverviewStats(EMPTY_OVERVIEW_STATS);
       setHistoryError(result.error ?? "Unable to load your activity history.");
     }
 
@@ -43,35 +56,6 @@ export const useRevieweeHistory = () => {
   useEffect(() => {
     void Promise.resolve().then(() => loadHistory(true));
   }, [loadHistory]);
-
-  const overviewStats = useMemo(() => {
-    const completedSessions = history.filter(
-      (historyEntry) => historyEntry.status === "completed",
-    ).length;
-    const scoredSessions = history.filter(
-      (historyEntry) => historyEntry.questionsReached > 0,
-    );
-    const totalAccuracy = scoredSessions.reduce(
-      (accuracySum, historyEntry) =>
-        accuracySum + historyEntry.accuracyPercentage,
-      0,
-    );
-    const totalStudySeconds = history.reduce(
-      (durationSum, historyEntry) =>
-        durationSum + historyEntry.durationSeconds,
-      0,
-    );
-
-    return {
-      averageAccuracy:
-        scoredSessions.length > 0
-          ? Math.round(totalAccuracy / scoredSessions.length)
-          : 0,
-      completedSessions,
-      totalSessions: history.length,
-      totalStudySeconds,
-    };
-  }, [history]);
 
   const filteredHistory = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase();
