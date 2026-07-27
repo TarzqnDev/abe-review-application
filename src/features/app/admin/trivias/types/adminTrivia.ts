@@ -7,14 +7,13 @@ export type AdminTrivia = {
 };
 
 export type TriviaFormModalRequest = {
+  initialPublishDate?: string;
   mode: "create" | "edit";
   requestId: string;
   trivia: AdminTrivia | null;
 };
 
-export type TriviaMonthGroup = {
-  count: number;
-  key: string;
-  label: string;
-  trivias: AdminTrivia[];
+export type TriviaDateSlot = {
+  date: string;
+  trivia: AdminTrivia | null;
 };

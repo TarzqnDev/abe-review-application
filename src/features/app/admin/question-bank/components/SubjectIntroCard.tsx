@@ -16,7 +16,7 @@ export default function SubjectIntroCard({
 }: SubjectIntroCardProps) {
   return (
     <div className="rounded-md border border-primary-accent bg-teal-50 px-6 py-10">
-      <div className="mx-auto flex max-w-xl flex-col items-center text-center">
+      <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
         <Image
           src={BookPileIconImage}
           alt="Book pile image"

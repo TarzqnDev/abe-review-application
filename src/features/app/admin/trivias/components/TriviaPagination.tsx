@@ -2,26 +2,26 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 type TriviaPaginationProps = {
   currentPage: number;
-  firstTriviaNumber: number;
-  lastTriviaNumber: number;
+  firstDateNumber: number;
+  lastDateNumber: number;
   onPageChange: (page: number) => void;
+  totalDates: number;
   totalPages: number;
-  totalTrivias: number;
 };
 
 export default function TriviaPagination({
   currentPage,
-  firstTriviaNumber,
-  lastTriviaNumber,
+  firstDateNumber,
+  lastDateNumber,
   onPageChange,
+  totalDates,
   totalPages,
-  totalTrivias,
 }: TriviaPaginationProps) {
   return (
     <div className="mt-5 flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-secondary-text">
-        Showing {firstTriviaNumber} to {lastTriviaNumber} of {totalTrivias}{" "}
-        {totalTrivias === 1 ? "trivia" : "trivias"}
+      <p className="text-sm text-secondary-text" aria-live="polite">
+        Showing {firstDateNumber} to {lastDateNumber} of {totalDates}{" "}
+        {totalDates === 1 ? "date" : "dates"}
       </p>
 
       {totalPages > 1 && (

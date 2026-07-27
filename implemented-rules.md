@@ -14,7 +14,7 @@
 - Reviewee history database changes are supplied as a timestamped Supabase SQL Editor script, including removal of the redundant activity-history table and UUID-based, ownership-checked detail access.
 - Flash-card game answers are compared server-side after trimming, collapsing repeated whitespace, and ignoring letter case; punctuation, accents, and word order remain significant.
 - ABE Trivia database changes are supplied as a timestamped Supabase SQL Editor script; publish dates follow the Asia/Manila calendar, allow an unchanged historical date during editing, and otherwise cannot be in the past.
-- ABE Trivia permits one trivia per publish date, restricts trivia management to administrators through row-level security, exposes only today's trivia to reviewees, groups admin listings by publish month, and paginates listings at four trivia per page.
+- ABE Trivia permits one trivia per publish date, restricts trivia management to administrators through row-level security, and exposes only today's trivia to reviewees.
 - All successful application operations use the established animated teal success banner that slides down into view and slides back up after completion.
 - Password recovery uses cloud-managed Supabase Auth and email-template settings, stores only a signed and expiring user ID recovery cookie, and never persists a Supabase recovery session in cookies.
 - Subject areas and subjects remain readable by authenticated users, while their create, update, and delete operations are restricted to administrators through row-level security.
@@ -23,3 +23,8 @@
 - PAES question sets use `game_type = 'PAES'` with a null difficulty, and PAES Series area and subject immutability is enforced by both the admin interface and subject-management server actions.
 - Predefined PAES Series subject data is supplied as an idempotent timestamped script under `supabase/seeds` for manual execution in the Supabase SQL Editor.
 - `PAES Series` remains the canonical database area name; only its subject-area card title on the reviewee flash-card page is shortened to `PAES`.
+- ABE Trivia calendar pagination counts all remaining current-month date cards plus the first next-month date card, including dates without trivia, with four date slots per page and a month divider before the next-month card.
+- ABE Trivia keeps the existing unique `publish_date` database constraint as the authoritative one-trivia-per-day safeguard; the calendar rework requires no schema change.
+- Reviewee trivia uses the existing row-level security policy together with an explicit Asia/Manila current-date query; the shared MCQ Quiz and Flash Cards card requires no schema change.
+- Reviewee MCQ Quiz and Flash Cards initial data must each use one page-specific server-action request so today's trivia is resolved before the completed page UI appears; `TodaysTriviaCard` remains controlled and must not start an independent mount fetch.
+- Reviewee Flash Cards must handle deck and trivia failures independently inside the coordinated initial request, and later deck retries, trivia retries, and Asia/Manila date-rollover refreshes must reload only their respective data.

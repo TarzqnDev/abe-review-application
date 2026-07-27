@@ -22,7 +22,7 @@
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
 - Payments: payment record IDs use generated bigint values.
 - Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.
-- ABE Trivia: administrators can load, create, edit, and delete database-backed trivia through a reusable create/edit form modal with a nested delete confirmation; trivia is grouped by publish month and paginated four items per page.
+- ABE Trivia: administrators can load, create, edit, and delete database-backed trivia through a reusable create/edit form modal with a nested delete confirmation.
 - Flash Cards: reviewees can manage database-backed flash cards grouped by subject area, create and edit cards through one reusable form, search cards in an area list, and delete cards after confirmation.
 - Flash Card Games: Play Now prepares a randomized server-side snapshot of the selected area's cards, runs a three-second countdown and timed free-text game, records correct, incorrect, timed-out, and early-exit results, and ends with a persisted summary.
 - Flash Card Games: each newly prepared flash card allows 15 seconds for an answer while preserving historical 10-second sessions.
@@ -64,3 +64,10 @@
 - PAES Series: a repeatable Supabase SQL Editor seed adds the predefined PAES Series area and PAES 100, 200, 300, 400, and 500 Series subjects without duplicating existing records.
 - Flash Cards: the database-backed `PAES Series` area card is titled `PAES` on the reviewee flash-card page without changing its stored name or its labels elsewhere.
 - Activity History: PAES MCQ sessions use the existing generic MCQ history pipeline, including nullable difficulty, session summaries, filtering, pagination, and item details.
+- ABE Trivia: the admin listing shows every remaining Asia/Manila date in the current month plus the first date of the next month as calendar-style cards, paginated four date slots at a time; scheduled dates show trivia details and editing, while empty dates prefill the create form.
+- ABE Trivia: a next-month divider appears immediately before the first next-month card, including when that card starts a new pagination page.
+- ABE Trivia: the global create action supports any future publish date, and long-open admin listings refresh automatically when the Asia/Manila date rolls over.
+- ABE Trivia: the MCQ Quiz and Flash Cards pages share a reference-matched card that displays the current Asia/Manila day's trivia when one is scheduled.
+- ABE Trivia: the reviewee card is always expanded at the `md`/768px breakpoint and above; below it, the card is an accessible accordion that starts expanded and can be hidden.
+- ABE Trivia: the MCQ Quiz and Flash Cards pages each load their initial page data through one page-specific server-action request, coordinating today's trivia into the completed initial render instead of letting the trivia card fetch independently after mounting.
+- ABE Trivia: Flash Cards settles its deck and trivia results independently within the coordinated initial request, while later deck retries remain deck-only and trivia retries or Asia/Manila date rollovers remain trivia-only.

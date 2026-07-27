@@ -1,9 +1,12 @@
 export default function TriviaListSkeleton() {
   return (
     <div className="animate-pulse" aria-label="Loading trivias" role="status">
-      <div className="h-7 w-48 rounded bg-border" />
+      <div className="flex items-center gap-2 border-b border-border pb-4">
+        <div className="h-7 w-40 rounded bg-border" />
+        <div className="h-6 w-20 rounded-full bg-teal-50" />
+      </div>
       <div className="mt-5 space-y-2">
-        {Array.from({ length: 3 }, (_, itemIndex) => (
+        {Array.from({ length: 4 }, (_, itemIndex) => (
           <div
             key={itemIndex}
             className="h-32 rounded-lg border border-border bg-surface p-5"

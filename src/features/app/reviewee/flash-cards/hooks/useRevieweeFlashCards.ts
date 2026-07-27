@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchFlashCardDecks } from "@/features/app/reviewee/flash-cards/actions/fetch-flash-card-decks.action";
+import { fetchRevieweeFlashCardsPageData } from "@/features/app/reviewee/flash-cards/actions/fetch-reviewee-flash-cards-page-data.action";
 import { prepareFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/prepare-flash-card-session.action";
 import type { FlashCardFormModalRequest } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardFormModal";
-import type { FlashCardDeck } from "@/features/app/reviewee/flash-cards/types/flashCard";
+import type {
+  FetchFlashCardDecksResult,
+  FlashCardDeck,
+} from "@/features/app/reviewee/flash-cards/types/flashCard";
 import type {
   FlashCardSummary,
   FlashCardTiming,
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
+import { useTodaysTriviaCard } from "@/features/app/reviewee/trivia/hooks/useTodaysTriviaCard";
 
 export type RevieweeFlashCardGameStage =
   | "idle"
@@ -16,8 +21,13 @@ export type RevieweeFlashCardGameStage =
   | "summary";
 
 export const useRevieweeFlashCards = () => {
+  const hasStartedInitialLoadRef = useRef(false);
   const isPreparingGameRef = useRef(false);
+  const todaysTriviaCard = useTodaysTriviaCard();
+  const { applyTriviaResult, beginTriviaRequest } = todaysTriviaCard;
   const [flashCardDecks, setFlashCardDecks] = useState<FlashCardDeck[]>([]);
+  const [isLoadingInitialPageData, setIsLoadingInitialPageData] =
+    useState(true);
   const [isLoadingFlashCardDecks, setIsLoadingFlashCardDecks] = useState(true);
   const [flashCardDecksError, setFlashCardDecksError] = useState("");
   const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
@@ -38,27 +48,63 @@ export const useRevieweeFlashCards = () => {
     message: "There are no flash cards available for this area yet.",
   });
 
-  const loadFlashCardDecks = useCallback(async (showLoadingState = false) => {
-    if (showLoadingState) setIsLoadingFlashCardDecks(true);
+  const applyFlashCardDecksResult = useCallback(
+    (result: FetchFlashCardDecksResult) => {
+      if (result.success) {
+        setFlashCardDecks(result.decks);
+        setFlashCardDecksError("");
+        return;
+      }
 
-    const result = await fetchFlashCardDecks();
-
-    if (result.success) {
-      setFlashCardDecks(result.decks);
-      setFlashCardDecksError("");
-    } else {
       setFlashCardDecks([]);
       setFlashCardDecksError(
         result.error ?? "Unable to load your flash card areas.",
       );
-    }
+    },
+    [],
+  );
+
+  const loadFlashCardDecks = useCallback(async (showLoadingState = false) => {
+    if (showLoadingState) setIsLoadingFlashCardDecks(true);
+
+    const result = await fetchFlashCardDecks();
+    applyFlashCardDecksResult(result);
 
     setIsLoadingFlashCardDecks(false);
-  }, []);
+  }, [applyFlashCardDecksResult]);
 
   useEffect(() => {
-    void Promise.resolve().then(() => loadFlashCardDecks(true));
-  }, [loadFlashCardDecks]);
+    if (hasStartedInitialLoadRef.current) return;
+
+    hasStartedInitialLoadRef.current = true;
+    const triviaRequestId = beginTriviaRequest(true);
+
+    void Promise.resolve().then(async () => {
+      try {
+        const result = await fetchRevieweeFlashCardsPageData();
+        applyFlashCardDecksResult(result.flashCardDecks);
+        applyTriviaResult(triviaRequestId, result.todaysTrivia);
+      } catch {
+        applyFlashCardDecksResult({
+          success: false,
+          decks: [],
+          error: "Unable to load your flash card areas.",
+        });
+        applyTriviaResult(triviaRequestId, {
+          success: false,
+          error: "Unable to load today's trivia.",
+          trivia: null,
+        });
+      } finally {
+        setIsLoadingFlashCardDecks(false);
+        setIsLoadingInitialPageData(false);
+      }
+    });
+  }, [
+    applyFlashCardDecksResult,
+    applyTriviaResult,
+    beginTriviaRequest,
+  ]);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -164,6 +210,7 @@ export const useRevieweeFlashCards = () => {
     handlePlayNow,
     initialTiming,
     isLoadingFlashCardDecks,
+    isLoadingInitialPageData,
     isPreparingGame: preparingAreaId !== null,
     loadFlashCardDecks,
     noFlashCards,
@@ -176,6 +223,7 @@ export const useRevieweeFlashCards = () => {
     selectedFlashCardDeck,
     showSuccessMessage: setSuccessMessage,
     successMessage,
+    todaysTriviaCard,
     closeNoFlashCards: () =>
       setNoFlashCards((currentState) => ({
         ...currentState,

@@ -26,7 +26,7 @@ export const useTriviaFormModal = ({
   const [formError, setFormError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [publishDate, setPublishDate] = useState(
-    request?.trivia?.publishDate ?? "",
+    request?.trivia?.publishDate ?? request?.initialPublishDate ?? "",
   );
   const closeWithAnimationRef = useRef(closeWithAnimation);
   const contentInputRef = useRef<HTMLTextAreaElement>(null);

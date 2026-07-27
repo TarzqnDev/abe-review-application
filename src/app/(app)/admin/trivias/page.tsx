@@ -1,6 +1,7 @@
 "use client";
 
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { Fragment } from "react";
 import DeleteTriviaConfirmationModal from "@/features/app/admin/trivias/components/DeleteTriviaConfirmationModal";
 import TriviaCard from "@/features/app/admin/trivias/components/TriviaCard";
 import TriviaFormModal from "@/features/app/admin/trivias/components/TriviaFormModal";
@@ -14,23 +15,28 @@ export default function AdminTriviasPage() {
     closeDeleteConfirmationModal,
     closeTriviaFormModal,
     currentPage,
-    firstTriviaNumber,
+    currentMonthLabel,
+    firstDateNumber,
     formModalRequest,
     handleTriviaDeleted,
+    hasCurrentMonthDateSlots,
     isLoadingTrivias,
-    lastTriviaNumber,
+    lastDateNumber,
     loadError,
     loadTrivias,
+    nextMonthLabel,
+    nextMonthStartDate,
     openCreateTriviaModal,
     openDeleteConfirmationModal,
     openEditTriviaModal,
+    paginatedDateSlots,
     retryLoadTrivias,
+    scheduledTriviaCount,
     setCurrentPage,
     showSuccessMessage,
     successMessage,
+    totalDateSlots,
     totalPages,
-    totalTrivias,
-    triviaMonthGroups,
     triviaToDelete,
   } = useAdminTrivias();
 
@@ -46,7 +52,7 @@ export default function AdminTriviasPage() {
 
         <button
           type="button"
-          onClick={openCreateTriviaModal}
+          onClick={() => openCreateTriviaModal()}
           className="mt-7 inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded bg-primary-accent px-5 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
         >
           <PlusIcon className="h-4 w-4" aria-hidden="true" />
@@ -68,50 +74,62 @@ export default function AdminTriviasPage() {
               Try Again
             </button>
           </div>
-        ) : totalTrivias === 0 ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-surface px-6 py-12 text-center">
-            <h2 className="text-base font-semibold text-primary-text">
-              No trivias yet
-            </h2>
-            <p className="mt-1 text-sm text-secondary-text">
-              Create your first trivia to schedule it for reviewees.
-            </p>
-          </div>
         ) : (
           <>
-            <div className="space-y-8">
-              {triviaMonthGroups.map((monthGroup) => (
-                <section key={monthGroup.key}>
-                  <div className="flex items-center gap-2 border-b border-border pb-4">
-                    <h2 className="text-lg font-semibold text-primary-text">
-                      Month of {monthGroup.label}
-                    </h2>
-                    <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-primary-dark">
-                      {monthGroup.count}{" "}
-                      {monthGroup.count === 1 ? "Trivia" : "Trivias"}
-                    </span>
-                  </div>
+            <section>
+              {hasCurrentMonthDateSlots && (
+                <div className="flex items-center gap-2 border-b border-border pb-4">
+                  <h2 className="text-lg font-semibold text-primary-text">
+                    Month of {currentMonthLabel}
+                  </h2>
+                  <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-primary-dark">
+                    {scheduledTriviaCount}{" "}
+                    {scheduledTriviaCount === 1 ? "Trivia" : "Trivias"}
+                  </span>
+                </div>
+              )}
 
-                  <div className="mt-5 space-y-2">
-                    {monthGroup.trivias.map((trivia) => (
+              <div
+                className={
+                  hasCurrentMonthDateSlots ? "mt-5 space-y-2" : "space-y-2"
+                }
+              >
+                {paginatedDateSlots.map((dateSlot) => {
+                  const isNextMonthStart =
+                    dateSlot.date === nextMonthStartDate;
+
+                  return (
+                    <Fragment key={dateSlot.date}>
+                      {isNextMonthStart && (
+                        <div
+                          className={`border-b border-border pb-4 ${
+                            hasCurrentMonthDateSlots ? "pt-6" : ""
+                          }`}
+                        >
+                          <h2 className="text-lg font-semibold text-primary-text">
+                            Month of {nextMonthLabel}
+                          </h2>
+                        </div>
+                      )}
                       <TriviaCard
-                        key={trivia.id}
-                        trivia={trivia}
+                        date={dateSlot.date}
+                        trivia={dateSlot.trivia}
+                        onCreate={openCreateTriviaModal}
                         onEdit={openEditTriviaModal}
                       />
-                    ))}
-                  </div>
-                </section>
-              ))}
-            </div>
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </section>
 
             <TriviaPagination
               currentPage={currentPage}
-              firstTriviaNumber={firstTriviaNumber}
-              lastTriviaNumber={lastTriviaNumber}
+              firstDateNumber={firstDateNumber}
+              lastDateNumber={lastDateNumber}
               onPageChange={setCurrentPage}
+              totalDates={totalDateSlots}
               totalPages={totalPages}
-              totalTrivias={totalTrivias}
             />
           </>
         )}

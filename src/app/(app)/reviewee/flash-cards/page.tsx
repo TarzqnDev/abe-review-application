@@ -13,16 +13,50 @@ import FlashCardGameModal from "@/features/app/reviewee/flash-cards/components/g
 import FlashCardGameSummaryModal from "@/features/app/reviewee/flash-cards/components/game/FlashCardGameSummaryModal";
 import NoFlashCardsModal from "@/features/app/reviewee/flash-cards/components/game/NoFlashCardsModal";
 import { useRevieweeFlashCards } from "@/features/app/reviewee/flash-cards/hooks/useRevieweeFlashCards";
+import TodaysTriviaCard from "@/features/app/reviewee/trivia/components/TodaysTriviaCard";
 
 export default function RevieweeFlashCardsPage() {
   const flashCardsPage = useRevieweeFlashCards();
 
+  if (flashCardsPage.isLoadingInitialPageData) {
+    return (
+      <section aria-busy="true">
+        <header className="mb-8">
+          <h1 className="text-2xl font-semibold text-primary-text">
+            My Flash Cards
+          </h1>
+          <p className="mt-1 text-base text-secondary-text">
+            Create and review your custom study cards
+          </p>
+        </header>
+
+        <div
+          aria-hidden="true"
+          className="mb-7 h-10 w-40 animate-pulse rounded bg-slate-200"
+        />
+
+        <FlashCardDecksSkeleton />
+      </section>
+    );
+  }
+
   return (
     <section>
+      <TodaysTriviaCard
+        isExpanded={flashCardsPage.todaysTriviaCard.isExpanded}
+        isLoading={flashCardsPage.todaysTriviaCard.isLoading}
+        loadError={flashCardsPage.todaysTriviaCard.loadError}
+        retryLoadTrivia={flashCardsPage.todaysTriviaCard.retryLoadTrivia}
+        toggleExpanded={flashCardsPage.todaysTriviaCard.toggleExpanded}
+        trivia={flashCardsPage.todaysTriviaCard.trivia}
+      />
+
       <FlashCardSuccessBanner message={flashCardsPage.successMessage} />
 
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold text-primary-text">My Flash Cards</h1>
+        <h1 className="text-2xl font-semibold text-primary-text">
+          My Flash Cards
+        </h1>
         <p className="mt-1 text-base text-secondary-text">
           Create and review your custom study cards
         </p>
