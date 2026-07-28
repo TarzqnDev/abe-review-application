@@ -47,6 +47,7 @@
 - Application metadata now uses the product title "ABE Review App" and the description "Practice and track your progress with MCQ quizzes and flash cards."
 - The shared admin and reviewee navbar uses a compact teal logout popover matching the supplied reference.
 - Application modals use stack-aware shared body scroll locking, while nested modal flows suspend their parent dialog's accessibility and focus handling until the child closes.
+- MCQ and flash-card games continue their authoritative timing and gameplay transitions behind exit confirmations while the underlying game dialog remains noninteractive and accessibility-suspended.
 - Design System: application colors use shared Tailwind theme tokens for brand, text, surfaces, backgrounds, borders, and semantic states.
 - Authentication: successful logins show the shared animated teal success banner on the designated dashboard, while authenticated visits to `/login` explain that the current account must be logged out before another account can sign in.
 - Authentication: login success notices preserve their message and complete their entrance and exit animation when users navigate through the persistent app layout; delayed notice cleanup now uses the current route and keeps unrelated query parameters.

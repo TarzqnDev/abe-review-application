@@ -39,7 +39,6 @@ export const useFlashCardGameModal = ({
   const answerInputRef = useRef<HTMLTextAreaElement>(null);
   const answerDeadlineRef = useRef(0);
   const phaseDeadlineRef = useRef(0);
-  const pausedAtRef = useRef<number | null>(null);
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
   const isSessionActiveRef = useRef(false);
@@ -61,7 +60,6 @@ export const useFlashCardGameModal = ({
 
   const handleRequestClose = useCallback(() => {
     if (isExitConfirmationOpen) return;
-    pausedAtRef.current = performance.now();
     setIsExitConfirmationOpen(true);
   }, [isExitConfirmationOpen]);
 
@@ -181,6 +179,7 @@ export const useFlashCardGameModal = ({
 
       if (result.advancement.completed) {
         if (result.advancement.summary) {
+          setIsExitConfirmationOpen(false);
           onFinished(result.advancement.summary);
         } else {
           setError("The game ended without a summary.");
@@ -288,7 +287,6 @@ export const useFlashCardGameModal = ({
       !isSessionActiveRef.current ||
       !isTimingReadyRef.current ||
       !currentTiming ||
-      isExitConfirmationOpen ||
       phase === "transitioning"
     ) {
       return;
@@ -328,7 +326,6 @@ export const useFlashCardGameModal = ({
   }, [
     advanceToNextFlashCard,
     currentTiming,
-    isExitConfirmationOpen,
     isOpen,
     phase,
     resolveSubmittedAnswer,
@@ -388,19 +385,6 @@ export const useFlashCardGameModal = ({
   const handleOpenExitConfirmation = handleRequestClose;
 
   const handleCancelExitConfirmation = () => {
-    if (pausedAtRef.current !== null) {
-      const pausedDuration = performance.now() - pausedAtRef.current;
-
-      if (
-        phase !== "answering" &&
-        Number.isFinite(phaseDeadlineRef.current) &&
-        phaseDeadlineRef.current > 0
-      ) {
-        phaseDeadlineRef.current += pausedDuration;
-      }
-    }
-
-    pausedAtRef.current = null;
     setIsExitConfirmationOpen(false);
   };
 
