@@ -6,6 +6,7 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
+import SuccessBanner from "@/components/ui/SuccessBanner";
 import { ProofOfPaymentModal } from "@/features/app/admin/manage-reviewees/components/ProofOfPaymentModal";
 import { ResendInvitationConfirmationModal } from "@/features/app/admin/manage-reviewees/components/ResendInvitationConfirmationModal";
 import { RevieweesPagination } from "@/features/app/admin/manage-reviewees/components/RevieweesPagination";
@@ -18,17 +19,10 @@ export default function AdminRevieweesPage() {
 
   return (
     <section>
-      <div
-        className={`fixed left-1/2 z-60 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 transition-all duration-500 ${
-          reviewees.noticeMessage
-            ? "top-8 opacity-100"
-            : "pointer-events-none -top-24 opacity-0"
-        }`}
-      >
-        <p className="rounded-lg bg-primary-dark px-5 py-4 text-center font-medium text-surface shadow-lg">
-          {reviewees.noticeMessage}
-        </p>
-      </div>
+      <SuccessBanner
+        message={reviewees.noticeMessage}
+        show={Boolean(reviewees.noticeMessage)}
+      />
 
       <div className="mb-7">
         <h1 className="text-2xl font-semibold text-primary-text">
@@ -46,7 +40,7 @@ export default function AdminRevieweesPage() {
           className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded bg-primary-accent px-5 py-3 text-sm font-medium text-surface transition-colors hover:bg-primary-dark"
         >
           <PlusIcon className="h-4 w-4" />
-          Register User
+          Register Reviewee
         </button>
 
         <div className="flex w-full items-center gap-2 sm:max-w-[323px]">
@@ -69,13 +63,13 @@ export default function AdminRevieweesPage() {
           </button>
 
           <label className="relative block min-w-0 flex-1">
-            <span className="sr-only">Search user</span>
+            <span className="sr-only">Search a reviewee</span>
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="search"
               value={reviewees.searchQuery}
               onChange={(event) => reviewees.setSearchQuery(event.target.value)}
-              placeholder="Search user"
+              placeholder="Search a reviewee"
               className="h-10 w-full rounded-full border border-border bg-surface pl-10 pr-4 text-sm outline-none transition focus:border-primary-light focus:ring-2 focus:ring-teal-100"
             />
           </label>

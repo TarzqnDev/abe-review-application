@@ -24,6 +24,7 @@ export default function SubjectDetailsModal({
     handleCloseQuestionFormModal,
     handleCloseQuestionListModal,
     handleCloseSubjectDetails,
+    handleOpenCreateQuestionFromListModal,
     handleOpenCreateQuestionModal,
     handleOpenEditQuestionModal,
     handleOpenQuestionListModal,
@@ -157,7 +158,7 @@ export default function SubjectDetailsModal({
         key={questionListRequest?.requestId ?? "question-list-modal"}
         isSuspended={questionFormRequest !== null}
         loadSubjectQuestions={loadSubjectQuestions}
-        onAddQuestion={handleOpenCreateQuestionModal}
+        onAddQuestion={handleOpenCreateQuestionFromListModal}
         onClose={handleCloseQuestionListModal}
         onEditQuestion={handleOpenEditQuestionModal}
         questionSets={activeSubjectQuestionSets}

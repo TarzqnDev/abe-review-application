@@ -4,8 +4,8 @@ import {
   isTriviaToday,
 } from "@/features/app/admin/trivias/utils/adminTriviaDates";
 import {
+  PencilIcon,
   PencilSquareIcon,
-  PlusIcon,
 } from "@heroicons/react/24/outline";
 
 type TriviaCardProps = {
@@ -63,11 +63,11 @@ export default function TriviaCard({
           <button
             type="button"
             onClick={() => onCreate(date)}
-            aria-label={`Create trivia for ${formattedDate}`}
-            className="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 self-start rounded border border-primary-accent bg-surface px-3 text-sm font-medium text-primary-accent transition-colors hover:bg-primary-accent hover:text-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
+            aria-label={`Write trivia for ${formattedDate}`}
+            className="inline-flex shrink-0 cursor-pointer items-center gap-1 self-start text-sm font-medium text-primary-accent transition-colors hover:text-primary-dark focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
           >
-            <PlusIcon className="h-4 w-4" aria-hidden="true" />
-            Create Trivia
+            <PencilIcon className="h-4 w-4" aria-hidden="true" />
+            Write Trivia
           </button>
         )}
       </div>

@@ -13,16 +13,6 @@ type UserFormModalProps = {
   reviewee: Reviewee | null;
 };
 
-const formatDate = (date: string) => {
-  const parsedDate = new Date(date.includes("T") ? date : `${date}T00:00:00`);
-  if (Number.isNaN(parsedDate.getTime())) return date;
-  return new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(parsedDate);
-};
-
 const formatStatus = (status: string) =>
   status.charAt(0).toUpperCase() + status.slice(1);
 
@@ -114,17 +104,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
             <div>
               <p className="text-base font-medium text-primary-text">Status</p>
               <div className="mt-2 flex min-h-[50px] items-center justify-between rounded border border-border bg-secondary-bg px-4">
-                <span
-                  className={`inline-flex min-w-[70px] justify-center rounded-full px-3 py-1 text-xs font-medium ${
-                    modal.status === "active"
-                      ? "bg-teal-50 text-primary-accent"
-                      : modal.status === "pending"
-                        ? "bg-amber-50 text-warning"
-                        : "bg-slate-200 text-secondary-text"
-                  }`}
-                >
-                  {formatStatus(modal.status)}
-                </span>
+                <span className="text-primary-text">{formatStatus(modal.status)}</span>
                 {props.reviewee.status.toLowerCase() === "active" && (
                   <button
                     ref={statusSwitchRef}
@@ -176,44 +156,42 @@ export const UserFormModal = (props: UserFormModalProps) => {
           </label>
 
           {modal.isEditing && props.reviewee ? (
-            <>
-              <div>
+            <div>
+              <div className="mb-2 flex items-center justify-between gap-4">
                 <p className="text-base font-medium text-primary-text">
-                  Date Joined
+                  Proof of Payment
                 </p>
-                <p className="mt-2 rounded border border-border bg-secondary-bg px-4 py-3 text-sm text-primary-text">
-                  {formatDate(props.reviewee.start_date)}
-                </p>
+                <button
+                  type="button"
+                  className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
+                >
+                  Choose new file
+                </button>
               </div>
-              <div>
-                <p className="mb-2 text-base font-medium text-primary-text">
-                  Payment
-                </p>
-                <div className="flex min-h-[220px] items-center justify-center overflow-hidden rounded border border-border bg-secondary-bg">
-                  {modal.isPaymentImageLoading ? (
-                    <ProofOfPaymentSkeleton />
-                  ) : modal.paymentImageError ? (
-                    <p className="px-6 text-center text-sm text-secondary-text">
-                      {modal.paymentImageError}
-                    </p>
-                  ) : modal.paymentImageUrl ? (
-                    <div className="relative h-[220px] w-full">
-                      <Image
-                        src={modal.paymentImageUrl}
-                        alt={`Proof of payment for ${props.reviewee.full_name}`}
-                        fill
-                        unoptimized
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <p className="text-sm text-secondary-text">
-                      No proof of payment is available.
-                    </p>
-                  )}
-                </div>
+              <div className="flex min-h-[150px] items-center justify-center overflow-hidden rounded border border-border bg-secondary-bg">
+                {modal.isPaymentImageLoading ? (
+                  <ProofOfPaymentSkeleton />
+                ) : modal.paymentImageError ? (
+                  <p className="px-6 text-center text-sm text-secondary-text">
+                    {modal.paymentImageError}
+                  </p>
+                ) : modal.paymentImageUrl ? (
+                  <div className="relative h-[150px] w-full">
+                    <Image
+                      src={modal.paymentImageUrl}
+                      alt={`Proof of payment for ${props.reviewee.full_name}`}
+                      fill
+                      unoptimized
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <p className="text-sm text-secondary-text">
+                    No proof of payment is available.
+                  </p>
+                )}
               </div>
-            </>
+            </div>
           ) : (
             <div>
               <p className="mb-2 text-base font-medium text-primary-text">

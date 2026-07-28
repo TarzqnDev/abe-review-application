@@ -1,5 +1,5 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import type { AdminSubject } from "@/features/app/admin/question-bank/actions/fetch-subject-areas.action";
 import { useDeleteSubjectConfirmationModal } from "@/features/app/admin/question-bank/hooks/modals/useDeleteSubjectConfirmationModal";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
@@ -65,34 +65,29 @@ export default function DeleteSubjectConfirmationModal({
       <form
         ref={dialogRef}
         onSubmit={handleDeleteSubject}
-        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[580px] rounded-md bg-surface p-10 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
       >
-        <button
-          type="button"
-          onClick={() =>
-            closeWithAnimation(handleCloseDeleteSubjectConfirmation)
-          }
-          disabled={isDeleting}
-          className="absolute top-6 right-6 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label="Close delete subject confirmation"
-        >
-          <XMarkIcon className="h-6 w-6 text-secondary-text" />
-        </button>
-
-        <div className="pr-9">
+        <div>
           <h2
             id="delete-subject-modal-title"
-            className="text-xl font-semibold text-primary-text"
+            className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            Delete Subject
+            <Image
+              src="/caution.png"
+              alt=""
+              width={24}
+              height={24}
+              className="h-6 w-6 object-contain"
+            />
+            Subject Deletion Notice
           </h2>
           <p
             id="delete-subject-modal-description"
-            className="mt-3 text-sm leading-6 text-secondary-text"
+            className="mt-3 text-base leading-6 text-secondary-text"
           >
             Are you sure you want to permanently delete this subject? All
             questions associated with it will also be deleted. This action
@@ -101,7 +96,7 @@ export default function DeleteSubjectConfirmationModal({
         </div>
 
         {subject && (
-          <p className="mt-5 rounded border border-border bg-secondary-bg p-4 text-sm font-medium leading-6 text-primary-text">
+          <p className="mt-5 flex h-[50px] items-center rounded border border-border bg-secondary-bg px-5 text-base font-medium text-primary-text">
             {subject.name}
           </p>
         )}
@@ -112,22 +107,11 @@ export default function DeleteSubjectConfirmationModal({
           </p>
         )}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <button
-            ref={cancelButtonRef}
-            type="button"
-            onClick={() =>
-              closeWithAnimation(handleCloseDeleteSubjectConfirmation)
-            }
-            disabled={isDeleting}
-            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Cancel
-          </button>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <button
             type="submit"
             disabled={isDeleting}
-            className="flex h-11 cursor-pointer items-center justify-center rounded bg-error text-sm font-semibold text-surface transition-colors hover:bg-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-error disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isDeleting ? (
               <LoaderCircle
@@ -135,8 +119,19 @@ export default function DeleteSubjectConfirmationModal({
                 aria-label="Deleting"
               />
             ) : (
-              "Delete Subject"
+              "Yes, Continue"
             )}
+          </button>
+          <button
+            ref={cancelButtonRef}
+            type="button"
+            onClick={() =>
+              closeWithAnimation(handleCloseDeleteSubjectConfirmation)
+            }
+            disabled={isDeleting}
+            className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-secondary-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            No, Cancel
           </button>
         </div>
       </form>

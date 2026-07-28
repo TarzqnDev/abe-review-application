@@ -98,6 +98,11 @@ export const useAdminManageReviewees = () => {
     await loadUsers();
   };
 
+  const handleInvitationNotice = (message: string) => {
+    setNoticeMessage(message);
+    void loadUsers();
+  };
+
   const openRegisterModal = () => {
     setRevieweeToEdit(null);
     setIsUserFormModalOpen(true);
@@ -152,7 +157,7 @@ export const useAdminManageReviewees = () => {
       setSearchQuery(query);
       setCurrentPage(1);
     },
-    showNotice: setNoticeMessage,
+    showNotice: handleInvitationNotice,
     totalPages,
   };
 };

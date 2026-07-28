@@ -1,6 +1,12 @@
-import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  DocumentTextIcon,
+  PencilSquareIcon,
+} from "@heroicons/react/24/outline";
 import { RevieweesTableSkeleton } from "@/features/app/admin/manage-reviewees/components/skeletons/RevieweesTableSkeleton";
+import { useInvitationCooldowns } from "@/features/app/admin/manage-reviewees/hooks/useInvitationCooldowns";
 import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
+import { formatInvitationCooldown } from "@/features/app/admin/manage-reviewees/utils/invitationCooldown";
 
 type RevieweesTableProps = {
   emptyMessage: string;
@@ -19,73 +25,96 @@ const formatDate = (date: string) => {
 
 const formatMode = (mode: string) => mode.toLowerCase() === "in-house" ? "In-House" : "Online";
 
-export const RevieweesTable = ({ emptyMessage, isLoading, onEdit, onResendInvitation, onViewPayment, users }: RevieweesTableProps) => (
-  <div className="overflow-x-auto rounded-lg border border-border bg-surface">
-    <table className="w-full min-w-[880px] text-sm">
-      <thead>
-        <tr className="border-b border-border text-secondary-text">
-          <th className="px-5 py-4 text-left font-medium">Name</th>
-          <th className="px-5 py-4 text-left font-medium">Email Address</th>
-          <th className="px-4 py-4 text-left font-medium">Status</th>
-          <th className="px-4 py-4 text-left font-medium">Mode</th>
-          <th className="px-4 py-4 text-left font-medium">Date Joined</th>
-          <th className="px-4 py-4 text-left font-medium">Payment</th>
-          <th className="px-4 py-4 text-left font-medium">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {isLoading ? (
-          <RevieweesTableSkeleton />
-        ) : users.length ? users.map((user) => (
-          <tr key={user.user_id} className="border-b border-border last:border-b-0">
-            <td className="whitespace-nowrap px-5 py-3 font-medium text-primary-text">{user.full_name}</td>
-            <td className="px-5 py-3 text-slate-800">{user.email}</td>
-            <td className="px-4 py-3">
-              <span className={`inline-flex min-w-[60px] justify-center rounded-full px-3 py-1 text-[10px] font-medium ${
-                user.status.toLowerCase() === "active"
-                  ? "bg-teal-50 text-primary-accent"
-                  : user.status.toLowerCase() === "pending"
-                    ? "bg-amber-50 text-warning"
-                    : "bg-slate-200 text-secondary-text"
-              }`}>
-                {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-              </span>
-            </td>
-            <td className="whitespace-nowrap px-4 py-3">{formatMode(user.mode_of_review)}</td>
-            <td className="whitespace-nowrap px-4 py-3">{formatDate(user.start_date)}</td>
-            <td className="px-4 py-3">
-              {user.payment_image_path ? (
-                <button type="button" onClick={() => onViewPayment(user)} className="inline-flex cursor-pointer items-center gap-1 text-blue-600 underline underline-offset-2 hover:text-blue-800">
-                  <DocumentTextIcon className="h-4 w-4" /> View
-                </button>
-              ) : <span className="text-slate-400">Unavailable</span>}
-            </td>
-            <td className="px-4 py-3">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => onEdit(user)}
-                  className="cursor-pointer hover:text-primary-dark"
-                >
-                  Edit
-                </button>
-                {user.status.toLowerCase() === "pending" && (
-                  <button
-                    type="button"
-                    onClick={() => onResendInvitation(user)}
-                    title="Resend Email Invitation"
-                    className="cursor-pointer text-primary-accent hover:text-primary-dark"
-                  >
-                    Resend
-                  </button>
-                )}
-              </div>
-            </td>
+export const RevieweesTable = ({ emptyMessage, isLoading, onEdit, onResendInvitation, onViewPayment, users }: RevieweesTableProps) => {
+  const currentTime = useInvitationCooldowns(users);
+
+  return (
+    <div className="overflow-x-auto rounded-lg border border-border bg-surface">
+      <table className="w-full min-w-[980px] text-sm">
+        <thead>
+          <tr className="border-b border-border text-secondary-text">
+            <th className="px-5 py-4 text-left font-medium">Name</th>
+            <th className="px-5 py-4 text-left font-medium">Email Address</th>
+            <th className="px-4 py-4 text-left font-medium">Status</th>
+            <th className="px-4 py-4 text-left font-medium">Mode</th>
+            <th className="px-4 py-4 text-left font-medium">Date Joined</th>
+            <th className="px-4 py-4 text-left font-medium">Payment</th>
+            <th className="px-4 py-4 text-left font-medium">Action</th>
           </tr>
-        )) : (
-          <tr><td colSpan={7} className="px-5 py-10 text-center text-secondary-text">{emptyMessage}</td></tr>
-        )}
-      </tbody>
-    </table>
-  </div>
-);
+        </thead>
+        <tbody>
+          {isLoading ? (
+            <RevieweesTableSkeleton />
+          ) : users.length ? users.map((user) => {
+            const normalizedStatus = user.status.toLowerCase();
+            const resendAvailableTime = user.resend_available_at
+              ? new Date(user.resend_available_at).getTime()
+              : 0;
+            const remainingCooldownSeconds = Math.max(
+              0,
+              Math.ceil((resendAvailableTime - currentTime) / 1000),
+            );
+            const isPending = normalizedStatus === "pending";
+            const isResendDisabled = !isPending || remainingCooldownSeconds > 0;
+            const resendTooltip = !isPending
+              ? "Only pending reviewees can receive another email invitation."
+              : remainingCooldownSeconds > 0
+                ? `Please wait ${formatInvitationCooldown(remainingCooldownSeconds)} before resending the email invitation.`
+                : "Resend Email Invitation";
+
+            return (
+              <tr key={user.user_id} className="border-b border-border last:border-b-0">
+                <td className="whitespace-nowrap px-5 py-3 font-medium text-primary-text">{user.full_name}</td>
+                <td className="px-5 py-3 text-slate-800">{user.email}</td>
+                <td className="px-4 py-3">
+                  <span className={`inline-flex min-w-[70px] justify-center rounded-full px-3 py-1 text-xs font-medium ${
+                    normalizedStatus === "active"
+                      ? "bg-teal-50 text-primary-accent"
+                      : normalizedStatus === "pending"
+                        ? "bg-amber-50 text-warning"
+                        : "bg-slate-200 text-secondary-text"
+                  }`}>
+                    {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                  </span>
+                </td>
+                <td className="whitespace-nowrap px-4 py-3">{formatMode(user.mode_of_review)}</td>
+                <td className="whitespace-nowrap px-4 py-3">{formatDate(user.start_date)}</td>
+                <td className="px-4 py-3">
+                  {user.payment_image_path ? (
+                    <button type="button" onClick={() => onViewPayment(user)} className="inline-flex cursor-pointer items-center gap-1 text-blue-600 underline underline-offset-2 hover:text-blue-800">
+                      <DocumentTextIcon className="h-4 w-4" /> View
+                    </button>
+                  ) : <span className="text-slate-400">Unavailable</span>}
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-5 whitespace-nowrap">
+                    <button
+                      type="button"
+                      onClick={() => onEdit(user)}
+                      className="inline-flex cursor-pointer items-center gap-1.5 text-primary-text hover:text-primary-dark"
+                    >
+                      <PencilSquareIcon className="h-4 w-4" />
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onResendInvitation(user)}
+                      disabled={isResendDisabled}
+                      title={resendTooltip}
+                      className="inline-flex cursor-pointer items-center gap-1.5 text-primary-accent hover:text-primary-dark disabled:cursor-not-allowed disabled:text-secondary-text"
+                    >
+                      <ArrowPathIcon className="h-4 w-4" />
+                      Resend
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          }) : (
+            <tr><td colSpan={7} className="px-5 py-10 text-center text-secondary-text">{emptyMessage}</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};

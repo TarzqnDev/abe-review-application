@@ -10,7 +10,7 @@ import { LoaderCircle } from "lucide-react";
 import AuthBrand from "@/features/auth/components/AuthBrand";
 import { useAcceptInvite } from "@/features/auth/accept-invite/hooks/useAcceptInvite";
 import { useAuth } from "@/providers/AuthProvider";
-import Link from "next/link";
+import SuccessBanner from "@/components/ui/SuccessBanner";
 
 export default function AcceptInvitePage() {
   const { user } = useAuth();
@@ -34,22 +34,10 @@ export default function AcceptInvitePage() {
 
   return (
     <>
-      <div
-        className={`fixed left-1/2 z-60 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 transition-all duration-500 ease-out ${
-          showAccountSetupSuccessBanner
-            ? "top-12 opacity-100"
-            : "pointer-events-none -top-24 opacity-0"
-        }`}
-      >
-        <div className="rounded-lg border border-primary-dark bg-teal-800 px-5 py-4 shadow-lg">
-          <p className="text-center font-medium text-surface">
-            {accountSetupSuccessBannerMessage}
-          </p>
-          <p className="mt-1 text-center text-sm text-teal-100">
-            You can now go to your dashboard.
-          </p>
-        </div>
-      </div>
+      <SuccessBanner
+        message={`${accountSetupSuccessBannerMessage} You can now go to your dashboard.`}
+        show={showAccountSetupSuccessBanner}
+      />
 
       <main className="flex min-h-screen items-center justify-center bg-secondary-bg px-6 py-10 text-black sm:px-10">
         <section className="w-full max-w-xl">

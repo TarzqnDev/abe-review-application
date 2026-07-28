@@ -66,6 +66,7 @@ export default function QuestionFormModal({
     openQuestionFormModal,
   );
   const isEditMode = questionFormMode === "edit";
+  const isQuestionSetLocked = request?.isQuestionSetLocked === true;
 
   return (
     <div
@@ -117,6 +118,20 @@ export default function QuestionFormModal({
               value={selectedEditQuestionId ?? ""}
             />
           )}
+          {isQuestionSetLocked && (
+            <>
+              <input
+                type="hidden"
+                name="gameType"
+                value={questionFormData.gameType}
+              />
+              <input
+                type="hidden"
+                name="difficulty"
+                value={questionFormData.difficulty}
+              />
+            </>
+          )}
 
           {isEditMode && selectedEditQuestion && (
             <div className="rounded border border-border bg-secondary-bg px-4 py-3">
@@ -136,10 +151,11 @@ export default function QuestionFormModal({
               </label>
               <select
                 id="gameType"
-                name="gameType"
+                name={isQuestionSetLocked ? undefined : "gameType"}
                 value={questionFormData.gameType}
                 onChange={handleQuestionInput}
-                className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent"
+                disabled={isQuestionSetLocked}
+                className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-secondary-text"
               >
                 {QUESTION_BANK_GAME_TYPES.map((gameType) => (
                   <option key={gameType} value={gameType}>
@@ -155,10 +171,11 @@ export default function QuestionFormModal({
               </label>
               <select
                 id="difficulty"
-                name="difficulty"
+                name={isQuestionSetLocked ? undefined : "difficulty"}
                 value={questionFormData.difficulty}
                 onChange={handleQuestionInput}
-                className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent"
+                disabled={isQuestionSetLocked}
+                className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-secondary-text"
               >
                 {QUESTION_BANK_DIFFICULTIES.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>

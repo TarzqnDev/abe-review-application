@@ -12,6 +12,7 @@ import {
 } from "@/features/app/admin/question-bank/constants/questionBank";
 
 export type QuestionFormModalRequest = {
+  isQuestionSetLocked?: boolean;
   mode: "create" | "edit";
   questionId?: number | null;
   requestId: number;
@@ -100,6 +101,18 @@ export const useSubjectDetailsModal = ({
     summary?: QuestionBankSummary | null,
   ) => {
     setQuestionFormRequest({
+      isQuestionSetLocked: false,
+      mode: "create",
+      requestId: Date.now(),
+      summary,
+    });
+  };
+
+  const handleOpenCreateQuestionFromListModal = (
+    summary: QuestionBankSummary,
+  ) => {
+    setQuestionFormRequest({
+      isQuestionSetLocked: true,
       mode: "create",
       requestId: Date.now(),
       summary,
@@ -111,6 +124,7 @@ export const useSubjectDetailsModal = ({
     question: AdminQuestion,
   ) => {
     setQuestionFormRequest({
+      isQuestionSetLocked: true,
       mode: "edit",
       questionId: question.id,
       requestId: Date.now(),
@@ -143,6 +157,7 @@ export const useSubjectDetailsModal = ({
     handleCloseQuestionFormModal,
     handleCloseQuestionListModal,
     handleCloseSubjectDetails,
+    handleOpenCreateQuestionFromListModal,
     handleOpenCreateQuestionModal,
     handleOpenEditQuestionModal,
     handleOpenQuestionListModal,

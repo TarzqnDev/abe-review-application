@@ -1,5 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { LoaderCircle, Trash2 } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useTriviaFormModal } from "@/features/app/admin/trivias/hooks/modals/useTriviaFormModal";
 import type {
   AdminTrivia,
@@ -36,7 +36,6 @@ export default function TriviaFormModal({
     handleSaveTrivia,
     isEditMode,
     isSaving,
-    originalPublishDate,
     publishDate,
     setContent,
     setPublishDate,
@@ -50,8 +49,6 @@ export default function TriviaFormModal({
     showSuccessMessage,
   });
   const modalTitle = isEditMode ? "Edit Trivia" : "Create Trivia";
-  const minimumPublishDate =
-    isEditMode && publishDate === originalPublishDate ? undefined : todayDate;
 
   return (
     <div
@@ -128,9 +125,9 @@ export default function TriviaFormModal({
               id="trivia-publish-date"
               type="date"
               value={publishDate}
-              min={minimumPublishDate}
+              min={todayDate}
               onChange={(event) => setPublishDate(event.target.value)}
-              disabled={isSaving}
+              disabled={isEditMode || isSaving}
               required
               className="mt-2 h-[50px] w-full rounded border border-border bg-surface px-4 text-base font-normal text-slate-700 outline-none transition-colors focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             />
@@ -143,18 +140,6 @@ export default function TriviaFormModal({
           )}
 
           <div className={`grid gap-3 ${isEditMode ? "sm:grid-cols-2" : ""}`}>
-            {isEditMode && request?.trivia && (
-              <button
-                type="button"
-                onClick={() => onRequestDelete(request.trivia as AdminTrivia)}
-                disabled={isSaving}
-                className="flex h-[50px] cursor-pointer items-center justify-center gap-2 rounded border border-red-200 bg-surface px-5 text-base font-semibold text-red-600 transition-colors hover:border-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                <Trash2 className="h-4 w-4" aria-hidden="true" />
-                Delete Trivia
-              </button>
-            )}
-
             <button
               type="submit"
               disabled={isSaving}
@@ -163,11 +148,22 @@ export default function TriviaFormModal({
               {isSaving ? (
                 <LoaderCircle className="h-5 w-5 animate-spin" aria-label="Saving" />
               ) : isEditMode ? (
-                "Save Trivia"
+                "Save Edit"
               ) : (
                 "Create Trivia"
               )}
             </button>
+
+            {isEditMode && request?.trivia && (
+              <button
+                type="button"
+                onClick={() => onRequestDelete(request.trivia as AdminTrivia)}
+                disabled={isSaving}
+                className="flex h-[50px] cursor-pointer items-center justify-center rounded border border-primary-accent bg-surface px-5 text-base font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Delete Trivia
+              </button>
+            )}
           </div>
         </form>
       </div>
