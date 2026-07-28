@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { fetchUsers } from "@/features/app/admin/reviewees/actions/fetch-users.action";
-import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
+import { fetchUsers } from "@/features/app/admin/manage-reviewees/actions/fetch-users.action";
+import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
 const ITEMS_PER_PAGE = 10;
 
-export const useAdminReviewees = () => {
+export const useAdminManageReviewees = () => {
   const [users, setUsers] = useState<Reviewee[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [usersError, setUsersError] = useState("");

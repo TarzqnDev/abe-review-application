@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPaymentProofUrl } from "@/features/app/admin/reviewees/actions/get-payment-proof-url.action";
+import { getPaymentProofUrl } from "@/features/app/admin/manage-reviewees/actions/get-payment-proof-url.action";
 
 type ProofOfPaymentModalOptions = {
   imagePath: string | null;

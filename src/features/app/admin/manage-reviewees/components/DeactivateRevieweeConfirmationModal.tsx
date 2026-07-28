@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import type { RefObject } from "react";
-import { useDeactivateRevieweeConfirmationModal } from "@/features/app/admin/reviewees/hooks/modals/useDeactivateRevieweeConfirmationModal";
+import { useDeactivateRevieweeConfirmationModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useDeactivateRevieweeConfirmationModal";
 
 type DeactivateRevieweeConfirmationModalProps = {
   isOpen: boolean;

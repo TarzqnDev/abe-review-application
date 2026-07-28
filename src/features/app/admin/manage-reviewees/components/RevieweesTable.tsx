@@ -1,6 +1,6 @@
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
-import { RevieweesTableSkeleton } from "@/features/app/admin/reviewees/components/skeletons/RevieweesTableSkeleton";
-import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
+import { RevieweesTableSkeleton } from "@/features/app/admin/manage-reviewees/components/skeletons/RevieweesTableSkeleton";
+import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
 type RevieweesTableProps = {
   emptyMessage: string;

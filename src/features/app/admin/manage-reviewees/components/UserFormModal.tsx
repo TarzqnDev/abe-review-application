@@ -1,10 +1,10 @@
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
-import { DeactivateRevieweeConfirmationModal } from "@/features/app/admin/reviewees/components/DeactivateRevieweeConfirmationModal";
-import { ProofOfPaymentSkeleton } from "@/features/app/admin/reviewees/components/skeletons/ProofOfPaymentSkeleton";
-import { useUserFormModal } from "@/features/app/admin/reviewees/hooks/modals/useUserFormModal";
-import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
+import { DeactivateRevieweeConfirmationModal } from "@/features/app/admin/manage-reviewees/components/DeactivateRevieweeConfirmationModal";
+import { ProofOfPaymentSkeleton } from "@/features/app/admin/manage-reviewees/components/skeletons/ProofOfPaymentSkeleton";
+import { useUserFormModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useUserFormModal";
+import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
 type UserFormModalProps = {
   isOpen: boolean;

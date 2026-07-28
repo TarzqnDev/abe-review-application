@@ -1,7 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
-import { useResendInvitationConfirmationModal } from "@/features/app/admin/reviewees/hooks/modals/useResendInvitationConfirmationModal";
-import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
+import { useResendInvitationConfirmationModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useResendInvitationConfirmationModal";
+import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
 type ResendInvitationConfirmationModalProps = {
   onClose: () => void;

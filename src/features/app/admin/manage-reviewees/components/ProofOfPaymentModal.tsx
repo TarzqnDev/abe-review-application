@@ -1,7 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { ProofOfPaymentSkeleton } from "@/features/app/admin/reviewees/components/skeletons/ProofOfPaymentSkeleton";
-import { useProofOfPaymentModal } from "@/features/app/admin/reviewees/hooks/modals/useProofOfPaymentModal";
+import { ProofOfPaymentSkeleton } from "@/features/app/admin/manage-reviewees/components/skeletons/ProofOfPaymentSkeleton";
+import { useProofOfPaymentModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useProofOfPaymentModal";
 
 type ProofOfPaymentModalProps = {
   imagePath: string | null;

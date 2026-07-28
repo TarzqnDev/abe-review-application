@@ -33,11 +33,11 @@ const adminLinks: SidebarLink[] = [
     matchPath: (pathname) => pathname.startsWith("/admin/question-bank"),
   },
   {
-    href: "/admin/reviewees",
+    href: "/admin/manage-reviewees",
     icon: UsersIconImage,
     iconAlt: "Users icon",
     label: "Manage Reviewees",
-    matchPath: (pathname) => pathname === "/admin/reviewees",
+    matchPath: (pathname) => pathname === "/admin/manage-reviewees",
   },
   {
     href: "/admin/trivias",

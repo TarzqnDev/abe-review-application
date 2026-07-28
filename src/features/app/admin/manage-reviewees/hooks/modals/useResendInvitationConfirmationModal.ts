@@ -5,8 +5,8 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { resendUserInvitation } from "@/features/app/admin/reviewees/actions/resend-user-invitation.action";
-import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
+import { resendUserInvitation } from "@/features/app/admin/manage-reviewees/actions/resend-user-invitation.action";
+import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 type ResendInvitationConfirmationModalOptions = {

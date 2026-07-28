@@ -8,7 +8,7 @@ import {
 import {
   formatInvitationCooldown,
   parseInvitationClaim,
-} from "@/features/app/admin/reviewees/utils/invitationCooldown";
+} from "@/features/app/admin/manage-reviewees/utils/invitationCooldown";
 import { headers } from "next/headers";
 
 export const resendUserInvitation = async (userId: string) => {

@@ -6,15 +6,15 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
-import { ProofOfPaymentModal } from "@/features/app/admin/reviewees/components/ProofOfPaymentModal";
-import { ResendInvitationConfirmationModal } from "@/features/app/admin/reviewees/components/ResendInvitationConfirmationModal";
-import { RevieweesPagination } from "@/features/app/admin/reviewees/components/RevieweesPagination";
-import { RevieweesTable } from "@/features/app/admin/reviewees/components/RevieweesTable";
-import { UserFormModal } from "@/features/app/admin/reviewees/components/UserFormModal";
-import { useAdminReviewees } from "@/features/app/admin/reviewees/hooks/useAdminReviewees";
+import { ProofOfPaymentModal } from "@/features/app/admin/manage-reviewees/components/ProofOfPaymentModal";
+import { ResendInvitationConfirmationModal } from "@/features/app/admin/manage-reviewees/components/ResendInvitationConfirmationModal";
+import { RevieweesPagination } from "@/features/app/admin/manage-reviewees/components/RevieweesPagination";
+import { RevieweesTable } from "@/features/app/admin/manage-reviewees/components/RevieweesTable";
+import { UserFormModal } from "@/features/app/admin/manage-reviewees/components/UserFormModal";
+import { useAdminManageReviewees } from "@/features/app/admin/manage-reviewees/hooks/useAdminManageReviewees";
 
 export default function AdminRevieweesPage() {
-  const reviewees = useAdminReviewees();
+  const reviewees = useAdminManageReviewees();
 
   return (
     <section>

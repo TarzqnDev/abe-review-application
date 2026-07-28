@@ -5,10 +5,10 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { getPaymentProofUrl } from "@/features/app/admin/reviewees/actions/get-payment-proof-url.action";
-import { inviteUser } from "@/features/app/admin/reviewees/actions/invite-user.action";
-import { updateReviewee } from "@/features/app/admin/reviewees/actions/update-reviewee.action";
-import type { Reviewee } from "@/features/app/admin/reviewees/types/reviewee";
+import { getPaymentProofUrl } from "@/features/app/admin/manage-reviewees/actions/get-payment-proof-url.action";
+import { inviteUser } from "@/features/app/admin/manage-reviewees/actions/invite-user.action";
+import { updateReviewee } from "@/features/app/admin/manage-reviewees/actions/update-reviewee.action";
+import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
