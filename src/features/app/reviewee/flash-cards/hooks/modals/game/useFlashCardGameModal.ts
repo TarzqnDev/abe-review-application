@@ -354,7 +354,7 @@ export const useFlashCardGameModal = ({
     isActionInProgressRef.current = true;
     setError("");
     setPhase("checking");
-    phaseDeadlineRef.current = Date.now() + 3000;
+    phaseDeadlineRef.current = Date.now() + 2000;
     const activeOperationId = operationIdRef.current;
     const result = await submitFlashCardAnswer({
       answer: submittedAnswer,

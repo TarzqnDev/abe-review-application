@@ -32,6 +32,7 @@
 - Role landing redirects: post-auth navigation now targets `/admin` or `/reviewee`, keeping each role's default destination centralized in its route page.
 - MCQ and flash-card games isolate asynchronous gameplay work and local state per session so early exits cannot surface stale timeout errors in later games.
 - MCQ and flash-card timers remain hidden during between-item and final-summary transitions, and reset to the configured maximum before the next item appears.
+- MCQ and flash-card games wait two seconds before revealing checked answers while preserving the three-second result feedback before advancing.
 - Flash Card management keeps the card list modal open while add and edit forms appear as nested modal layers above it.
 - Flash Card management success banners appear above the list and form modal layers so successful operations remain visible.
 - Question Bank: question list modals now include question search, persistent five-item frontend pagination, and a nested Add Question flow while preserving the list beneath the form modal.
