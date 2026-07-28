@@ -41,24 +41,36 @@ export default function QuizAnswerOption({
         : "border-slate-300 bg-surface";
 
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(option.id)}
-      disabled={disabled}
-      className={`min-h-[58px] w-full cursor-pointer rounded border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-default ${stateClassName}`}
-      aria-pressed={isSelected}
-    >
-      <span className="flex items-start gap-3">
-        <span
-          className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border ${radioClassName}`}
-        />
-        <span className="min-w-0">
-          <span className="block text-sm font-semibold">Option {label}</span>
-          <span className="mt-1 block break-words text-sm leading-5">
+    <div>
+      <div className="mb-1.5 flex min-h-5 items-center justify-between gap-3">
+        <span className="text-base font-medium text-primary-text">
+          Option {label}
+        </span>
+        {isSelectedIncorrect && (
+          <span className="text-sm font-medium text-error">Wrong Answer</span>
+        )}
+        {isCorrect && (
+          <span className="text-sm font-medium text-primary-accent">
+            Right Answer
+          </span>
+        )}
+      </div>
+      <button
+        type="button"
+        onClick={() => onSelect(option.id)}
+        disabled={disabled}
+        className={`min-h-[50px] w-full cursor-pointer rounded border px-2 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-default ${stateClassName}`}
+        aria-pressed={isSelected}
+      >
+        <span className="flex items-start gap-3">
+          <span
+            className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border ${radioClassName}`}
+          />
+          <span className="min-w-0 break-words text-sm leading-5">
             {option.text}
           </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
   );
 }

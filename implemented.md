@@ -74,3 +74,4 @@
 - ABE Trivia: the MCQ Quiz and Flash Cards pages each load their initial page data through one page-specific server-action request, coordinating today's trivia into the completed initial render instead of letting the trivia card fetch independently after mounting.
 - ABE Trivia: Flash Cards settles its deck and trivia results independently within the coordinated initial request, while later deck retries remain deck-only and trivia retries or Asia/Manila date rollovers remain trivia-only.
 - Reviewee MCQ Quiz: the initial game-card placeholders mirror the loaded card layout and use the shared shimmer skeleton without displaying a Today's Trivia placeholder.
+- Reviewee MCQ Quiz: the game modal uses the reference header and labeled right and wrong options during answer reveal, while replacing the paused timer with the original correct or incorrect result greeting.
