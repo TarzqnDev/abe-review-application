@@ -42,10 +42,10 @@ export const useQuizGameModal = ({
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
   const isSessionActiveRef = useRef(false);
+  const isTimingReadyRef = useRef(false);
   const timeoutRecordedRef = useRef(false);
-  const serverOffsetRef = useRef(0);
   const [currentTiming, setCurrentTiming] =
-    useState<QuizQuestionTiming | null>(initialTiming);
+    useState<QuizQuestionTiming | null>(null);
   const [phase, setPhase] = useState<QuizQuestionPhase>("answering");
   const [remainingSeconds, setRemainingSeconds] = useState(
     preparedSession?.timerSeconds ?? 0,
@@ -61,7 +61,7 @@ export const useQuizGameModal = ({
 
   const handleRequestClose = useCallback(() => {
     if (isExitConfirmationOpen) return;
-    pausedAtRef.current = Date.now();
+    pausedAtRef.current = performance.now();
     setIsExitConfirmationOpen(true);
   }, [isExitConfirmationOpen]);
 
@@ -86,11 +86,11 @@ export const useQuizGameModal = ({
     (timing: QuizQuestionTiming) => {
       const serverNow = Date.parse(timing.serverNow);
       const serverDeadline = Date.parse(timing.deadlineAt);
-      serverOffsetRef.current = serverNow - Date.now();
       answerDeadlineRef.current =
-        serverDeadline - serverOffsetRef.current;
+        performance.now() + Math.max(0, serverDeadline - serverNow);
       phaseDeadlineRef.current = 0;
       timeoutRecordedRef.current = false;
+      isTimingReadyRef.current = true;
       setCurrentTiming(timing);
       setRemainingSeconds(preparedSession?.timerSeconds ?? 0);
       setSelectedOptionId(null);
@@ -123,6 +123,7 @@ export const useQuizGameModal = ({
     return () => {
       operationIdRef.current += 1;
       isSessionActiveRef.current = false;
+      isTimingReadyRef.current = false;
       isActionInProgressRef.current = false;
     };
   }, [applyTiming, initialTiming, isOpen]);
@@ -230,7 +231,7 @@ export const useQuizGameModal = ({
 
     setAnswerReveal(result.answer);
     setPhase("result");
-    phaseDeadlineRef.current = Date.now() + 3000;
+    phaseDeadlineRef.current = performance.now() + 3000;
     isActionInProgressRef.current = false;
   }, [currentTiming]);
 
@@ -278,6 +279,7 @@ export const useQuizGameModal = ({
     if (
       !isOpen ||
       !isSessionActiveRef.current ||
+      !isTimingReadyRef.current ||
       !currentTiming ||
       isExitConfirmationOpen ||
       phase === "transitioning"
@@ -286,7 +288,7 @@ export const useQuizGameModal = ({
     }
 
     const updatePhase = () => {
-      const now = Date.now();
+      const now = performance.now();
 
       if (phase === "answering") {
         const secondsUntilDeadline = Math.max(
@@ -346,7 +348,7 @@ export const useQuizGameModal = ({
     isActionInProgressRef.current = true;
     setError("");
     setPhase("checking");
-    phaseDeadlineRef.current = Date.now() + 2000;
+    phaseDeadlineRef.current = performance.now() + 2000;
     const activeOperationId = operationIdRef.current;
     const result = await submitQuizAnswer({
       selectedOptionId,
@@ -367,9 +369,10 @@ export const useQuizGameModal = ({
       return;
     }
 
+    const submittedAt = Date.parse(result.submission.submittedAt);
     const revealAt = Date.parse(result.submission.revealAt);
     phaseDeadlineRef.current =
-      revealAt - serverOffsetRef.current;
+      performance.now() + Math.max(0, revealAt - submittedAt);
     isActionInProgressRef.current = false;
   };
 
@@ -377,7 +380,7 @@ export const useQuizGameModal = ({
 
   const handleCancelExitConfirmation = () => {
     if (pausedAtRef.current !== null) {
-      const pausedDuration = Date.now() - pausedAtRef.current;
+      const pausedDuration = performance.now() - pausedAtRef.current;
 
       if (
         phase !== "answering" &&
@@ -405,9 +408,9 @@ export const useQuizGameModal = ({
     setError("");
 
     if (phase === "checking") {
-      phaseDeadlineRef.current = Date.now();
+      phaseDeadlineRef.current = performance.now();
     } else if (phase === "result" || phase === "timeoutHold") {
-      phaseDeadlineRef.current = Date.now();
+      phaseDeadlineRef.current = performance.now();
     }
 
     setRetryVersion((currentVersion) => currentVersion + 1);

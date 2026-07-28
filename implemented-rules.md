@@ -10,6 +10,7 @@
 - The unfinished gray content block in the ABE Trivia reference is intentionally omitted.
 - Reviewee quiz gameplay database changes are supplied as a Supabase SQL Editor script, and answer keys remain server-private instead of being returned with playable questions.
 - Reviewee flash-card database changes are supplied as a Supabase SQL Editor script; each reviewee has at most one deck per subject area and each deck is limited to 100 cards.
+- MCQ and flash-card client timers must not run until server timing is initialized, and local deadline scheduling must use monotonic elapsed durations while the database remains authoritative.
 - `game_sessions` is the sole canonical activity-history source for MCQ and flash-card attempts; summary metrics are derived from the mode-specific session-item tables, and private answer-key tables remain the source for detailed results.
 - Reviewee history database changes are supplied as a timestamped Supabase SQL Editor script, including removal of the redundant activity-history table and UUID-based, ownership-checked detail access.
 - Flash-card game answers are compared server-side after trimming, collapsing repeated whitespace, and ignoring letter case; punctuation, accents, and word order remain significant.

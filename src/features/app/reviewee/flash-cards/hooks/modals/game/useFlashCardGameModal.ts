@@ -43,10 +43,10 @@ export const useFlashCardGameModal = ({
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
   const isSessionActiveRef = useRef(false);
+  const isTimingReadyRef = useRef(false);
   const timeoutRecordedRef = useRef(false);
-  const serverOffsetRef = useRef(0);
   const [currentTiming, setCurrentTiming] =
-    useState<FlashCardTiming | null>(initialTiming);
+    useState<FlashCardTiming | null>(null);
   const [phase, setPhase] = useState<FlashCardGamePhase>("answering");
   const [remainingSeconds, setRemainingSeconds] = useState(
     preparedSession?.timerSeconds ?? 0,
@@ -61,7 +61,7 @@ export const useFlashCardGameModal = ({
 
   const handleRequestClose = useCallback(() => {
     if (isExitConfirmationOpen) return;
-    pausedAtRef.current = Date.now();
+    pausedAtRef.current = performance.now();
     setIsExitConfirmationOpen(true);
   }, [isExitConfirmationOpen]);
 
@@ -86,10 +86,11 @@ export const useFlashCardGameModal = ({
     (timing: FlashCardTiming) => {
       const serverNow = Date.parse(timing.serverNow);
       const serverDeadline = Date.parse(timing.deadlineAt);
-      serverOffsetRef.current = serverNow - Date.now();
-      answerDeadlineRef.current = serverDeadline - serverOffsetRef.current;
+      const answerDurationMs = Math.max(0, serverDeadline - serverNow);
+      answerDeadlineRef.current = performance.now() + answerDurationMs;
       phaseDeadlineRef.current = 0;
       timeoutRecordedRef.current = false;
+      isTimingReadyRef.current = true;
       setCurrentTiming(timing);
       setRemainingSeconds(preparedSession?.timerSeconds ?? 0);
       setAnswer("");
@@ -122,6 +123,7 @@ export const useFlashCardGameModal = ({
     return () => {
       operationIdRef.current += 1;
       isSessionActiveRef.current = false;
+      isTimingReadyRef.current = false;
       isActionInProgressRef.current = false;
     };
   }, [applyTiming, initialTiming, isOpen]);
@@ -236,7 +238,7 @@ export const useFlashCardGameModal = ({
 
     setAnswerReveal(result.answer);
     setPhase("result");
-    phaseDeadlineRef.current = Date.now() + 3000;
+    phaseDeadlineRef.current = performance.now() + 3000;
     isActionInProgressRef.current = false;
   }, [currentTiming]);
 
@@ -284,6 +286,7 @@ export const useFlashCardGameModal = ({
     if (
       !isOpen ||
       !isSessionActiveRef.current ||
+      !isTimingReadyRef.current ||
       !currentTiming ||
       isExitConfirmationOpen ||
       phase === "transitioning"
@@ -292,7 +295,7 @@ export const useFlashCardGameModal = ({
     }
 
     const updatePhase = () => {
-      const now = Date.now();
+      const now = performance.now();
 
       if (phase === "answering") {
         const secondsUntilDeadline = Math.max(
@@ -354,7 +357,7 @@ export const useFlashCardGameModal = ({
     isActionInProgressRef.current = true;
     setError("");
     setPhase("checking");
-    phaseDeadlineRef.current = Date.now() + 2000;
+    phaseDeadlineRef.current = performance.now() + 2000;
     const activeOperationId = operationIdRef.current;
     const result = await submitFlashCardAnswer({
       answer: submittedAnswer,
@@ -376,7 +379,9 @@ export const useFlashCardGameModal = ({
     }
 
     const revealAt = Date.parse(result.submission.revealAt);
-    phaseDeadlineRef.current = revealAt - serverOffsetRef.current;
+    const submittedAt = Date.parse(result.submission.submittedAt);
+    const revealDurationMs = Math.max(0, revealAt - submittedAt);
+    phaseDeadlineRef.current = performance.now() + revealDurationMs;
     isActionInProgressRef.current = false;
   };
 
@@ -384,7 +389,7 @@ export const useFlashCardGameModal = ({
 
   const handleCancelExitConfirmation = () => {
     if (pausedAtRef.current !== null) {
-      const pausedDuration = Date.now() - pausedAtRef.current;
+      const pausedDuration = performance.now() - pausedAtRef.current;
 
       if (
         phase !== "answering" &&
@@ -416,7 +421,7 @@ export const useFlashCardGameModal = ({
       phase === "result" ||
       phase === "timeoutHold"
     ) {
-      phaseDeadlineRef.current = Date.now();
+      phaseDeadlineRef.current = performance.now();
     }
 
     setRetryVersion((currentVersion) => currentVersion + 1);
