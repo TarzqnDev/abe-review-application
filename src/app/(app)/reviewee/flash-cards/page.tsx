@@ -125,10 +125,11 @@ export default function RevieweeFlashCardsPage() {
         />
       )}
       <FlashCardGameCountdownModal
+        countdownDetails={flashCardsPage.countdownDetails}
         isOpen={flashCardsPage.gameStage === "countdown"}
         onCancel={flashCardsPage.handleCountdownCancelled}
+        onNoFlashCards={flashCardsPage.handleNoFlashCardsAfterCountdown}
         onStarted={flashCardsPage.handleGameStarted}
-        preparedSession={flashCardsPage.preparedSession}
       />
       <FlashCardGameModal
         key={flashCardsPage.preparedSession?.sessionId ?? "flash-card-game"}

@@ -41,6 +41,24 @@ export type PreparedQuizSession = {
   questions: PreparedQuizQuestion[];
 };
 
+export type QuizSessionPreview =
+  | {
+      selectionId: number;
+      areaName: string;
+      gameType: Exclude<QuizGameType, "PAES">;
+      difficulty: QuizDifficulty;
+      timerSeconds: number;
+      totalQuestions: number;
+    }
+  | {
+      selectionId: number;
+      areaName: string;
+      gameType: "PAES";
+      difficulty: null;
+      timerSeconds: number;
+      totalQuestions: number;
+    };
+
 export type QuizQuestionTiming = {
   sessionId: string;
   sessionQuestionId: number;

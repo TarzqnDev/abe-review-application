@@ -1,16 +1,21 @@
 import { LoaderCircle } from "lucide-react";
 import { useFlashCardGameCountdownModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useFlashCardGameCountdownModal";
 import type {
+  FlashCardCountdownDetails,
   FlashCardTiming,
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 
 export type FlashCardGameCountdownModalProps = {
+  countdownDetails: FlashCardCountdownDetails | null;
   isOpen: boolean;
   onCancel: () => void;
-  onStarted: (timing: FlashCardTiming) => void;
-  preparedSession: PreparedFlashCardSession | null;
+  onNoFlashCards: () => void;
+  onStarted: (
+    preparedSession: PreparedFlashCardSession,
+    timing: FlashCardTiming,
+  ) => void;
 };
 
 export default function FlashCardGameCountdownModal(
@@ -20,13 +25,12 @@ export default function FlashCardGameCountdownModal(
     countdown,
     error,
     handleCancel,
-    isCancelling,
     isStarting,
     modalAccessibility,
   } = useFlashCardGameCountdownModal(props);
   const { dialogRef, isVisible } = modalAccessibility;
 
-  if (!props.preparedSession) return null;
+  if (!props.countdownDetails) return null;
 
   return (
     <QuizModalShell
@@ -46,8 +50,8 @@ export default function FlashCardGameCountdownModal(
         Flash Cards
       </h2>
       <p className="mt-1 text-sm text-secondary-text">
-        {props.preparedSession.areaName} ·{" "}
-        {props.preparedSession.totalFlashCards} Flash Cards
+        {props.countdownDetails.areaName} ·{" "}
+        {props.countdownDetails.totalFlashCards} Flash Cards
       </p>
 
       <div
@@ -73,10 +77,10 @@ export default function FlashCardGameCountdownModal(
       <button
         type="button"
         onClick={handleCancel}
-        disabled={isCancelling || isStarting}
+        disabled={isStarting}
         className="flex h-11 w-full cursor-pointer items-center justify-center rounded border border-primary-accent bg-surface text-sm font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isCancelling || isStarting ? (
+        {isStarting ? (
           <LoaderCircle className="h-5 w-5 animate-spin" />
         ) : (
           "Cancel"

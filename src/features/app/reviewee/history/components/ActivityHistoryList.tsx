@@ -12,7 +12,6 @@ type ActivityHistoryListProps = {
 };
 
 const statusStyles: Record<ActivityHistoryEntry["status"], string> = {
-  cancelled: "border-border bg-secondary-bg text-slate-600",
   completed: "border-emerald-200 bg-emerald-50 text-emerald-700",
   exited: "border-amber-200 bg-amber-50 text-amber-700",
 };

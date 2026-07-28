@@ -18,7 +18,7 @@ export default function ActivityHistoryEmpty({
       <p className="mx-auto mt-1 max-w-md text-sm text-secondary-text">
         {isFiltered
           ? "Try changing your activity type, status, or search filters."
-          : "Your completed, exited, and cancelled study sessions will appear here."}
+          : "Your completed and exited study sessions will appear here."}
       </p>
     </div>
   );

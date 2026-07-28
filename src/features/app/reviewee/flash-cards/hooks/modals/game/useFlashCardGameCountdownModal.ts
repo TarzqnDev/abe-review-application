@@ -1,37 +1,40 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cancelFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/cancel-flash-card-session.action";
-import { startFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/start-flash-card-session.action";
+import { startFlashCardSessionAfterCountdown } from "@/features/app/reviewee/flash-cards/actions/game/start-flash-card-session-after-countdown.action";
 import type {
+  FlashCardCountdownDetails,
   FlashCardTiming,
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
 
 type UseFlashCardGameCountdownModalOptions = {
+  countdownDetails: FlashCardCountdownDetails | null;
   isOpen: boolean;
   onCancel: () => void;
-  onStarted: (timing: FlashCardTiming) => void;
-  preparedSession: PreparedFlashCardSession | null;
+  onNoFlashCards: () => void;
+  onStarted: (
+    preparedSession: PreparedFlashCardSession,
+    timing: FlashCardTiming,
+  ) => void;
 };
 
 export const useFlashCardGameCountdownModal = ({
+  countdownDetails,
   isOpen,
   onCancel,
+  onNoFlashCards,
   onStarted,
-  preparedSession,
 }: UseFlashCardGameCountdownModalOptions) => {
   const actionInProgressRef = useRef(false);
   const cancelledRef = useRef(false);
-  const countdownDeadlineRef = useRef(0);
   const [countdown, setCountdown] = useState(3);
-  const [isCancelling, setIsCancelling] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState("");
   const modalAccessibility = useQuizModalAccessibility({ isOpen });
 
   const beginStart = useCallback(async () => {
     if (
-      !preparedSession ||
+      !countdownDetails ||
       cancelledRef.current ||
       actionInProgressRef.current
     ) {
@@ -41,25 +44,35 @@ export const useFlashCardGameCountdownModal = ({
     actionInProgressRef.current = true;
     setError("");
     setIsStarting(true);
-    const result = await startFlashCardSession({
-      sessionId: preparedSession.sessionId,
+    const result = await startFlashCardSessionAfterCountdown({
+      areaId: countdownDetails.areaId,
     });
 
-    if (!result.success || !result.timing) {
+    if (cancelledRef.current) return;
+
+    if (!result.success) {
       setError(result.error ?? "Unable to start the flash card game.");
       actionInProgressRef.current = false;
       setIsStarting(false);
       return;
     }
 
-    onStarted(result.timing);
-  }, [onStarted, preparedSession]);
+    if (
+      result.noFlashCards ||
+      !result.preparedSession ||
+      !result.timing
+    ) {
+      onNoFlashCards();
+      return;
+    }
+
+    onStarted(result.preparedSession, result.timing);
+  }, [countdownDetails, onNoFlashCards, onStarted]);
 
   useEffect(() => {
-    if (!isOpen || !preparedSession) return;
+    if (!isOpen || !countdownDetails) return;
 
     const countdownStartedAt = Date.now();
-    countdownDeadlineRef.current = countdownStartedAt + 3000;
     cancelledRef.current = false;
     actionInProgressRef.current = false;
     void Promise.resolve().then(() => {
@@ -83,48 +96,21 @@ export const useFlashCardGameCountdownModal = ({
       clearInterval(interval);
       clearTimeout(startTimeout);
     };
-  }, [beginStart, isOpen, preparedSession]);
+  }, [beginStart, countdownDetails, isOpen]);
 
-  const handleCancel = async () => {
-    if (
-      !preparedSession ||
-      isCancelling ||
-      isStarting ||
-      actionInProgressRef.current
-    ) {
+  const handleCancel = () => {
+    if (!countdownDetails || isStarting || actionInProgressRef.current) {
       return;
     }
 
-    actionInProgressRef.current = true;
     cancelledRef.current = true;
-    setIsCancelling(true);
-    setError("");
-    const result = await cancelFlashCardSession({
-      sessionId: preparedSession.sessionId,
-    });
-
-    if (!result.success) {
-      cancelledRef.current = false;
-      actionInProgressRef.current = false;
-      setError(result.error ?? "Unable to cancel the flash card game.");
-      setIsCancelling(false);
-
-      if (Date.now() >= countdownDeadlineRef.current) {
-        void beginStart();
-      }
-
-      return;
-    }
-
     onCancel();
-    setIsCancelling(false);
   };
 
   return {
     countdown,
     error,
     handleCancel,
-    isCancelling,
     isStarting,
     modalAccessibility,
   };

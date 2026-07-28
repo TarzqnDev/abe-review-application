@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchPaesSubjects } from "@/features/app/reviewee/mcq-quiz/actions/fetch-paes-subjects.action";
 import { fetchQuizAreas } from "@/features/app/reviewee/mcq-quiz/actions/fetch-quiz-areas.action";
-import { preparePaesQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/prepare-paes-quiz-session.action";
-import { prepareQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/prepare-quiz-session.action";
+import { previewPaesQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/preview-paes-quiz-session.action";
+import { previewQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/preview-quiz-session.action";
 import type {
-  PreparedQuizSession,
   QuizArea,
   QuizDifficulty,
   QuizGameType,
+  QuizSessionPreview,
 } from "@/features/app/reviewee/mcq-quiz/types/quiz";
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
 
@@ -16,7 +16,7 @@ type UseGameSelectionModalOptions = {
   isOpen: boolean;
   onClose: () => void;
   onNoQuestions: (message?: string) => void;
-  onPrepared: (session: PreparedQuizSession) => void;
+  onPreviewed: (preview: QuizSessionPreview) => void;
 };
 
 const QUIZ_DIFFICULTIES: QuizDifficulty[] = ["Easy", "Medium", "Hard"];
@@ -26,7 +26,7 @@ export const useGameSelectionModal = ({
   isOpen,
   onClose,
   onNoQuestions,
-  onPrepared,
+  onPreviewed,
 }: UseGameSelectionModalOptions) => {
   const areaSelectRef = useRef<HTMLSelectElement>(null);
   const requestIdRef = useRef(0);
@@ -116,8 +116,8 @@ export const useGameSelectionModal = ({
     setError("");
     setIsPreparing(true);
     const result = isPaesGame
-      ? await preparePaesQuizSession({ subjectId: selectedId })
-      : await prepareQuizSession({
+      ? await previewPaesQuizSession({ subjectId: selectedId })
+      : await previewQuizSession({
           areaId: selectedId,
           difficulty,
           gameType,
@@ -129,7 +129,7 @@ export const useGameSelectionModal = ({
       return;
     }
 
-    if (result.noQuestions || !result.preparedSession) {
+    if (result.noQuestions || !result.preview) {
       onNoQuestions(
         isPaesGame
           ? "There are no questions available for this PAES subject yet."
@@ -139,7 +139,7 @@ export const useGameSelectionModal = ({
       return;
     }
 
-    onPrepared(result.preparedSession);
+    onPreviewed(result.preview);
     setIsPreparing(false);
   };
 

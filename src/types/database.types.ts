@@ -804,14 +804,6 @@ export type Database = {
         Args: { selected_session_id: string }
         Returns: Json
       }
-      cancel_flash_card_session: {
-        Args: { selected_session_id: string }
-        Returns: Json
-      }
-      cancel_quiz_session: {
-        Args: { selected_session_id: string }
-        Returns: Json
-      }
       claim_reviewee_invitation: {
         Args: {
           selected_email: string
@@ -856,15 +848,15 @@ export type Database = {
         Args: { selected_answer: string }
         Returns: string
       }
-      prepare_flash_card_session: {
+      preview_flash_card_session: {
         Args: { selected_area_id: number }
         Returns: Json
       }
-      prepare_paes_quiz_session: {
+      preview_paes_quiz_session: {
         Args: { selected_subject_id: number }
         Returns: Json
       }
-      prepare_quiz_session: {
+      preview_quiz_session: {
         Args: {
           selected_area_id: number
           selected_difficulty: string
@@ -895,12 +887,20 @@ export type Database = {
         Args: { selected_session_question_id: number }
         Returns: Json
       }
-      start_flash_card_session: {
-        Args: { selected_session_id: string }
+      start_flash_card_session_after_countdown: {
+        Args: { selected_area_id: number }
         Returns: Json
       }
-      start_quiz_session: {
-        Args: { selected_session_id: string }
+      start_paes_quiz_session_after_countdown: {
+        Args: { selected_subject_id: number }
+        Returns: Json
+      }
+      start_quiz_session_after_countdown: {
+        Args: {
+          selected_area_id: number
+          selected_difficulty: string
+          selected_game_type: string
+        }
         Returns: Json
       }
       submit_flash_card_answer: {

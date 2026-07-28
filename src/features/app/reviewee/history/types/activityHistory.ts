@@ -1,11 +1,8 @@
 export type ActivityHistorySessionType = "mcq_quiz" | "flash_cards";
 
-export type ActivityHistoryStatus = "completed" | "exited" | "cancelled";
+export type ActivityHistoryStatus = "completed" | "exited";
 
-export type ActivityHistoryEndReason =
-  | "completed"
-  | "user_exit"
-  | "countdown_cancelled";
+export type ActivityHistoryEndReason = "completed" | "user_exit";
 
 export type ActivityHistoryDifficulty = "Easy" | "Medium" | "Hard";
 

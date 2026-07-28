@@ -4,6 +4,13 @@ export type PreparedFlashCardPrompt = {
   questionText: string;
 };
 
+export type FlashCardCountdownDetails = {
+  areaId: number;
+  areaName: string;
+  timerSeconds: number;
+  totalFlashCards: number;
+};
+
 export type PreparedFlashCardSession = {
   sessionId: string;
   areaId: number;
@@ -69,9 +76,4 @@ export type FlashCardAdvancement = {
   completed: boolean;
   timing: FlashCardTiming | null;
   summary: FlashCardSummary | null;
-};
-
-export type FlashCardCancellation = {
-  sessionId: string;
-  status: "cancelled";
 };

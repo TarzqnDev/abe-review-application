@@ -36,7 +36,7 @@ export const fetchActivityHistoryDetails = async ({
           game_session_questions(status, result)
         `)
         .eq("id", sessionId)
-        .in("status", ["completed", "exited", "cancelled"])
+        .in("status", ["completed", "exited"])
         .single(),
       supabase.rpc("get_activity_history_details", {
         selected_session_id: sessionId,

@@ -55,7 +55,7 @@ export const mapActivityHistoryRow = (
   const incorrect = items.filter((item) => item.result === "incorrect").length;
   const timedOut = items.filter((item) => item.status === "timed_out").length;
   const notPlayed = items.filter((item) =>
-    ["abandoned", "not_played", "cancelled"].includes(item.status),
+    ["abandoned", "not_played"].includes(item.status),
   ).length;
   const questionsReached = items.filter((item) =>
     ["active", "submitted", "answered", "timed_out", "abandoned"].includes(

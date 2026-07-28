@@ -22,7 +22,6 @@ const activityDateTimeFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 const statusLabel = {
-  cancelled: "Cancelled",
   completed: "Completed",
   exited: "Ended Early",
 } as const;
@@ -63,9 +62,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
                   className={`rounded-full px-2.5 py-1 text-xs font-medium ${
                     history.status === "completed"
                       ? "bg-teal-50 text-primary-dark"
-                      : history.status === "exited"
-                        ? "bg-amber-50 text-amber-700"
-                        : "bg-slate-100 text-slate-600"
+                      : "bg-amber-50 text-amber-700"
                   }`}
                 >
                   {statusLabel[history.status]}
@@ -152,9 +149,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
               ) : (
                 <div className="mt-4 rounded border border-border bg-secondary-bg px-5 py-10 text-center">
                   <p className="text-sm font-medium text-slate-700">
-                    {history.status === "cancelled"
-                      ? "This activity was cancelled before the game started."
-                      : "No activity items were recorded for this session."}
+                    No activity items were recorded for this session.
                   </p>
                 </div>
               )}

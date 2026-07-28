@@ -29,7 +29,6 @@ const statusOptions: Array<{
   { label: "All", value: "all" },
   { label: "Completed", value: "completed" },
   { label: "Exited", value: "exited" },
-  { label: "Cancelled", value: "cancelled" },
 ];
 
 export default function ActivityHistoryFilters({

@@ -3,8 +3,8 @@ import { LoaderCircle } from "lucide-react";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 import { useGameSelectionModal } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useGameSelectionModal";
 import type {
-  PreparedQuizSession,
   QuizGameType,
+  QuizSessionPreview,
 } from "@/features/app/reviewee/mcq-quiz/types/quiz";
 
 export type GameSelectionModalProps = {
@@ -12,7 +12,7 @@ export type GameSelectionModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onNoQuestions: (message?: string) => void;
-  onPrepared: (session: PreparedQuizSession) => void;
+  onPreviewed: (preview: QuizSessionPreview) => void;
 };
 
 export default function GameSelectionModal(

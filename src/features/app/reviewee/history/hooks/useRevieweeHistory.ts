@@ -6,11 +6,7 @@ import type {
 } from "@/features/app/reviewee/history/types/activityHistory";
 
 export type ActivityTypeFilter = "all" | "mcq_quiz" | "flash_cards";
-export type ActivityStatusFilter =
-  | "all"
-  | "completed"
-  | "exited"
-  | "cancelled";
+export type ActivityStatusFilter = "all" | "completed" | "exited";
 
 const HISTORY_PAGE_SIZE = 8;
 const EMPTY_OVERVIEW_STATS: ActivityHistoryOverviewStats = {

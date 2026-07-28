@@ -20,7 +20,7 @@ export const fetchActivityHistory = async (): Promise<FetchActivityHistoryResult
           game_session_flash_cards(status, result),
           game_session_questions(status, result)
         `)
-        .in("status", ["completed", "exited", "cancelled"])
+        .in("status", ["completed", "exited"])
         .order("ended_at", { ascending: false, nullsFirst: false })
         .order("id", { ascending: false })
         .limit(20),

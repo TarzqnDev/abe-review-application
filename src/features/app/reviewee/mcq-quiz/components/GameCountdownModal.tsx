@@ -4,13 +4,18 @@ import { useGameCountdownModal } from "@/features/app/reviewee/mcq-quiz/hooks/mo
 import type {
   PreparedQuizSession,
   QuizQuestionTiming,
+  QuizSessionPreview,
 } from "@/features/app/reviewee/mcq-quiz/types/quiz";
 
 export type GameCountdownModalProps = {
   isOpen: boolean;
   onCancel: () => void;
-  onStarted: (timing: QuizQuestionTiming) => void;
-  preparedSession: PreparedQuizSession | null;
+  onNoQuestions: (message?: string) => void;
+  onStarted: (
+    session: PreparedQuizSession,
+    timing: QuizQuestionTiming,
+  ) => void;
+  sessionPreview: QuizSessionPreview | null;
 };
 
 export default function GameCountdownModal(props: GameCountdownModalProps) {
@@ -18,13 +23,12 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
     countdown,
     error,
     handleCancel,
-    isCancelling,
     isStarting,
     modalAccessibility,
   } = useGameCountdownModal(props);
   const { dialogRef, isVisible } = modalAccessibility;
 
-  if (!props.preparedSession) return null;
+  if (!props.sessionPreview) return null;
 
   return (
     <QuizModalShell
@@ -41,12 +45,12 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
         id="game-countdown-title"
         className="mt-3 text-xl font-semibold text-primary-text"
       >
-        {props.preparedSession.gameType}
+        {props.sessionPreview.gameType}
       </h2>
       <p className="mt-1 text-sm text-secondary-text">
-        {props.preparedSession.areaName}
-        {props.preparedSession.difficulty
-          ? ` · ${props.preparedSession.difficulty}`
+        {props.sessionPreview.areaName}
+        {props.sessionPreview.difficulty
+          ? ` · ${props.sessionPreview.difficulty}`
           : ""}
       </p>
 
@@ -73,10 +77,10 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
       <button
         type="button"
         onClick={handleCancel}
-        disabled={isCancelling || isStarting}
+        disabled={isStarting}
         className="flex h-11 w-full cursor-pointer items-center justify-center rounded border border-primary-accent bg-surface text-sm font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isCancelling || isStarting ? (
+        {isStarting ? (
           <LoaderCircle className="h-5 w-5 animate-spin" />
         ) : (
           "Cancel"

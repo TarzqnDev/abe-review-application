@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchFlashCardDecks } from "@/features/app/reviewee/flash-cards/actions/fetch-flash-card-decks.action";
 import { fetchRevieweeFlashCardsPageData } from "@/features/app/reviewee/flash-cards/actions/fetch-reviewee-flash-cards-page-data.action";
-import { prepareFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/prepare-flash-card-session.action";
+import { previewFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/preview-flash-card-session.action";
 import type { FlashCardFormModalRequest } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardFormModal";
 import type {
   FetchFlashCardDecksResult,
   FlashCardDeck,
 } from "@/features/app/reviewee/flash-cards/types/flashCard";
 import type {
+  FlashCardCountdownDetails,
   FlashCardSummary,
   FlashCardTiming,
   PreparedFlashCardSession,
@@ -37,6 +38,8 @@ export const useRevieweeFlashCards = () => {
   const [gameStage, setGameStage] =
     useState<RevieweeFlashCardGameStage>("idle");
   const [preparingAreaId, setPreparingAreaId] = useState<number | null>(null);
+  const [countdownDetails, setCountdownDetails] =
+    useState<FlashCardCountdownDetails | null>(null);
   const [preparedSession, setPreparedSession] =
     useState<PreparedFlashCardSession | null>(null);
   const [initialTiming, setInitialTiming] =
@@ -137,6 +140,7 @@ export const useRevieweeFlashCards = () => {
     isPreparingGameRef.current = false;
     setGameStage("idle");
     setPreparingAreaId(null);
+    setCountdownDetails(null);
     setPreparedSession(null);
     setInitialTiming(null);
     setGameSummary(null);
@@ -158,16 +162,16 @@ export const useRevieweeFlashCards = () => {
       setGameSummary(null);
       setGameError("");
 
-      const result = await prepareFlashCardSession({ areaId });
+      const result = await previewFlashCardSession({ areaId });
 
       if (!result.success) {
-        setGameError(result.error ?? "Unable to prepare this flash card game.");
+        setGameError(result.error ?? "Unable to preview this flash card game.");
         setPreparingAreaId(null);
         isPreparingGameRef.current = false;
         return;
       }
 
-      if (result.noFlashCards || !result.preparedSession) {
+      if (result.noFlashCards || !result.countdownDetails) {
         setNoFlashCards((currentState) => ({
           ...currentState,
           isOpen: true,
@@ -177,7 +181,7 @@ export const useRevieweeFlashCards = () => {
         return;
       }
 
-      setPreparedSession(result.preparedSession);
+      setCountdownDetails(result.countdownDetails);
       setGameStage("countdown");
       setPreparingAreaId(null);
       isPreparingGameRef.current = false;
@@ -185,9 +189,26 @@ export const useRevieweeFlashCards = () => {
     [gameStage],
   );
 
-  const handleGameStarted = useCallback((timing: FlashCardTiming) => {
-    setInitialTiming(timing);
-    setGameStage("playing");
+  const handleGameStarted = useCallback(
+    (
+      startedSession: PreparedFlashCardSession,
+      timing: FlashCardTiming,
+    ) => {
+      setPreparedSession(startedSession);
+      setInitialTiming(timing);
+      setCountdownDetails(null);
+      setGameStage("playing");
+    },
+    [],
+  );
+
+  const handleNoFlashCardsAfterCountdown = useCallback(() => {
+    setGameStage("idle");
+    setCountdownDetails(null);
+    setNoFlashCards((currentState) => ({
+      ...currentState,
+      isOpen: true,
+    }));
   }, []);
 
   const handleGameFinished = useCallback((summary: FlashCardSummary) => {
@@ -198,6 +219,7 @@ export const useRevieweeFlashCards = () => {
   return {
     closeFlashCardFormModal: () => setFormModalRequest(null),
     closeFlashCardListModal: () => setSelectedAreaId(null),
+    countdownDetails,
     flashCardDecks,
     flashCardDecksError,
     formModalRequest,
@@ -206,6 +228,7 @@ export const useRevieweeFlashCards = () => {
     gameSummary,
     handleCountdownCancelled: resetFlashCardGame,
     handleGameFinished,
+    handleNoFlashCardsAfterCountdown,
     handleGameStarted,
     handlePlayNow,
     initialTiming,

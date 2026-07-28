@@ -1,30 +1,34 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cancelQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/cancel-quiz-session.action";
-import { startQuizSession } from "@/features/app/reviewee/mcq-quiz/actions/start-quiz-session.action";
+import { startPaesQuizSessionAfterCountdown } from "@/features/app/reviewee/mcq-quiz/actions/start-paes-quiz-session-after-countdown.action";
+import { startQuizSessionAfterCountdown } from "@/features/app/reviewee/mcq-quiz/actions/start-quiz-session-after-countdown.action";
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
 import type {
   PreparedQuizSession,
   QuizQuestionTiming,
+  QuizSessionPreview,
 } from "@/features/app/reviewee/mcq-quiz/types/quiz";
 
 type UseGameCountdownModalOptions = {
   isOpen: boolean;
   onCancel: () => void;
-  onStarted: (timing: QuizQuestionTiming) => void;
-  preparedSession: PreparedQuizSession | null;
+  onNoQuestions: (message?: string) => void;
+  onStarted: (
+    session: PreparedQuizSession,
+    timing: QuizQuestionTiming,
+  ) => void;
+  sessionPreview: QuizSessionPreview | null;
 };
 
 export const useGameCountdownModal = ({
   isOpen,
   onCancel,
+  onNoQuestions,
   onStarted,
-  preparedSession,
+  sessionPreview,
 }: UseGameCountdownModalOptions) => {
   const actionInProgressRef = useRef(false);
   const cancelledRef = useRef(false);
-  const countdownDeadlineRef = useRef(0);
   const [countdown, setCountdown] = useState(3);
-  const [isCancelling, setIsCancelling] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState("");
   const modalAccessibility = useQuizModalAccessibility({
@@ -33,7 +37,7 @@ export const useGameCountdownModal = ({
 
   const beginStart = useCallback(async () => {
     if (
-      !preparedSession ||
+      !sessionPreview ||
       cancelledRef.current ||
       actionInProgressRef.current
     ) {
@@ -43,25 +47,44 @@ export const useGameCountdownModal = ({
     actionInProgressRef.current = true;
     setError("");
     setIsStarting(true);
-    const result = await startQuizSession({
-      sessionId: preparedSession.sessionId,
-    });
+    const result =
+      sessionPreview.gameType === "PAES"
+        ? await startPaesQuizSessionAfterCountdown({
+            subjectId: sessionPreview.selectionId,
+          })
+        : await startQuizSessionAfterCountdown({
+            areaId: sessionPreview.selectionId,
+            difficulty: sessionPreview.difficulty,
+            gameType: sessionPreview.gameType,
+          });
 
-    if (!result.success || !result.timing) {
+    if (!result.success) {
       setError(result.error ?? "Unable to start the game.");
       actionInProgressRef.current = false;
       setIsStarting(false);
       return;
     }
 
-    onStarted(result.timing);
-  }, [onStarted, preparedSession]);
+    if (
+      result.noQuestions ||
+      !result.preparedSession ||
+      !result.timing
+    ) {
+      onNoQuestions(
+        sessionPreview.gameType === "PAES"
+          ? "There are no questions available for this PAES subject yet."
+          : undefined,
+      );
+      return;
+    }
+
+    onStarted(result.preparedSession, result.timing);
+  }, [onNoQuestions, onStarted, sessionPreview]);
 
   useEffect(() => {
-    if (!isOpen || !preparedSession) return;
+    if (!isOpen || !sessionPreview) return;
 
     const countdownStartedAt = Date.now();
-    countdownDeadlineRef.current = countdownStartedAt + 3000;
     cancelledRef.current = false;
     actionInProgressRef.current = false;
     void Promise.resolve().then(() => {
@@ -85,49 +108,21 @@ export const useGameCountdownModal = ({
       clearInterval(interval);
       clearTimeout(startTimeout);
     };
-  }, [beginStart, isOpen, preparedSession]);
+  }, [beginStart, isOpen, sessionPreview]);
 
-  const handleCancel = async () => {
-    if (
-      !preparedSession ||
-      isCancelling ||
-      isStarting ||
-      actionInProgressRef.current
-    ) {
+  const handleCancel = () => {
+    if (!sessionPreview || isStarting || actionInProgressRef.current) {
       return;
     }
 
-    actionInProgressRef.current = true;
     cancelledRef.current = true;
-    setIsCancelling(true);
-    setError("");
-
-    const result = await cancelQuizSession({
-      sessionId: preparedSession.sessionId,
-    });
-
-    if (!result.success) {
-      cancelledRef.current = false;
-      actionInProgressRef.current = false;
-      setError(result.error ?? "Unable to cancel the game.");
-      setIsCancelling(false);
-
-      if (Date.now() >= countdownDeadlineRef.current) {
-        void beginStart();
-      }
-
-      return;
-    }
-
     onCancel();
-    setIsCancelling(false);
   };
 
   return {
     countdown,
     error,
     handleCancel,
-    isCancelling,
     isStarting,
     modalAccessibility,
   };

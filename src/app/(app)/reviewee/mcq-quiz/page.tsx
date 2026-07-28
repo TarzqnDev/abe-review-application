@@ -60,13 +60,14 @@ export default function RevieweeMcqQuizPage() {
         isOpen={mcqQuiz.stage === "selection"}
         onClose={mcqQuiz.closeGameSelection}
         onNoQuestions={mcqQuiz.handleNoQuestions}
-        onPrepared={mcqQuiz.handleSessionPrepared}
+        onPreviewed={mcqQuiz.handleSessionPreviewed}
       />
       <GameCountdownModal
         isOpen={mcqQuiz.stage === "countdown"}
         onCancel={mcqQuiz.handleCountdownCancelled}
+        onNoQuestions={mcqQuiz.handleCountdownNoQuestions}
         onStarted={mcqQuiz.handleGameStarted}
-        preparedSession={mcqQuiz.preparedSession}
+        sessionPreview={mcqQuiz.sessionPreview}
       />
       <QuizGameModal
         key={mcqQuiz.preparedSession?.sessionId ?? "quiz-game"}

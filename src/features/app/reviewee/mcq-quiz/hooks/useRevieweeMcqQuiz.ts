@@ -4,6 +4,7 @@ import type {
   PreparedQuizSession,
   QuizGameType,
   QuizQuestionTiming,
+  QuizSessionPreview,
   QuizSummary,
 } from "@/features/app/reviewee/mcq-quiz/types/quiz";
 import { useTodaysTriviaCard } from "@/features/app/reviewee/trivia/hooks/useTodaysTriviaCard";
@@ -29,6 +30,8 @@ export const useRevieweeMcqQuiz = () => {
   const [stage, setStage] = useState<RevieweeMcqQuizStage>("idle");
   const [preparedSession, setPreparedSession] =
     useState<PreparedQuizSession | null>(null);
+  const [sessionPreview, setSessionPreview] =
+    useState<QuizSessionPreview | null>(null);
   const [initialTiming, setInitialTiming] =
     useState<QuizQuestionTiming | null>(null);
   const [summary, setSummary] = useState<QuizSummary | null>(null);
@@ -63,6 +66,7 @@ export const useRevieweeMcqQuiz = () => {
     setSelectedGameType(null);
     setStage("idle");
     setPreparedSession(null);
+    setSessionPreview(null);
     setInitialTiming(null);
     setSummary(null);
     setNoQuestions((currentState) => ({
@@ -74,6 +78,7 @@ export const useRevieweeMcqQuiz = () => {
   const openGameSelection = useCallback((gameType: QuizGameType) => {
     setSelectedGameType(gameType);
     setPreparedSession(null);
+    setSessionPreview(null);
     setInitialTiming(null);
     setSummary(null);
     setStage("selection");
@@ -84,8 +89,8 @@ export const useRevieweeMcqQuiz = () => {
     setStage("idle");
   }, []);
 
-  const handleSessionPrepared = useCallback((session: PreparedQuizSession) => {
-    setPreparedSession(session);
+  const handleSessionPreviewed = useCallback((preview: QuizSessionPreview) => {
+    setSessionPreview(preview);
     setStage("countdown");
   }, []);
 
@@ -107,10 +112,24 @@ export const useRevieweeMcqQuiz = () => {
     resetMcqQuizGame();
   }, [resetMcqQuizGame]);
 
-  const handleGameStarted = useCallback((timing: QuizQuestionTiming) => {
-    setInitialTiming(timing);
-    setStage("playing");
+  const handleCountdownNoQuestions = useCallback((message?: string) => {
+    setSelectedGameType(null);
+    setSessionPreview(null);
+    setStage("idle");
+    setNoQuestions({
+      isOpen: true,
+      message: message ?? DEFAULT_NO_QUESTIONS_MESSAGE,
+    });
   }, []);
+
+  const handleGameStarted = useCallback(
+    (session: PreparedQuizSession, timing: QuizQuestionTiming) => {
+      setPreparedSession(session);
+      setInitialTiming(timing);
+      setStage("playing");
+    },
+    [],
+  );
 
   const handleGameFinished = useCallback((gameSummary: QuizSummary) => {
     setSummary(gameSummary);
@@ -121,10 +140,11 @@ export const useRevieweeMcqQuiz = () => {
     closeGameSelection,
     closeNoQuestions,
     handleCountdownCancelled,
+    handleCountdownNoQuestions,
     handleGameFinished,
     handleGameStarted,
     handleNoQuestions,
-    handleSessionPrepared,
+    handleSessionPreviewed,
     initialTiming,
     isLoadingInitialPageData,
     noQuestions,
@@ -132,6 +152,7 @@ export const useRevieweeMcqQuiz = () => {
     preparedSession,
     resetMcqQuizGame,
     selectedGameType,
+    sessionPreview,
     stage,
     summary,
     todaysTriviaCard,
