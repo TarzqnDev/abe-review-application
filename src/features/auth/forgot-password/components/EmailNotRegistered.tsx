@@ -45,7 +45,7 @@ export default function EmailNotRegistered({
 
       <Link
         href="/login"
-        className="mt-8 flex items-center gap-2 font-medium text-primary-text"
+        className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-sm border border-primary-accent font-medium text-primary-accent transition hover:bg-teal-50"
       >
         <ArrowLeftIcon className="size-4" />
         Back to Login

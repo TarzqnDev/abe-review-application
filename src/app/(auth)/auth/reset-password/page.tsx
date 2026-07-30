@@ -8,20 +8,14 @@ import {
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
-import AuthBrand from "@/features/auth/components/AuthBrand";
+import AuthPageShell from "@/features/auth/components/AuthPageShell";
 import { useResetPassword } from "@/features/auth/reset-password/hooks/useResetPassword";
 
 export default function ResetPasswordPage() {
   const resetPasswordPage = useResetPassword();
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-secondary-bg px-6 py-10 text-black sm:px-10">
-      <section className="w-full max-w-xl">
-        <div className="mb-8 flex justify-center">
-          <AuthBrand />
-        </div>
-
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-border/60 sm:p-10">
+    <AuthPageShell>
           {resetPasswordPage.status === "loading" ? (
             <div
               className="flex flex-col items-center py-10 text-center"
@@ -117,7 +111,7 @@ export default function ResetPasswordPage() {
                   Create a New Password
                 </h1>
                 <p className="mt-2 text-sm leading-6 text-secondary-text sm:text-base">
-                  Choose a secure password for your ABE Review App account.
+                  Choose a secure password for your ABEquip account.
                 </p>
               </div>
 
@@ -238,8 +232,6 @@ export default function ResetPasswordPage() {
               </form>
             </div>
           )}
-        </div>
-      </section>
-    </main>
+    </AuthPageShell>
   );
 }

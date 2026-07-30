@@ -64,7 +64,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
         <button
           type="button"
           onClick={handleOpenExitConfirmation}
-          className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light sm:top-8 sm:right-8"
+          className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light sm:top-8 sm:right-8"
           aria-label="End game"
         >
           <XMarkIcon className="h-7 w-7" />

@@ -50,7 +50,7 @@ export default function TodaysTriviaCard({
   return (
     <aside
       aria-label="Today's trivia"
-      className="mb-8 w-full rounded-md border-primary-light bg-teal-50/70 px-5 py-4 text-primary-text border"
+      className="relative mb-8 mt-5 w-full rounded-2xl border border-primary-accent bg-teal-50/70 px-5 py-5 text-primary-text md:ml-8 md:w-[calc(100%-2rem)]"
     >
       <button
         type="button"
@@ -63,9 +63,9 @@ export default function TodaysTriviaCard({
           <Image
             src={DidYouKnowImage}
             alt=""
-            width={28}
-            height={28}
-            className="h-7 w-7 shrink-0 object-contain"
+            width={36}
+            height={36}
+            className="h-9 w-9 shrink-0 object-contain"
           />
           <span className="text-xl font-semibold">Did You Know?</span>
         </span>
@@ -77,13 +77,13 @@ export default function TodaysTriviaCard({
         />
       </button>
 
-      <div className="hidden items-center gap-2 md:flex">
+      <div className="hidden items-center md:flex">
         <Image
           src={DidYouKnowImage}
           alt=""
-          width={28}
-          height={28}
-          className="h-7 w-7 shrink-0 object-contain"
+          width={88}
+          height={88}
+          className="absolute -top-10 -left-10 h-20 w-20 shrink-0 object-contain"
         />
         <h2 className="text-xl font-semibold">Did You Know?</h2>
       </div>

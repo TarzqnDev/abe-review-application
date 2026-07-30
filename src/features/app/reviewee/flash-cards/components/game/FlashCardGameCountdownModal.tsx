@@ -1,4 +1,4 @@
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Puzzle } from "lucide-react";
 import { useFlashCardGameCountdownModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useFlashCardGameCountdownModal";
 import type {
   FlashCardCountdownDetails,
@@ -34,58 +34,67 @@ export default function FlashCardGameCountdownModal(
 
   return (
     <QuizModalShell
-      className="max-w-[430px] px-6 py-10 text-center sm:px-10 sm:py-12"
+      className="max-w-[560px] overflow-hidden text-center"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="flash-card-game-countdown-title"
     >
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary-accent">
-        Get ready
-      </p>
-      <h2
-        id="flash-card-game-countdown-title"
-        className="mt-3 text-xl font-semibold text-primary-text"
-      >
-        Flash Cards
-      </h2>
-      <p className="mt-1 text-sm text-secondary-text">
-        {props.countdownDetails.areaName} ·{" "}
-        {props.countdownDetails.totalFlashCards} Flash Cards
-      </p>
-
-      <div
-        className="my-8 text-8xl font-semibold tabular-nums text-primary-accent transition-opacity duration-300"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        {countdown > 0 ? (
-          countdown
-        ) : isStarting ? (
-          <LoaderCircle className="mx-auto h-14 w-14 animate-spin" />
-        ) : (
-          ""
-        )}
+      <div className="bg-primary-accent px-6 py-7 text-surface sm:py-8">
+        <Puzzle
+          aria-hidden="true"
+          strokeWidth={1.8}
+          className="mx-auto h-14 w-14"
+        />
+        <h2
+          id="flash-card-game-countdown-title"
+          className="mt-3 text-2xl font-semibold"
+        >
+          Flash Card Game
+        </h2>
+        <p className="mt-2 text-base font-semibold">
+          {props.countdownDetails.areaName}
+        </p>
       </div>
 
-      {error && (
-        <p role="alert" className="mb-5 text-sm text-red-600">
-          {error}
+      <div className="px-6 py-8 sm:px-10 sm:py-9">
+        <p className="text-xl font-semibold text-primary-text">Get Ready!</p>
+        <p className="mt-2 text-xl font-semibold text-secondary-text">
+          Game is starting in
         </p>
-      )}
+        <div
+          className="my-7 min-h-24 text-8xl font-semibold tabular-nums text-primary-accent transition-opacity duration-300"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          {countdown > 0 ? (
+            countdown
+          ) : isStarting ? (
+            <LoaderCircle className="mx-auto h-14 w-14 animate-spin" />
+          ) : (
+            ""
+          )}
+        </div>
 
-      <button
-        type="button"
-        onClick={handleCancel}
-        disabled={isStarting}
-        className="flex h-11 w-full cursor-pointer items-center justify-center rounded border border-primary-accent bg-surface text-sm font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {isStarting ? (
-          <LoaderCircle className="h-5 w-5 animate-spin" />
-        ) : (
-          "Cancel"
+        {error && (
+          <p role="alert" className="mb-5 text-sm text-error">
+            {error}
+          </p>
         )}
-      </button>
+
+        <button
+          type="button"
+          onClick={handleCancel}
+          disabled={isStarting}
+          className="flex h-12 w-full cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isStarting ? (
+            <LoaderCircle className="h-5 w-5 animate-spin" />
+          ) : (
+            "Cancel Game"
+          )}
+        </button>
+      </div>
     </QuizModalShell>
   );
 }

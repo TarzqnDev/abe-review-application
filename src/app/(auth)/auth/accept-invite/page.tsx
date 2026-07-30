@@ -7,7 +7,7 @@ import {
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
-import AuthBrand from "@/features/auth/components/AuthBrand";
+import AuthPageShell from "@/features/auth/components/AuthPageShell";
 import { useAcceptInvite } from "@/features/auth/accept-invite/hooks/useAcceptInvite";
 import { useAuth } from "@/providers/AuthProvider";
 import SuccessBanner from "@/components/ui/SuccessBanner";
@@ -39,13 +39,7 @@ export default function AcceptInvitePage() {
         show={showAccountSetupSuccessBanner}
       />
 
-      <main className="flex min-h-screen items-center justify-center bg-secondary-bg px-6 py-10 text-black sm:px-10">
-        <section className="w-full max-w-xl">
-          <div className="mb-8 flex justify-center">
-            <AuthBrand />
-          </div>
-
-          <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-border/60 sm:p-10">
+      <AuthPageShell>
             {hasInviteSession === null ? (
               <div className="flex flex-col items-center py-10 text-center">
                 <LoaderCircle className="size-8 animate-spin text-primary-accent" />
@@ -223,9 +217,7 @@ export default function AcceptInvitePage() {
                 </form>
               </div>
             )}
-          </div>
-        </section>
-      </main>
+      </AuthPageShell>
     </>
   );
 }

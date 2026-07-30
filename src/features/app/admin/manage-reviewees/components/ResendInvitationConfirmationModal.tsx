@@ -1,5 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import { useResendInvitationConfirmationModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useResendInvitationConfirmationModal";
 import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
@@ -41,7 +42,7 @@ export const ResendInvitationConfirmationModal = (
         ref={dialogRef}
         inert={!isOpen}
         onSubmit={modal.handleResend}
-        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
           isOpen
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -60,13 +61,20 @@ export const ResendInvitationConfirmationModal = (
         <div className="pr-9">
           <h2
             id="resend-invitation-title"
-            className="text-xl font-semibold text-primary-text"
+            className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            Resend Email Invitation
+            <Image
+              src="/caution.png"
+              alt=""
+              width={24}
+              height={24}
+              className="h-6 w-6 object-contain"
+            />
+            Invitation Resend Notice
           </h2>
           <p
             id="resend-invitation-description"
-            className="mt-3 text-sm leading-6 text-secondary-text"
+            className="mt-7 text-base leading-6 text-secondary-text"
           >
             Are you sure you want to resend the email invitation to this
             reviewee?
@@ -92,18 +100,9 @@ export const ResendInvitationConfirmationModal = (
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <button
-            ref={cancelButtonRef}
-            type="button"
-            onClick={modal.handleClose}
-            disabled={modal.isResending}
-            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
             type="submit"
             disabled={modal.isResending}
-            className="flex h-11 cursor-pointer items-center justify-center rounded bg-primary-accent text-sm font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
             {modal.isResending ? (
               <LoaderCircle
@@ -111,8 +110,17 @@ export const ResendInvitationConfirmationModal = (
                 aria-label="Resending invitation"
               />
             ) : (
-              "Resend Invitation"
+              "Yes, Continue"
             )}
+          </button>
+          <button
+            ref={cancelButtonRef}
+            type="button"
+            onClick={modal.handleClose}
+            disabled={modal.isResending}
+            className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-secondary-bg disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            No, Cancel
           </button>
         </div>
       </form>

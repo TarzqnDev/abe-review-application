@@ -5,7 +5,8 @@ import Image from "next/image";
 
 import type { AppRole } from "@/features/app/layout/types/appRole";
 import { useNavbar } from "@/features/app/navbar/hooks/useNavbar";
-import LogoV2 from "@/public/logo-v2.png";
+import AbequipLogo from "@/public/abequip-logo.png";
+import BrandIcon from "@/public/logo-v2.png";
 
 type NavbarProps = {
   role: AppRole | null;
@@ -23,17 +24,21 @@ export default function Navbar({ role }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 shrink-0 border-b border-border bg-surface">
       <div className="mx-auto flex h-[100px] w-full max-w-[1200px] items-center justify-between px-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-[50px] w-[50px] items-center justify-center rounded bg-teal-50 text-primary-accent">
+        <div className="flex items-center gap-2">
+          <div className="flex h-[50px] w-[50px] items-center justify-center rounded bg-teal-50">
             <Image
-              src={LogoV2}
-              alt="ABE Review logo"
-              className="object-contain"
+              src={BrandIcon}
+              alt=""
+              className="h-10 w-10 object-contain"
+              priority
             />
           </div>
-          <h1 className="text-xl font-semibold text-primary-text">
-            ABE Review App
-          </h1>
+          <Image
+            src={AbequipLogo}
+            alt="ABEquip"
+            className="h-auto w-[105px] object-contain sm:w-[110px]"
+            priority
+          />
         </div>
 
         <div className="relative flex items-center gap-3">

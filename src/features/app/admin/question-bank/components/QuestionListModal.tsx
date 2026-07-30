@@ -241,6 +241,13 @@ export default function QuestionListModal({
         loadSubjectQuestions={loadSubjectQuestions}
         onClose={handleCloseDeleteConfirmation}
         question={selectedDeleteQuestion}
+        questionNumber={
+          selectedDeleteQuestion
+            ? activeQuestionSetQuestions.findIndex(
+                (question) => question.id === selectedDeleteQuestion.id,
+              ) + 1
+            : 0
+        }
         selectedSubject={selectedSubject}
         showSuccessMessage={showSuccessMessage}
       />

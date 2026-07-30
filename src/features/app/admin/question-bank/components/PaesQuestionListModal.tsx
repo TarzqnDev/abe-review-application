@@ -229,6 +229,7 @@ export default function PaesQuestionListModal({
       {/* Modals Section */}
       <PaesQuestionFormModal
         key={questionFormRequest?.requestId ?? "paes-question-form-modal"}
+        isSubjectLocked
         onClose={handleCloseQuestionFormModal}
         onSaved={async () => {
           if (subject) {
@@ -248,6 +249,13 @@ export default function PaesQuestionListModal({
         loadSubjectQuestions={loadPaesSubjectQuestions}
         onClose={handleCloseDeleteConfirmation}
         question={selectedDeleteQuestion}
+        questionNumber={
+          selectedDeleteQuestion
+            ? questions.findIndex(
+                (question) => question.id === selectedDeleteQuestion.id,
+              ) + 1
+            : 0
+        }
         selectedSubject={subject}
         showSuccessMessage={showSuccessMessage}
       />

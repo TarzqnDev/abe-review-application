@@ -1,5 +1,5 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import { useDeleteFlashCardConfirmationModal } from "@/features/app/reviewee/flash-cards/hooks/modals/useDeleteFlashCardConfirmationModal";
 import type { FlashCard } from "@/features/app/reviewee/flash-cards/types/flashCard";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
@@ -57,32 +57,29 @@ export default function DeleteFlashCardConfirmationModal({
       <form
         ref={dialogRef}
         onSubmit={handleDeleteFlashCard}
-        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[580px] rounded-md bg-surface px-6 py-9 shadow-xl transition-all duration-300 ease-out sm:px-10 sm:py-10 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
       >
-        <button
-          type="button"
-          onClick={() => closeWithAnimation(onClose)}
-          disabled={isDeleting}
-          className="absolute top-6 right-6 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label="Close delete flash card confirmation"
-        >
-          <XMarkIcon className="h-6 w-6 text-secondary-text" />
-        </button>
-
-        <div className="pr-9">
+        <div>
           <h2
             id="delete-flash-card-modal-title"
-            className="text-xl font-semibold text-primary-text"
+            className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            Delete Flash Card
+            <Image
+              src="/caution.png"
+              alt=""
+              width={24}
+              height={24}
+              className="h-6 w-6 shrink-0 object-contain"
+            />
+            Flash Card Deletion Notice
           </h2>
           <p
             id="delete-flash-card-modal-description"
-            className="mt-3 text-sm leading-6 text-secondary-text"
+            className="mt-7 text-base leading-6 text-secondary-text"
           >
             Are you sure you want to delete this flash card? This action cannot
             be undone.
@@ -90,10 +87,15 @@ export default function DeleteFlashCardConfirmationModal({
         </div>
 
         {flashCard && (
-          <div className="mt-5 rounded border border-border bg-secondary-bg p-4">
-            <p className="line-clamp-3 text-sm font-medium leading-6 text-primary-text">
-              {flashCard.question}
+          <div className="mt-6">
+            <p className="mb-2 text-base font-medium text-primary-text">
+              Flash Card #
             </p>
+            <div className="min-h-32 rounded border border-border bg-secondary-bg p-4 sm:min-h-36">
+              <p className="line-clamp-5 text-sm font-medium leading-6 text-primary-text">
+                {flashCard.question}
+              </p>
+            </div>
           </div>
         )}
 
@@ -103,26 +105,26 @@ export default function DeleteFlashCardConfirmationModal({
           </p>
         )}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <button
+            type="submit"
+            disabled={isDeleting}
+            className="flex h-12 cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {isDeleting ? (
+              <LoaderCircle className="h-5 w-5 animate-spin" />
+            ) : (
+              "Yes, Continue"
+            )}
+          </button>
           <button
             ref={cancelButtonRef}
             type="button"
             onClick={() => closeWithAnimation(onClose)}
             disabled={isDeleting}
-            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-12 cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isDeleting}
-            className="flex h-11 cursor-pointer items-center justify-center rounded bg-red-600 text-sm font-semibold text-surface transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isDeleting ? (
-              <LoaderCircle className="h-5 w-5 animate-spin" />
-            ) : (
-              "Delete Flash Card"
-            )}
+            No, Cancel
           </button>
         </div>
       </form>

@@ -80,3 +80,8 @@
 - Question Bank: adding or editing a question from a specific non-PAES question list keeps its preselected game type and difficulty locked, and subject deletion uses the warning-notice confirmation design.
 - ABE Trivia: empty calendar cards use the compact Write Trivia action, while edit forms keep their Edit Trivia title, lock the original publish date, and use the reference-matched save and delete actions.
 - Manage Reviewees: table actions use reference-matched edit and resend icons, resend remains visible with status- and cooldown-aware native title tooltips, and the edit form hides the join date while presenting status and proof of payment in the updated layout.
+- ABE Trivia: creating trivia from an empty calendar date keeps the preselected publish date locked, while the global Create Trivia action keeps its date selectable.
+- Question Bank: selected correct-answer fields use the teal reference treatment, PAES forms opened from a subject list lock their preselected series, and question deletion uses the caution-icon notice design with teal confirmation actions.
+- Design System: confirmation notices share the caution artwork, teal confirmation action, and outlined cancel treatment; modal close icons use the shared error red on hover.
+- Reviewee Games: MCQ and flash-card countdowns, unavailable-content notices, flash-card deletion, and today’s trivia use the supplied reference layouts and artwork.
+- Authentication and App Branding: pages in `src/app/(auth)/auth/` use the centered bordered card layout, while the separate `/login` page retains its split-panel layout; visible ABE Review App wordmarks are replaced by the responsive ABEquip image alongside the existing brand icon.

@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
-import AuthBrand from "@/features/auth/components/AuthBrand";
+import AuthPageShell from "@/features/auth/components/AuthPageShell";
 import EmailNotRegistered from "@/features/auth/forgot-password/components/EmailNotRegistered";
 import { useForgotPassword } from "@/features/auth/forgot-password/hooks/useForgotPassword";
 
@@ -33,13 +33,7 @@ export default function ForgotPasswordPage() {
   ).padStart(2, "0");
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-secondary-bg px-6 py-10 text-black sm:px-10">
-      <section className="w-full max-w-xl">
-        <div className="mb-8 flex justify-center">
-          <AuthBrand />
-        </div>
-
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-border/60 sm:p-10">
+    <AuthPageShell>
           {isEmailNotRegistered ? (
             <EmailNotRegistered
               email={submittedEmail}
@@ -121,7 +115,7 @@ export default function ForgotPasswordPage() {
 
               <Link
                 href="/login"
-                className="mt-8 flex items-center gap-2 font-medium text-primary-text"
+                className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-sm border border-primary-accent font-medium text-primary-accent transition hover:bg-teal-50"
               >
                 <ArrowLeftIcon className="size-4" />
                 Back to Login
@@ -183,10 +177,10 @@ export default function ForgotPasswordPage() {
                 )}
               </form>
 
-              <div className="mt-8 flex justify-center">
+              <div className="mt-2 flex justify-center">
                 <Link
                   href="/login"
-                  className="flex items-center gap-2 font-medium text-primary-text"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-sm border border-primary-accent font-medium text-primary-accent transition hover:bg-teal-50"
                 >
                   <ArrowLeftIcon className="size-4" />
                   Back to Login
@@ -194,8 +188,6 @@ export default function ForgotPasswordPage() {
               </div>
             </>
           )}
-        </div>
-      </section>
-    </main>
+    </AuthPageShell>
   );
 }

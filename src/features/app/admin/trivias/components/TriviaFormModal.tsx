@@ -127,7 +127,7 @@ export default function TriviaFormModal({
               value={publishDate}
               min={todayDate}
               onChange={(event) => setPublishDate(event.target.value)}
-              disabled={isEditMode || isSaving}
+              disabled={request?.isPublishDateLocked === true || isSaving}
               required
               className="mt-2 h-[50px] w-full rounded border border-border bg-surface px-4 text-base font-normal text-slate-700 outline-none transition-colors focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             />

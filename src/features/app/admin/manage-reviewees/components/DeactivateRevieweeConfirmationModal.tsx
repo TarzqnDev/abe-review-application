@@ -1,4 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import type { RefObject } from "react";
 import { useDeactivateRevieweeConfirmationModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useDeactivateRevieweeConfirmationModal";
 
@@ -39,7 +40,7 @@ export const DeactivateRevieweeConfirmationModal = (
       <div
         ref={dialogRef}
         inert={!props.isOpen}
-        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
           props.isOpen
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -57,13 +58,20 @@ export const DeactivateRevieweeConfirmationModal = (
         <div className="pr-9">
           <h2
             id="deactivate-reviewee-title"
-            className="text-xl font-semibold text-primary-text"
+            className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            Deactivate Reviewee
+            <Image
+              src="/caution.png"
+              alt=""
+              width={24}
+              height={24}
+              className="h-6 w-6 object-contain"
+            />
+            Reviewee Deactivation Notice
           </h2>
           <p
             id="deactivate-reviewee-description"
-            className="mt-3 text-sm leading-6 text-secondary-text"
+            className="mt-7 text-base leading-6 text-secondary-text"
           >
             Are you sure you want to deactivate this reviewee? Once
             deactivated, this reviewee will no longer be able to access or use
@@ -73,19 +81,19 @@ export const DeactivateRevieweeConfirmationModal = (
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <button
+            type="button"
+            onClick={handleConfirm}
+            className="h-[50px] cursor-pointer rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark"
+          >
+            Yes, Continue
+          </button>
+          <button
             ref={cancelButtonRef}
             type="button"
             onClick={handleClose}
-            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent"
+            className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-secondary-bg"
           >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="h-11 cursor-pointer rounded bg-error text-sm font-semibold text-surface transition-opacity hover:opacity-90"
-          >
-            Deactivate
+            No, Cancel
           </button>
         </div>
       </div>

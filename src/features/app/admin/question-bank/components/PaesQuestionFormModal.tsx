@@ -21,6 +21,7 @@ type PaesQuestionFormData = {
 };
 
 type PaesQuestionFormModalProps = {
+  isSubjectLocked?: boolean;
   onClose: () => void;
   onSaved?: (subjectId: number) => Promise<void>;
   request: PaesQuestionFormRequest | null;
@@ -29,6 +30,7 @@ type PaesQuestionFormModalProps = {
 };
 
 export default function PaesQuestionFormModal({
+  isSubjectLocked = false,
   onClose,
   onSaved,
   request,
@@ -90,18 +92,20 @@ export default function PaesQuestionFormModal({
           <XMarkIcon className="h-7 w-7 text-secondary-text" />
         </button>
 
-        <div className="mb-6 border-b border-border pb-5">
+        <div className="mb-6">
           <h2 className="text-xl font-semibold text-primary-text">
             {isEditMode ? "Edit Question" : "Add Question"}
           </h2>
-          <p className="mt-2 text-base font-medium text-secondary-text">
-            {subjects.find(
-              (subject) => String(subject.id) === questionFormData.subjectId,
-            )?.name ?? "PAES Series"}
-          </p>
         </div>
 
         <form onSubmit={handleSaveQuestion} className="flex flex-col gap-5">
+          {isSubjectLocked && (
+            <input
+              type="hidden"
+              name="subjectId"
+              value={questionFormData.subjectId}
+            />
+          )}
           {isEditMode && (
             <input
               type="hidden"
@@ -116,10 +120,10 @@ export default function PaesQuestionFormModal({
             </label>
             <select
               id="paesSubjectId"
-              name="subjectId"
+              name={isSubjectLocked ? undefined : "subjectId"}
               value={questionFormData.subjectId}
               onChange={handleQuestionInput}
-              disabled={subjects.length === 0}
+              disabled={isSubjectLocked || subjects.length === 0}
               className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent disabled:cursor-not-allowed disabled:bg-secondary-bg"
             >
               {subjects.length === 0 && (

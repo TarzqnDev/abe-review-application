@@ -118,6 +118,7 @@ export const useAdminTrivias = () => {
   const openCreateTriviaModal = (initialPublishDate?: string) => {
     setFormModalRequest({
       initialPublishDate,
+      isPublishDateLocked: initialPublishDate !== undefined,
       mode: "create",
       requestId: crypto.randomUUID(),
       trivia: null,
@@ -126,6 +127,7 @@ export const useAdminTrivias = () => {
 
   const openEditTriviaModal = (trivia: AdminTrivia) => {
     setFormModalRequest({
+      isPublishDateLocked: true,
       mode: "edit",
       requestId: crypto.randomUUID(),
       trivia,

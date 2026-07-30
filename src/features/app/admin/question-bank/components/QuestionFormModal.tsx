@@ -51,7 +51,6 @@ export default function QuestionFormModal({
     questionFormData,
     questionFormError,
     questionFormMode,
-    selectedEditQuestion,
     selectedEditQuestionId,
   } = useQuestionFormModal({
     loadSubjectQuestions,
@@ -92,6 +91,7 @@ export default function QuestionFormModal({
           type="button"
           onClick={() => closeWithAnimation(handleCloseQuestionFormModal)}
           className="absolute top-9 right-9 cursor-pointer"
+          aria-label="Close question form"
         >
           <XMarkIcon className="h-7 w-7 text-secondary-text" />
         </button>
@@ -131,17 +131,6 @@ export default function QuestionFormModal({
                 value={questionFormData.difficulty}
               />
             </>
-          )}
-
-          {isEditMode && selectedEditQuestion && (
-            <div className="rounded border border-border bg-secondary-bg px-4 py-3">
-              <p className="text-sm font-semibold text-primary-text">
-                Editing selected question
-              </p>
-              <p className="mt-1 line-clamp-2 text-sm text-secondary-text">
-                {selectedEditQuestion.question_text}
-              </p>
-            </div>
           )}
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -206,42 +195,51 @@ export default function QuestionFormModal({
               Select the correct answer
             </p>
             <div className="grid gap-5 md:grid-cols-2">
-              {[1, 2, 3, 4].map((optionNumber) => (
-                <div key={optionNumber} className="flex flex-col gap-2">
-                  <label
-                    htmlFor={`option${optionNumber}`}
-                    className="text-base font-semibold"
-                  >
-                    Option {QUESTION_BANK_OPTION_LABELS[optionNumber - 1]}
-                  </label>
-                  <div className="flex h-[50px] items-center gap-3 rounded border border-border bg-surface px-3 focus-within:border-primary-accent">
-                    <input
-                      type="radio"
-                      name="correctOptionSortOrder"
-                      value={optionNumber}
-                      checked={
-                        questionFormData.correctOptionSortOrder ===
-                        String(optionNumber)
-                      }
-                      onChange={handleQuestionInput}
-                      className="h-4 w-4 shrink-0 accent-primary-accent"
-                    />
-                    <input
-                      id={`option${optionNumber}`}
-                      type="text"
-                      name={`option${optionNumber}`}
-                      value={
-                        questionFormData[
-                          `option${optionNumber}` as keyof QuestionFormData
-                        ]
-                      }
-                      onChange={handleQuestionInput}
-                      maxLength={255}
-                      className="min-w-0 flex-1 text-sm outline-none placeholder:text-slate-400"
-                    />
+              {[1, 2, 3, 4].map((optionNumber) => {
+                const isSelected =
+                  questionFormData.correctOptionSortOrder ===
+                  String(optionNumber);
+
+                return (
+                  <div key={optionNumber} className="flex flex-col gap-2">
+                    <label
+                      htmlFor={`option${optionNumber}`}
+                      className="text-base font-semibold"
+                    >
+                      Option {QUESTION_BANK_OPTION_LABELS[optionNumber - 1]}
+                    </label>
+                    <div
+                      className={`flex h-[64px] items-center gap-3 rounded border px-3 transition-colors focus-within:border-primary-accent ${
+                        isSelected
+                          ? "border-primary-accent bg-[#E0F2F1]"
+                          : "border-border bg-surface"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="correctOptionSortOrder"
+                        value={optionNumber}
+                        checked={isSelected}
+                        onChange={handleQuestionInput}
+                        className="h-4 w-4 shrink-0 accent-primary-accent"
+                      />
+                      <input
+                        id={`option${optionNumber}`}
+                        type="text"
+                        name={`option${optionNumber}`}
+                        value={
+                          questionFormData[
+                            `option${optionNumber}` as keyof QuestionFormData
+                          ]
+                        }
+                        onChange={handleQuestionInput}
+                        maxLength={255}
+                        className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

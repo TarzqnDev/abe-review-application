@@ -1,7 +1,4 @@
-import {
-  ExclamationTriangleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { useNoFlashCardsModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useNoFlashCardsModal";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 
@@ -19,7 +16,7 @@ export default function NoFlashCardsModal(props: NoFlashCardsModalProps) {
 
   return (
     <QuizModalShell
-      className="max-w-[430px] p-7 sm:p-8"
+      className="max-w-[530px] px-6 py-9 sm:px-10 sm:py-10"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
@@ -28,29 +25,31 @@ export default function NoFlashCardsModal(props: NoFlashCardsModalProps) {
       overlayClassName="bg-slate-950/30"
       zIndexClassName="z-[70]"
     >
-      <button
-        ref={closeButtonRef}
-        type="button"
-        onClick={props.onClose}
-        className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
-        aria-label="Close no flash cards notice"
-      >
-        <XMarkIcon className="h-6 w-6" />
-      </button>
-
-      <div className="pr-8">
-        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-amber-50">
-          <ExclamationTriangleIcon className="h-6 w-6 text-amber-600" />
-        </div>
+      <div>
         <h2
           id="no-flash-cards-title"
-          className="text-xl font-semibold text-primary-text"
+          className="flex items-center gap-2 text-xl font-semibold text-primary-text"
         >
+          <Image
+            src="/notify.png"
+            alt=""
+            width={24}
+            height={24}
+            className="h-6 w-6 shrink-0 object-contain"
+          />
           No Flash Cards Available
         </h2>
-        <p className="mt-3 text-sm leading-6 text-secondary-text">
+        <p className="mt-5 text-base leading-6 text-secondary-text">
           {props.message}
         </p>
+        <button
+          ref={closeButtonRef}
+          type="button"
+          onClick={props.onClose}
+          className="mt-5 h-12 w-full cursor-pointer rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
+        >
+          Try Another Game
+        </button>
       </div>
     </QuizModalShell>
   );

@@ -19,3 +19,8 @@
 body {
   font-family: var(--font-poppins), sans-serif;
 }
+
+button[aria-label*="close" i]:not([tabindex="-1"]):hover,
+button[aria-label*="close" i]:not([tabindex="-1"]):hover svg {
+  color: var(--color-error) !important;
+}

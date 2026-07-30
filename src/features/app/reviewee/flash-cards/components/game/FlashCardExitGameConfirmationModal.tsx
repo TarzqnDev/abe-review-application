@@ -1,4 +1,5 @@
-import { LoaderCircle, TriangleAlert } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import { useFlashCardExitGameConfirmationModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useFlashCardExitGameConfirmationModal";
 import type { FlashCardSummary } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
@@ -33,9 +34,12 @@ export default function FlashCardExitGameConfirmationModal(
       zIndexClassName="z-[70]"
     >
       <div className="flex items-center gap-2.5">
-        <TriangleAlert
-          aria-hidden="true"
-          className="h-5 w-5 shrink-0 fill-yellow-300 text-primary-text"
+        <Image
+          src="/caution.png"
+          alt=""
+          width={20}
+          height={20}
+          className="h-5 w-5 shrink-0 object-contain"
         />
         <h2
           id="exit-flash-card-game-title"

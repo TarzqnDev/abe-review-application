@@ -2,6 +2,7 @@ import type { AdminSubject } from "@/features/app/admin/question-bank/actions/fe
 import type { AdminQuestion } from "@/features/app/admin/question-bank/actions/fetch-subject-question-sets.action";
 import { useDeleteQuestionConfirmationModal } from "@/features/app/admin/question-bank/hooks/modals/useDeleteQuestionConfirmationModal";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
+import Image from "next/image";
 import { LoaderCircle } from "lucide-react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -9,6 +10,7 @@ type DeleteQuestionConfirmationModalProps = {
   loadSubjectQuestions: (subjectId: number) => Promise<void>;
   onClose: () => void;
   question: AdminQuestion | null;
+  questionNumber: number;
   selectedSubject: AdminSubject | null;
   showSuccessMessage: (message: string) => void;
 };
@@ -17,6 +19,7 @@ export default function DeleteQuestionConfirmationModal({
   loadSubjectQuestions,
   onClose,
   question,
+  questionNumber,
   selectedSubject,
   showSuccessMessage,
 }: DeleteQuestionConfirmationModalProps) {
@@ -47,7 +50,7 @@ export default function DeleteQuestionConfirmationModal({
 
       <form
         onSubmit={handleDeleteQuestion}
-        className={`relative w-full max-w-[430px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
@@ -56,9 +59,10 @@ export default function DeleteQuestionConfirmationModal({
         <button
           type="button"
           onClick={() => closeWithAnimation(onClose)}
-          className="absolute top-6 right-6 cursor-pointer"
+          className="absolute top-6 right-6 cursor-pointer rounded text-secondary-text transition-colors hover:text-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
+          aria-label="Close question deletion notice"
         >
-          <XMarkIcon className="h-6 w-6 text-secondary-text" />
+          <XMarkIcon className="h-6 w-6" />
         </button>
 
         <input type="hidden" name="questionId" value={question?.id ?? ""} />
@@ -68,21 +72,36 @@ export default function DeleteQuestionConfirmationModal({
           value={selectedSubject?.id ?? ""}
         />
 
-        <div className="pr-9">
+        <div className="flex items-center gap-3 pr-9">
+          <Image
+            src="/caution.png"
+            alt=""
+            width={24}
+            height={24}
+            className="h-6 w-6 object-contain"
+          />
           <h2 className="text-xl font-semibold text-primary-text">
-            Delete Question
+            Question Deletion Notice
           </h2>
-          <p className="mt-3 text-sm leading-6 text-secondary-text">
+        </div>
+
+        <div className="mt-7">
+          <p className="text-base leading-6 text-secondary-text">
             Are you sure you want to delete this question? This action cannot be
             undone.
           </p>
         </div>
 
         {question && (
-          <div className="mt-5 rounded border border-border bg-secondary-bg p-4">
-            <p className="line-clamp-3 text-sm font-medium leading-6 text-primary-text">
-              {question.question_text}
+          <div className="mt-6">
+            <p className="mb-2 text-base font-medium text-primary-text">
+              Question # {questionNumber}
             </p>
+            <div className="min-h-36 rounded border border-border bg-secondary-bg p-4">
+              <p className="whitespace-pre-wrap text-sm leading-6 text-primary-text">
+                {question.question_text}
+              </p>
+            </div>
           </div>
         )}
 
@@ -90,24 +109,24 @@ export default function DeleteQuestionConfirmationModal({
           <p className="mt-4 text-sm text-error">{deleteQuestionError}</p>
         )}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <button
-            type="button"
-            onClick={() => closeWithAnimation(onClose)}
-            className="h-11 cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent"
-          >
-            Cancel
-          </button>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <button
             type="submit"
             disabled={isDeletingQuestion}
-            className="flex h-11 cursor-pointer items-center justify-center rounded bg-primary-accent text-sm font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isDeletingQuestion ? (
               <LoaderCircle className="animate-spin" />
             ) : (
-              "Delete Question"
+              "Yes, Continue"
             )}
+          </button>
+          <button
+            type="button"
+            onClick={() => closeWithAnimation(onClose)}
+            className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-medium text-primary-accent transition-colors hover:bg-teal-50"
+          >
+            No, Cancel
           </button>
         </div>
       </form>

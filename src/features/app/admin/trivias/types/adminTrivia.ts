@@ -8,6 +8,7 @@ export type AdminTrivia = {
 
 export type TriviaFormModalRequest = {
   initialPublishDate?: string;
+  isPublishDateLocked: boolean;
   mode: "create" | "edit";
   requestId: string;
   trivia: AdminTrivia | null;

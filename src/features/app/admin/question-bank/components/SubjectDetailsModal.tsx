@@ -70,6 +70,7 @@ export default function SubjectDetailsModal({
             type="button"
             onClick={() => closeWithAnimation(handleCloseSubjectDetails)}
             className="absolute top-10 right-9 cursor-pointer"
+            aria-label="Close subject details"
           >
             <XMarkIcon className="h-7 w-7 text-secondary-text" />
           </button>
