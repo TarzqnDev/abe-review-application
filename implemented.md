@@ -85,3 +85,4 @@
 - Design System: confirmation notices share the caution artwork, teal confirmation action, and outlined cancel treatment; modal close icons use the shared error red on hover.
 - Reviewee Games: MCQ and flash-card countdowns, unavailable-content notices, flash-card deletion, and today’s trivia use the supplied reference layouts and artwork.
 - Authentication and App Branding: pages in `src/app/(auth)/auth/` use the centered bordered card layout, while the separate `/login` page retains its split-panel layout; visible ABE Review App wordmarks are replaced by the responsive ABEquip image alongside the existing brand icon.
+- Reviewee MCQ Quiz: the PAES game card uses its dedicated supplied target-and-check-marks artwork.

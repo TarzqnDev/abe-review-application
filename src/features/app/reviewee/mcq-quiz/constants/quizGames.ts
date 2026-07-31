@@ -2,6 +2,7 @@ import type { StaticImageData } from "next/image";
 import type { QuizGameType } from "@/features/app/reviewee/mcq-quiz/types/quiz";
 import AbSolutionCardImage from "@/public/ab-solution-card-image.png";
 import GuessTheWordCardImage from "@/public/guess-the-word-card-image.png";
+import PaesCardImage from "@/public/paes-card-image.png";
 import SituationshipCardImage from "@/public/situationship-card-image.png";
 
 export type QuizGame = {
@@ -38,7 +39,7 @@ export const quizGames: QuizGame[] = [
     title: "PAES",
     description: "Answer questions using PAES standards.",
     gameType: "PAES",
-    image: AbSolutionCardImage,
-    imageAlt: "Engineering problem solving illustrations for the PAES quiz",
+    image: PaesCardImage,
+    imageAlt: "Wooden check marks surrounding a target for the PAES quiz",
   },
 ];
