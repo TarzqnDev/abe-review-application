@@ -44,7 +44,7 @@
 - MCQ and flash-card game summaries now use the score-focused reference layout with a segmented result donut, performance feedback, answered and duration cards, and compact result totals while preserving early-exit results and existing return actions.
 - MCQ and flash-card game summaries include completion headers with mode-specific titles and session metadata.
 - MCQ and flash-card games use mode-specific exit notices with responsive reference-matched confirmation actions.
-- Application metadata now uses the product title "ABE Review App" and the description "Practice and track your progress with MCQ quizzes and flash cards."
+- Application metadata now uses the product title "ABEquip" and the description "A learning platform designed to help you grow at your own pace through quizzes, flashcards, and reviews."
 - The shared admin and reviewee navbar uses a compact teal logout popover matching the supplied reference.
 - Application modals use stack-aware shared body scroll locking, while nested modal flows suspend their parent dialog's accessibility and focus handling until the child closes.
 - MCQ and flash-card games continue their authoritative timing and gameplay transitions behind exit confirmations while the underlying game dialog remains noninteractive and accessibility-suspended.

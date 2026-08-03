@@ -5,8 +5,9 @@ import { createSupabaseServerComponentClient } from "@/lib/supabase/server-compo
 import { AuthProvider } from "@/providers/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "ABE Review App",
-  description: "Practice and track your progress with MCQ quizzes and flash cards.",
+  title: "ABEquip",
+  description:
+    "A learning platform designed to help you grow at your own pace through quizzes, flashcards, and reviews.",
 };
 
 const poppins = Poppins({
