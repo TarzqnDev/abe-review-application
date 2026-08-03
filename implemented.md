@@ -87,3 +87,6 @@
 - Authentication and App Branding: pages in `src/app/(auth)/auth/` use the centered bordered card layout, while the separate `/login` page retains its split-panel layout; visible ABE Review App wordmarks are replaced by the responsive ABEquip image alongside the existing brand icon.
 - Reviewee MCQ Quiz: the PAES game card uses its dedicated supplied target-and-check-marks artwork.
 - Authorization: unauthorized dashboard access now shows a responsive, branded access-denied page with guidance and a return-to-dashboard action.
+- App Layout: below the `md` breakpoint, admin and reviewee dashboards use an animated hamburger navigation drawer containing the role-specific links, account identity, role, and logout action; the existing sidebar and profile menu remain unchanged on larger screens.
+- Authentication: below the `lg` breakpoint, the login page uses a full-width open-book hero with overlaid ABEquip branding and a raised rounded form surface, while preserving the existing split-panel desktop layout.
+- Mobile Modals: below the `sm` breakpoint, scrollable reviewee, question, PAES question, MCQ game, and flash-card game forms keep their primary submit action anchored above the modal bottom while their content scrolls with dedicated bottom clearance; `sm` and larger layouts retain their existing in-flow actions.

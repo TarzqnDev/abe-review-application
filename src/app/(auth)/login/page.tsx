@@ -5,6 +5,7 @@ import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import AuthBrand from "@/features/auth/components/AuthBrand";
 import AuthImagePanel from "@/features/auth/components/AuthImagePanel";
+import MobileLoginHero from "@/features/auth/login/components/MobileLoginHero";
 import { useLogin } from "@/features/auth/login/hooks/useLogin";
 
 export default function LoginPage() {
@@ -19,25 +20,28 @@ export default function LoginPage() {
   } = useLogin();
 
   return (
-    <main className="flex min-h-screen bg-surface">
+    <main className="flex min-h-screen flex-col bg-surface lg:flex-row">
+      <MobileLoginHero />
       <AuthImagePanel />
 
-      <section className="flex min-h-screen w-full justify-center px-6 py-8 text-black sm:px-10 lg:w-2/5 lg:px-12 lg:py-16 xl:px-20">
+      <section className="relative z-10 -mt-16 flex min-h-[calc(100dvh-11rem)] w-full justify-center rounded-t-[4rem] bg-surface px-6 pb-10 pt-16 text-black sm:-mt-20 sm:min-h-[calc(100dvh-13rem)] sm:rounded-t-[5rem] sm:px-10 sm:pb-12 sm:pt-20 lg:mt-0 lg:min-h-screen lg:w-2/5 lg:rounded-none lg:px-12 lg:py-16 xl:px-20">
         <div className="flex w-full max-w-md flex-col">
-          <AuthBrand />
+          <div className="hidden lg:block">
+            <AuthBrand />
+          </div>
 
-          <div className="my-auto py-14">
-            <div className="mb-10">
-              <h1 className="text-3xl font-semibold tracking-tight text-primary-text">
+          <div className="my-auto py-4 sm:py-8 lg:py-14">
+            <div className="mb-8 sm:mb-10">
+              <h1 className="text-3xl font-semibold tracking-tight text-primary-text sm:text-4xl lg:text-3xl">
                 Grow Your Knowledge
               </h1>
-              <p className="mt-2 max-w-md text-sm leading-6 text-secondary-text sm:text-base">
+              <p className="mt-3 max-w-md text-sm leading-6 text-secondary-text sm:text-base lg:mt-2">
                 A learning platform designed to help you grow at your own pace
                 through quizzes, flashcards, and reviews.
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="flex flex-col gap-5">
+            <form onSubmit={handleLogin} className="flex flex-col gap-5 sm:gap-6 lg:gap-5">
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="font-medium">
                   Email Address
@@ -49,7 +53,7 @@ export default function LoginPage() {
                   defaultValue={formData.email}
                   onChange={handleUserInput}
                   autoComplete="email"
-                  className="h-12 w-full rounded-sm border border-border px-4 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
+                  className="h-13 w-full rounded-sm border border-border px-4 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15 lg:h-12"
                 />
               </div>
 
@@ -65,7 +69,7 @@ export default function LoginPage() {
                     defaultValue={formData.password}
                     onChange={handleUserInput}
                     autoComplete="current-password"
-                    className="h-12 w-full rounded-sm border border-border px-4 pr-12 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
+                    className="h-13 w-full rounded-sm border border-border px-4 pr-12 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15 lg:h-12"
                   />
                   <button
                     type="button"
@@ -95,7 +99,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoggingin}
-                className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
+                className="mt-1 flex h-13 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70 lg:h-12"
               >
                 {isLoggingin ? (
                   <LoaderCircle className="animate-spin" />

@@ -49,11 +49,12 @@ export const UserFormModal = (props: UserFormModalProps) => {
       >
         <div
           ref={dialogRef}
-          className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-y-auto rounded-lg bg-surface px-9 py-10 shadow-xl transition-all duration-300 sm:px-9 ${
+          className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-hidden rounded-lg bg-surface shadow-xl transition-all duration-300 sm:overflow-y-auto sm:px-9 sm:py-10 ${
             props.isOpen ? "translate-y-0 scale-100" : "-translate-y-3 scale-95"
           }`}
         >
-        <div className="mb-8 flex items-center justify-between">
+          <div className="max-h-[calc(100vh-3rem)] overflow-y-auto px-6 pt-8 pb-28 sm:contents">
+            <div className="mb-8 flex items-center justify-between">
           <h2
             id="user-form-title"
             className="text-xl font-semibold text-primary-text"
@@ -71,7 +72,11 @@ export const UserFormModal = (props: UserFormModalProps) => {
           </button>
         </div>
 
-        <form onSubmit={modal.handleSubmit} className="space-y-5">
+            <form
+              id="user-form"
+              onSubmit={modal.handleSubmit}
+              className="space-y-5"
+            >
           <label className="block text-base font-medium text-primary-text">
             Full Name
             <input
@@ -256,6 +261,27 @@ export const UserFormModal = (props: UserFormModalProps) => {
           <button
             type="submit"
             disabled={modal.isSubmitting}
+            className="hidden h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent font-medium text-surface hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:flex"
+          >
+            {modal.isSubmitting ? (
+              <LoaderCircle
+                className="h-5 w-5 animate-spin"
+                aria-label={modal.isEditing ? "Saving" : "Registering"}
+              />
+            ) : modal.isEditing ? (
+              "Save Changes"
+            ) : (
+              "Register User"
+            )}
+          </button>
+            </form>
+          </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-surface px-6 pt-3 pb-6 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:hidden">
+          <button
+            type="submit"
+            form="user-form"
+            disabled={modal.isSubmitting}
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent font-medium text-surface hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
             {modal.isSubmitting ? (
@@ -269,7 +295,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
               "Register User"
             )}
           </button>
-        </form>
+        </div>
         </div>
       </div>
 

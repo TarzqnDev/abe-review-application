@@ -54,7 +54,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
   return (
     <>
       <QuizModalShell
-        className="max-h-[calc(100dvh-2rem)] max-w-[935px] overflow-y-auto p-5 sm:p-8 lg:p-10"
+        className="max-h-[calc(100dvh-2rem)] max-w-[935px] overflow-hidden sm:overflow-y-auto sm:p-8 lg:p-10"
         dialogRef={dialogRef}
         isInert={isExitConfirmationOpen}
         isOpen={props.isOpen}
@@ -70,6 +70,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
           <XMarkIcon className="h-7 w-7" />
         </button>
 
+        <div className="max-h-[calc(100dvh-2rem)] overflow-y-auto p-5 pb-28 sm:contents">
         <header className="border-b border-border pb-5 pr-10">
           <div className="flex flex-wrap items-center gap-2">
             <h2
@@ -194,7 +195,23 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             disabled={
               selectedOptionId === null || phase !== "answering"
             }
-            className="mt-5 flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 hidden h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:flex"
+          >
+            {phase === "checking"
+              ? "Checking Answer..."
+              : phase === "transitioning"
+                ? "Loading Next Question..."
+                : "Submit Answer"}
+          </button>
+        </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-surface px-5 pt-3 pb-5 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:hidden">
+          <button
+            type="button"
+            onClick={handleSubmitAnswer}
+            disabled={selectedOptionId === null || phase !== "answering"}
+            className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {phase === "checking"
               ? "Checking Answer..."

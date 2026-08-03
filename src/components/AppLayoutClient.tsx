@@ -21,7 +21,7 @@ export default function AppLayoutClient({
         <AuthenticationSuccessNotice />
       </Suspense>
       <Navbar role={role} />
-      <div className="mx-auto grid min-h-0 w-full max-w-[1200px] flex-1 grid-cols-1 grid-rows-[auto_minmax(0,1fr)] gap-10 px-5 md:grid-cols-[250px_1fr] md:grid-rows-1">
+      <div className="mx-auto grid min-h-0 w-full max-w-[1200px] flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)] px-5 md:grid-cols-[250px_1fr] md:grid-rows-1 md:gap-10">
         <Sidebar role={role} />
         <main
           className="min-h-0 min-w-0 overflow-y-auto py-10"

@@ -81,13 +81,14 @@ export default function QuestionFormModal({
       ></div>
 
       <div
-        className={`relative max-h-[88vh] w-full max-w-[760px] overflow-y-auto rounded-md bg-surface p-9 shadow-xl transition-all duration-300 ease-out ${
+        className={`relative max-h-[88vh] w-full max-w-[760px] overflow-hidden rounded-md bg-surface shadow-xl transition-all duration-300 ease-out sm:overflow-y-auto sm:p-9 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
       >
-        <button
+        <div className="max-h-[88vh] overflow-y-auto p-6 pb-28 sm:contents">
+          <button
           type="button"
           onClick={() => closeWithAnimation(handleCloseQuestionFormModal)}
           className="absolute top-9 right-9 cursor-pointer"
@@ -105,7 +106,11 @@ export default function QuestionFormModal({
           </p>
         </div>
 
-        <form onSubmit={handleSaveQuestion} className="flex flex-col gap-5">
+        <form
+          id="question-form"
+          onSubmit={handleSaveQuestion}
+          className="flex flex-col gap-5"
+        >
           <input
             type="hidden"
             name="subjectId"
@@ -246,7 +251,7 @@ export default function QuestionFormModal({
           <button
             type="submit"
             disabled={isSavingQuestion}
-            className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
+            className="hidden h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70 sm:flex"
           >
             {isSavingQuestion ? (
               <LoaderCircle className="animate-spin" />
@@ -260,7 +265,25 @@ export default function QuestionFormModal({
           {questionFormError && (
             <p className="text-sm text-error">{questionFormError}</p>
           )}
-        </form>
+          </form>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-surface px-6 pt-3 pb-6 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:hidden">
+          <button
+            type="submit"
+            form="question-form"
+            disabled={isSavingQuestion}
+            className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {isSavingQuestion ? (
+              <LoaderCircle className="animate-spin" />
+            ) : isEditMode ? (
+              "Save Question"
+            ) : (
+              "Create Question"
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

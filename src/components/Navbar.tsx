@@ -4,6 +4,7 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
 import type { AppRole } from "@/features/app/layout/types/appRole";
+import MobileNavigation from "@/features/app/navbar/components/MobileNavigation";
 import { useNavbar } from "@/features/app/navbar/hooks/useNavbar";
 import AbequipLogo from "@/public/abequip-logo.png";
 import BrandIcon from "@/public/logo-v2.png";
@@ -41,7 +42,7 @@ export default function Navbar({ role }: NavbarProps) {
           />
         </div>
 
-        <div className="relative flex items-center gap-3">
+        <div className="relative hidden items-center gap-3 md:flex">
           <button
             type="button"
             className="flex cursor-pointer items-center gap-3 text-right"
@@ -76,6 +77,13 @@ export default function Navbar({ role }: NavbarProps) {
             </div>
           )}
         </div>
+
+        <MobileNavigation
+          email={email}
+          onLogout={handleLogout}
+          role={role}
+          roleLabel={roleLabel}
+        />
       </div>
     </header>
   );
