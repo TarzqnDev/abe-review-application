@@ -17,7 +17,7 @@ export default function SuccessBanner({
       role="status"
       aria-live="polite"
     >
-      <p className="rounded-lg border-2 border-primary-accent bg-primary-accent/10 px-5 py-4 text-center font-semibold text-primary-accent">
+      <p className="rounded-lg border-2 border-primary-accent bg-success-bg px-5 py-4 text-center font-semibold text-primary-accent">
         {message}
       </p>
     </div>

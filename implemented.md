@@ -76,7 +76,7 @@
 - ABE Trivia: Flash Cards settles its deck and trivia results independently within the coordinated initial request, while later deck retries remain deck-only and trivia retries or Asia/Manila date rollovers remain trivia-only.
 - Reviewee MCQ Quiz: the initial game-card placeholders mirror the loaded card layout and use the shared shimmer skeleton without displaying a Today's Trivia placeholder.
 - Reviewee MCQ Quiz: the game modal uses the reference header and labeled right and wrong options during answer reveal, while replacing the paused timer with the original correct or incorrect result greeting.
-- Design System: transient success banners share the reference-matched pale teal background, teal outline, and centered teal message treatment.
+- Design System: transient success banners share the reference-matched opaque pale teal background, teal outline, and centered teal message treatment.
 - Question Bank: adding or editing a question from a specific non-PAES question list keeps its preselected game type and difficulty locked, and subject deletion uses the warning-notice confirmation design.
 - ABE Trivia: empty calendar cards use the compact Write Trivia action, while edit forms keep their Edit Trivia title, lock the original publish date, and use the reference-matched save and delete actions.
 - Manage Reviewees: table actions use reference-matched edit and resend icons, resend remains visible with status- and cooldown-aware native title tooltips, and the edit form hides the join date while presenting status and proof of payment in the updated layout.
