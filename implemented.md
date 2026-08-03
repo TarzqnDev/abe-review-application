@@ -91,3 +91,4 @@
 - Authentication: below the `lg` breakpoint, the login page uses a full-width open-book hero with overlaid ABEquip branding and a raised rounded form surface, while preserving the existing split-panel desktop layout.
 - Mobile Modals: below the `sm` breakpoint, scrollable reviewee, question, PAES question, MCQ game, and flash-card game forms keep their primary submit action anchored above the modal bottom while their content scrolls with dedicated bottom clearance; `sm` and larger layouts retain their existing in-flow actions.
 - PAES Series: each newly prepared PAES quiz question allows 15 seconds for an answer while preserving historical 60-second sessions.
+- Reviewee Games: MCQ and flash-card countdowns and final critical seconds use a softened race-inspired standard cue; only countdown-modal loading uses its distinct fourth start cue after one, while perfect results pair reduced-motion-aware confetti with the supplied kids' “Yehey!” sound remixed with applause.

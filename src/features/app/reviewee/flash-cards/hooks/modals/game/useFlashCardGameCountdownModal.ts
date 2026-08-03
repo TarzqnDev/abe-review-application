@@ -6,6 +6,7 @@ import type {
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 type UseFlashCardGameCountdownModalOptions = {
   countdownDetails: FlashCardCountdownDetails | null;
@@ -27,10 +28,27 @@ export const useFlashCardGameCountdownModal = ({
 }: UseFlashCardGameCountdownModalOptions) => {
   const actionInProgressRef = useRef(false);
   const cancelledRef = useRef(false);
+  const lastPlayedCountdownRef = useRef<number | null>(null);
   const [countdown, setCountdown] = useState(3);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState("");
   const modalAccessibility = useQuizModalAccessibility({ isOpen });
+  const { playCountdownCue, playCountdownStartCue } = useGameSounds();
+
+  useEffect(() => {
+    if (!isOpen) {
+      lastPlayedCountdownRef.current = null;
+      return;
+    }
+
+    if (
+      countdown > 0 &&
+      lastPlayedCountdownRef.current !== countdown
+    ) {
+      lastPlayedCountdownRef.current = countdown;
+      playCountdownCue();
+    }
+  }, [countdown, isOpen, playCountdownCue]);
 
   const beginStart = useCallback(async () => {
     if (
@@ -43,7 +61,9 @@ export const useFlashCardGameCountdownModal = ({
 
     actionInProgressRef.current = true;
     setError("");
+    setCountdown(0);
     setIsStarting(true);
+    playCountdownStartCue();
     const result = await startFlashCardSessionAfterCountdown({
       areaId: countdownDetails.areaId,
     });
@@ -67,7 +87,12 @@ export const useFlashCardGameCountdownModal = ({
     }
 
     onStarted(result.preparedSession, result.timing);
-  }, [countdownDetails, onNoFlashCards, onStarted]);
+  }, [
+    countdownDetails,
+    onNoFlashCards,
+    onStarted,
+    playCountdownStartCue,
+  ]);
 
   useEffect(() => {
     if (!isOpen || !countdownDetails) return;

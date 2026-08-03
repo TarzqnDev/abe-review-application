@@ -10,6 +10,7 @@ import type {
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 export type FlashCardGamePhase =
   | "answering"
@@ -43,6 +44,7 @@ export const useFlashCardGameModal = ({
   const isActionInProgressRef = useRef(false);
   const isSessionActiveRef = useRef(false);
   const isTimingReadyRef = useRef(false);
+  const lastPlayedCriticalTimerRef = useRef("");
   const timeoutRecordedRef = useRef(false);
   const [currentTiming, setCurrentTiming] =
     useState<FlashCardTiming | null>(null);
@@ -57,6 +59,7 @@ export const useFlashCardGameModal = ({
   const [isExitConfirmationOpen, setIsExitConfirmationOpen] = useState(false);
   const [isFlashCardVisible, setIsFlashCardVisible] = useState(true);
   const [retryVersion, setRetryVersion] = useState(0);
+  const { playCountdownCue } = useGameSounds();
 
   const handleRequestClose = useCallback(() => {
     if (isExitConfirmationOpen) return;
@@ -132,6 +135,30 @@ export const useFlashCardGameModal = ({
     const focusFrame = requestAnimationFrame(() => answerInputRef.current?.focus());
     return () => cancelAnimationFrame(focusFrame);
   }, [currentTiming, isFlashCardVisible, isOpen, phase]);
+
+  useEffect(() => {
+    if (
+      !isOpen ||
+      phase !== "answering" ||
+      !currentTiming ||
+      remainingSeconds < 1 ||
+      remainingSeconds > 3
+    ) {
+      return;
+    }
+
+    const criticalTimerKey = `${currentTiming.sessionFlashCardId}:${remainingSeconds}`;
+    if (lastPlayedCriticalTimerRef.current === criticalTimerKey) return;
+
+    lastPlayedCriticalTimerRef.current = criticalTimerKey;
+    playCountdownCue();
+  }, [
+    currentTiming,
+    isOpen,
+    phase,
+    playCountdownCue,
+    remainingSeconds,
+  ]);
 
   const advanceToNextFlashCard = useCallback(
     async (fallbackPhase: "result" | "timeoutHold") => {

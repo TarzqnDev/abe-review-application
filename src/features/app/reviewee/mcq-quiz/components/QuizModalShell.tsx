@@ -10,6 +10,7 @@ type QuizModalShellProps = {
   labelledBy: string;
   onBackdropMouseDown?: React.MouseEventHandler<HTMLDivElement>;
   overlayClassName?: string;
+  underlay?: ReactNode;
   zIndexClassName?: string;
 };
 
@@ -23,6 +24,7 @@ export default function QuizModalShell({
   labelledBy,
   onBackdropMouseDown,
   overlayClassName = "bg-slate-950/45",
+  underlay,
   zIndexClassName = "z-50",
 }: QuizModalShellProps) {
   return (
@@ -39,10 +41,15 @@ export default function QuizModalShell({
       aria-hidden={!isOpen || isInert}
       inert={isInert ? true : undefined}
     >
+      {underlay && (
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          {underlay}
+        </div>
+      )}
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className={`relative w-full rounded-lg bg-surface shadow-xl transition-all duration-300 ease-out outline-none motion-reduce:transform-none motion-reduce:transition-none ${
+        className={`relative z-10 w-full rounded-lg bg-surface shadow-xl transition-all duration-300 ease-out outline-none motion-reduce:transform-none motion-reduce:transition-none ${
           isVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"

@@ -1,4 +1,5 @@
 import GameSummaryHeader from "@/features/app/reviewee/components/GameSummaryHeader";
+import GameConfetti from "@/components/ui/GameConfetti";
 import { useFlashCardGameSummaryModal } from "@/features/app/reviewee/flash-cards/hooks/modals/game/useFlashCardGameSummaryModal";
 import type { FlashCardSummary } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
@@ -16,6 +17,7 @@ export default function FlashCardGameSummaryModal(
     closeButtonRef,
     donutBackground,
     duration,
+    isPerfectResult,
     modalAccessibility,
     performanceMessage,
     scorePercentage,
@@ -31,6 +33,7 @@ export default function FlashCardGameSummaryModal(
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="flash-card-game-summary-title"
+      underlay={isPerfectResult ? <GameConfetti /> : undefined}
     >
       <GameSummaryHeader
         metadata={props.summary.areaName}

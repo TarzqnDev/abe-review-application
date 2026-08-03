@@ -4,6 +4,7 @@ import { revealQuizAnswer } from "@/features/app/reviewee/mcq-quiz/actions/revea
 import { submitQuizAnswer } from "@/features/app/reviewee/mcq-quiz/actions/submit-quiz-answer.action";
 import { timeoutQuizQuestion } from "@/features/app/reviewee/mcq-quiz/actions/timeout-quiz-question.action";
 import { useQuizModalAccessibility } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizModalAccessibility";
+import { useGameSounds } from "@/hooks/useGameSounds";
 import type {
   PreparedQuizSession,
   QuizAnswerReveal,
@@ -43,6 +44,7 @@ export const useQuizGameModal = ({
   const isSessionActiveRef = useRef(false);
   const isTimingReadyRef = useRef(false);
   const timeoutRecordedRef = useRef(false);
+  const lastCriticalCueRef = useRef<number | null>(null);
   const [currentTiming, setCurrentTiming] =
     useState<QuizQuestionTiming | null>(null);
   const [phase, setPhase] = useState<QuizQuestionPhase>("answering");
@@ -57,6 +59,7 @@ export const useQuizGameModal = ({
   const [isExitConfirmationOpen, setIsExitConfirmationOpen] = useState(false);
   const [isQuestionVisible, setIsQuestionVisible] = useState(true);
   const [retryVersion, setRetryVersion] = useState(0);
+  const { playCountdownCue } = useGameSounds();
 
   const handleRequestClose = useCallback(() => {
     if (isExitConfirmationOpen) return;
@@ -88,6 +91,7 @@ export const useQuizGameModal = ({
         performance.now() + Math.max(0, serverDeadline - serverNow);
       phaseDeadlineRef.current = 0;
       timeoutRecordedRef.current = false;
+      lastCriticalCueRef.current = null;
       isTimingReadyRef.current = true;
       setCurrentTiming(timing);
       setRemainingSeconds(preparedSession?.timerSeconds ?? 0);
@@ -125,6 +129,21 @@ export const useQuizGameModal = ({
       isActionInProgressRef.current = false;
     };
   }, [applyTiming, initialTiming, isOpen]);
+
+  useEffect(() => {
+    if (
+      !isOpen ||
+      phase !== "answering" ||
+      remainingSeconds < 1 ||
+      remainingSeconds > 3 ||
+      lastCriticalCueRef.current === remainingSeconds
+    ) {
+      return;
+    }
+
+    lastCriticalCueRef.current = remainingSeconds;
+    playCountdownCue();
+  }, [isOpen, phase, playCountdownCue, remainingSeconds]);
 
   const advanceToNextQuestion = useCallback(
     async (fallbackPhase: "result" | "timeoutHold") => {

@@ -1,3 +1,4 @@
+import GameConfetti from "@/components/ui/GameConfetti";
 import GameSummaryHeader from "@/features/app/reviewee/components/GameSummaryHeader";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 import { useGameSummaryModal } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useGameSummaryModal";
@@ -14,6 +15,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
     closeButtonRef,
     donutBackground,
     duration,
+    isPerfectResult,
     modalAccessibility,
     performanceMessage,
     scorePercentage,
@@ -29,6 +31,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="game-summary-title"
+      underlay={isPerfectResult ? <GameConfetti /> : undefined}
     >
       <GameSummaryHeader
         metadata={[
