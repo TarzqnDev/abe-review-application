@@ -3,7 +3,7 @@
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import {
   createSupabaseServerActionAdminClient,
-  createSupabaseServerActionClient,
+  createActiveSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
 import { randomUUID } from "crypto";
 
@@ -54,7 +54,7 @@ export const updateReviewee = async (formData: FormData) => {
       throw new Error("Proof of payment must not exceed 5 MB");
     }
 
-    const supabase = await createSupabaseServerActionClient();
+    const supabase = await createActiveSupabaseServerActionClient();
     const {
       data: { user: currentUser },
       error: currentUserError,

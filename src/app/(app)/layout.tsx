@@ -28,5 +28,21 @@ export default async function AppLayout({
       ? "reviewee"
       : null;
 
-  return <AppLayoutClient role={role}>{children}</AppLayoutClient>;
+  const { data: account, error: accountError } = await supabase
+    .from("users")
+    .select("status")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (accountError || !account) {
+    throw new Error("Unable to verify your account status");
+  }
+
+  const isInactive = account.status.toLowerCase() !== "active";
+
+  return (
+    <AppLayoutClient initialIsInactive={isInactive} role={role}>
+      {children}
+    </AppLayoutClient>
+  );
 }

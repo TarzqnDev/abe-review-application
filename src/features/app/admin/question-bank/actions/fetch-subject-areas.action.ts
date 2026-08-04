@@ -1,7 +1,7 @@
 "use server";
 
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
-import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import { createActiveSupabaseServerActionClient } from "@/lib/supabase/server-action";
 
 export type AdminSubject = {
   id: number;
@@ -21,7 +21,7 @@ export type AdminSubjectArea = {
 
 export const fetchSubjectAreas = async () => {
   try {
-    const supabase = await createSupabaseServerActionClient();
+    const supabase = await createActiveSupabaseServerActionClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();

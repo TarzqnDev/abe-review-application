@@ -3,7 +3,7 @@
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import {
   createSupabaseServerActionAdminClient,
-  createSupabaseServerActionClient,
+  createActiveSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
 
 const INVITATION_COOLDOWN_MILLISECONDS = 5 * 60 * 1000;
@@ -21,7 +21,7 @@ export type AdminDashboardUser = {
 
 export const fetchUsers = async () => {
   try {
-    const supabase = await createSupabaseServerActionClient();
+    const supabase = await createActiveSupabaseServerActionClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();

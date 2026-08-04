@@ -1,8 +1,8 @@
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
-import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import { createActiveSupabaseServerActionClient } from "@/lib/supabase/server-action";
 
 export const createAdminSubjectActionClient = async () => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createActiveSupabaseServerActionClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();

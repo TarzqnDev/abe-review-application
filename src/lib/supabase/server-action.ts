@@ -22,6 +22,34 @@ export async function createSupabaseServerActionClient() {
   );
 }
 
+export async function createActiveSupabaseServerActionClient() {
+  const supabase = await createSupabaseServerActionClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    throw new Error("You must be logged in to continue");
+  }
+
+  const { data: account, error: accountError } = await supabase
+    .from("users")
+    .select("status")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (accountError || !account) {
+    throw new Error("Unable to verify your account status");
+  }
+
+  if (account.status.toLowerCase() !== "active") {
+    throw new Error("Your account has been deactivated");
+  }
+
+  return supabase;
+}
+
 export function createSupabaseServerActionAdminClient() {
   return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

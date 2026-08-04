@@ -1,7 +1,7 @@
 "use server";
 
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
-import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import { createActiveSupabaseServerActionClient } from "@/lib/supabase/server-action";
 import { PAES_AREA_NAME } from "@/features/app/admin/question-bank/constants/questionBank";
 
 const validateSubjectName = (subjectName: string) => {
@@ -28,7 +28,7 @@ export const createSubject = async (formData: FormData) => {
       throw new Error(validationError);
     }
 
-    const supabase = await createSupabaseServerActionClient();
+    const supabase = await createActiveSupabaseServerActionClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();

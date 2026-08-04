@@ -3,7 +3,7 @@
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import {
   createSupabaseServerActionAdminClient,
-  createSupabaseServerActionClient,
+  createActiveSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
 
 const PAYMENT_IMAGE_PATH_PATTERN = /^payment-images\/[0-9a-f-]{36}\/[0-9a-f-]+\.(?:jpg|png|webp)$/i;
@@ -14,7 +14,7 @@ export const getPaymentProofUrl = async (imagePath: string) => {
       throw new Error("Invalid proof of payment path");
     }
 
-    const supabase = await createSupabaseServerActionClient();
+    const supabase = await createActiveSupabaseServerActionClient();
     const {
       data: { user },
       error: userError,

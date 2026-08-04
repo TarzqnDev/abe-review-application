@@ -3,7 +3,7 @@
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import {
   createSupabaseServerActionAdminClient,
-  createSupabaseServerActionClient,
+  createActiveSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
 import {
   formatInvitationCooldown,
@@ -21,7 +21,7 @@ export const resendUserInvitation = async (userId: string) => {
       throw new Error("Reviewee is required");
     }
 
-    const supabase = await createSupabaseServerActionClient();
+    const supabase = await createActiveSupabaseServerActionClient();
     const {
       data: { user: currentUser },
       error: currentUserError,

@@ -1,6 +1,9 @@
 "use server";
 
-import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import {
+  createSupabaseServerActionAdminClient,
+  createSupabaseServerActionClient,
+} from "@/lib/supabase/server-action";
 
 export const completeAccountSetup = async (formData: FormData) => {
   try {
@@ -11,6 +14,7 @@ export const completeAccountSetup = async (formData: FormData) => {
     }
 
     const supabase = await createSupabaseServerActionClient();
+    const supabaseAdmin = createSupabaseServerActionAdminClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -21,7 +25,7 @@ export const completeAccountSetup = async (formData: FormData) => {
 
     const { data: accountSetupData, error: accountSetupError } = await supabase
       .from("users")
-      .select("account_setup_completed_at")
+      .select("account_setup_completed_at, status")
       .eq("user_id", user.id)
       .single();
 
@@ -31,6 +35,10 @@ export const completeAccountSetup = async (formData: FormData) => {
 
     if (accountSetupData.account_setup_completed_at) {
       throw new Error("This invitation has already been accepted");
+    }
+
+    if (accountSetupData.status.toLowerCase() !== "pending") {
+      throw new Error("This invitation is no longer available");
     }
 
     const { error } = await supabase.auth.updateUser({
@@ -62,7 +70,7 @@ export const completeAccountSetup = async (formData: FormData) => {
       throw new Error("Unable to set roles to just created user");
     }
 
-    const { error: insertRoleError } = await supabase
+    const { error: insertRoleError } = await supabaseAdmin
       .from("user_roles")
       .upsert(
         { user_id: user.id, role_id: revieweeRoleId },
@@ -73,16 +81,22 @@ export const completeAccountSetup = async (formData: FormData) => {
       throw new Error(insertRoleError.message);
     }
 
-    const { error: statusUpdateError } = await supabase
+    const { data: updatedAccount, error: statusUpdateError } = await supabaseAdmin
       .from("users")
       .update({
         status: "active",
         account_setup_completed_at: new Date().toISOString(),
       })
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .eq("status", "pending")
+      .is("account_setup_completed_at", null)
+      .select("user_id")
+      .maybeSingle();
 
-    if (statusUpdateError) {
-      throw new Error(statusUpdateError.message);
+    if (statusUpdateError || !updatedAccount) {
+      throw new Error(
+        statusUpdateError?.message ?? "This invitation is no longer available",
+      );
     }
 
     await supabase.auth.refreshSession();

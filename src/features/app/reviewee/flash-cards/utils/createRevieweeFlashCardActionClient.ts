@@ -1,7 +1,7 @@
-import { createSupabaseServerActionClient } from "@/lib/supabase/server-action";
+import { createActiveSupabaseServerActionClient } from "@/lib/supabase/server-action";
 
 export const createRevieweeFlashCardActionClient = async () => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createActiveSupabaseServerActionClient();
   const {
     data: { user },
     error: userError,
