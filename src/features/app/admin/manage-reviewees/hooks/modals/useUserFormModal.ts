@@ -32,12 +32,14 @@ export const useUserFormModal = ({
   const [modeOfReview, setModeOfReview] = useState("online");
   const [status, setStatus] = useState("");
   const [paymentImage, setPaymentImage] = useState<File | null>(null);
+  const [paymentImagePreviewUrl, setPaymentImagePreviewUrl] = useState("");
   const [paymentImageUrl, setPaymentImageUrl] = useState("");
   const [paymentImageError, setPaymentImageError] = useState("");
   const [isPaymentImageLoading, setIsPaymentImageLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isPaymentViewerOpen, setIsPaymentViewerOpen] = useState(false);
   const [
     isDeactivationConfirmationOpen,
     setIsDeactivationConfirmationOpen,
@@ -46,23 +48,33 @@ export const useUserFormModal = ({
   const initialFocusRef = useRef<HTMLInputElement>(null);
   const deactivationReturnFocusRef = useRef<HTMLElement | null>(null);
   const isSubmittingRef = useRef(false);
+  const paymentImageInputRef = useRef<HTMLInputElement>(null);
+  const paymentViewerReturnFocusRef = useRef<HTMLElement | null>(null);
   const statusSwitchRef = useRef<HTMLButtonElement>(null);
+  const paymentImagePreviewUrlRef = useRef("");
 
   const isEditing = reviewee !== null;
 
   useBodyScrollLock(isOpen);
 
   const resetForm = () => {
+    if (paymentImagePreviewUrlRef.current) {
+      URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
+      paymentImagePreviewUrlRef.current = "";
+    }
+
     setFullName("");
     setEmail("");
     setModeOfReview("online");
     setStatus("");
     setPaymentImage(null);
+    setPaymentImagePreviewUrl("");
     setPaymentImageUrl("");
     setPaymentImageError("");
     setIsPaymentImageLoading(false);
     setError("");
     setIsDragging(false);
+    setIsPaymentViewerOpen(false);
     setIsDeactivationConfirmationOpen(false);
   };
 
@@ -75,20 +87,36 @@ export const useUserFormModal = ({
     let isCurrentEffect = true;
     void Promise.resolve().then(() => {
       if (!isCurrentEffect) return;
+      if (paymentImagePreviewUrlRef.current) {
+        URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
+        paymentImagePreviewUrlRef.current = "";
+      }
       setFullName(reviewee?.full_name ?? "");
       setEmail(reviewee?.email ?? "");
       setModeOfReview(reviewee?.mode_of_review ?? "online");
       setStatus(reviewee?.status.toLowerCase() ?? "");
+      setPaymentImage(null);
+      setPaymentImagePreviewUrl("");
       setPaymentImageUrl("");
       setPaymentImageError("");
       setIsPaymentImageLoading(false);
       setError("");
+      setIsPaymentViewerOpen(false);
     });
 
     return () => {
       isCurrentEffect = false;
     };
   }, [isOpen, reviewee]);
+
+  useEffect(
+    () => () => {
+      if (paymentImagePreviewUrlRef.current) {
+        URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!isOpen || !reviewee?.payment_image_path) return;
@@ -136,13 +164,20 @@ export const useUserFormModal = ({
       if (
         event.key === "Escape" &&
         !isSubmittingRef.current &&
-        !isDeactivationConfirmationOpen
+        !isDeactivationConfirmationOpen &&
+        !isPaymentViewerOpen
       ) {
         onClose();
         return;
       }
 
-      if (event.key !== "Tab" || isDeactivationConfirmationOpen) return;
+      if (
+        event.key !== "Tab" ||
+        isDeactivationConfirmationOpen ||
+        isPaymentViewerOpen
+      ) {
+        return;
+      }
 
       const focusableElements = dialogRef.current?.querySelectorAll<HTMLElement>(
         'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -170,17 +205,28 @@ export const useUserFormModal = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isDeactivationConfirmationOpen, isOpen, onClose]);
+  }, [isDeactivationConfirmationOpen, isOpen, isPaymentViewerOpen, onClose]);
+
+  const openPaymentViewer = useCallback((trigger: HTMLElement) => {
+    paymentViewerReturnFocusRef.current = trigger;
+    setIsPaymentViewerOpen(true);
+  }, []);
+
+  const closePaymentViewer = useCallback(() => {
+    setIsPaymentViewerOpen(false);
+  }, []);
 
   const handleStatusToggle = useCallback(() => {
-    if (status === "active") {
+    const originalStatus = reviewee?.status.toLowerCase();
+
+    if (status === "active" && originalStatus === "active") {
       deactivationReturnFocusRef.current = statusSwitchRef.current;
       setIsDeactivationConfirmationOpen(true);
       return;
     }
 
-    setStatus("active");
-  }, [status]);
+    setStatus(status === "active" ? "inactive" : "active");
+  }, [reviewee, status]);
 
   const cancelDeactivation = useCallback(() => {
     setIsDeactivationConfirmationOpen(false);
@@ -206,10 +252,23 @@ export const useUserFormModal = ({
     const validationError = validateImage(file);
     if (validationError) {
       setPaymentImage(null);
+      if (paymentImagePreviewUrlRef.current) {
+        URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
+        paymentImagePreviewUrlRef.current = "";
+      }
+      setPaymentImagePreviewUrl("");
       setError(validationError);
       return;
     }
+
+    if (paymentImagePreviewUrlRef.current) {
+      URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
+    }
+    const previewUrl = URL.createObjectURL(file);
+    paymentImagePreviewUrlRef.current = previewUrl;
     setPaymentImage(file);
+    setPaymentImagePreviewUrl(previewUrl);
+    setPaymentImageError("");
     setError("");
   };
 
@@ -252,6 +311,9 @@ export const useUserFormModal = ({
             (() => {
               formData.set("userId", reviewee.user_id);
               formData.set("status", status);
+              if (paymentImage) {
+                formData.set("paymentImage", paymentImage);
+              }
               return formData;
             })(),
           )
@@ -306,12 +368,18 @@ export const useUserFormModal = ({
     isDeactivationConfirmationOpen,
     isEditing,
     isPaymentImageLoading,
+    isPaymentViewerOpen,
     isSubmitting,
     initialFocusRef,
     modeOfReview,
     paymentImage,
     paymentImageError,
+    paymentImageInputRef,
+    paymentImagePreviewUrl,
     paymentImageUrl,
+    paymentViewerReturnFocusRef,
+    openPaymentViewer,
+    closePaymentViewer,
     selectPaymentImage,
     setEmail,
     setFullName,
