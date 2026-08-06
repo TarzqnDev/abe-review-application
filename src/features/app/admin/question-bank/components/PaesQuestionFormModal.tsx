@@ -162,42 +162,51 @@ export default function PaesQuestionFormModal({
               Fill out the options and select the correct answer
             </p>
             <div className="grid gap-5 md:grid-cols-2">
-              {[1, 2, 3, 4].map((optionNumber) => (
-                <div key={optionNumber} className="flex flex-col gap-2">
-                  <label
-                    htmlFor={`paesOption${optionNumber}`}
-                    className="text-base font-semibold"
-                  >
-                    Option {QUESTION_BANK_OPTION_LABELS[optionNumber - 1]}
-                  </label>
-                  <div className="flex h-[50px] items-center gap-3 rounded border border-border bg-surface px-3 focus-within:border-primary-accent">
-                    <input
-                      type="radio"
-                      name="correctOptionSortOrder"
-                      value={optionNumber}
-                      checked={
-                        questionFormData.correctOptionSortOrder ===
-                        String(optionNumber)
-                      }
-                      onChange={handleQuestionInput}
-                      className="h-4 w-4 shrink-0 accent-primary-accent"
-                    />
-                    <input
-                      id={`paesOption${optionNumber}`}
-                      type="text"
-                      name={`option${optionNumber}`}
-                      value={
-                        questionFormData[
-                          `option${optionNumber}` as keyof PaesQuestionFormData
-                        ]
-                      }
-                      onChange={handleQuestionInput}
-                      maxLength={255}
-                      className="min-w-0 flex-1 text-sm outline-none"
-                    />
+              {[1, 2, 3, 4].map((optionNumber) => {
+                const isSelected =
+                  questionFormData.correctOptionSortOrder ===
+                  String(optionNumber);
+
+                return (
+                  <div key={optionNumber} className="flex flex-col gap-2">
+                    <label
+                      htmlFor={`paesOption${optionNumber}`}
+                      className="text-base font-semibold"
+                    >
+                      Option {QUESTION_BANK_OPTION_LABELS[optionNumber - 1]}
+                    </label>
+                    <div
+                      className={`flex h-[50px] items-center gap-3 rounded border px-3 transition-colors focus-within:border-primary-accent ${
+                        isSelected
+                          ? "border-primary-accent bg-[#E0F2F1]"
+                          : "border-border bg-surface"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="correctOptionSortOrder"
+                        value={optionNumber}
+                        checked={isSelected}
+                        onChange={handleQuestionInput}
+                        className="h-4 w-4 shrink-0 accent-primary-accent"
+                      />
+                      <input
+                        id={`paesOption${optionNumber}`}
+                        type="text"
+                        name={`option${optionNumber}`}
+                        value={
+                          questionFormData[
+                            `option${optionNumber}` as keyof PaesQuestionFormData
+                          ]
+                        }
+                        onChange={handleQuestionInput}
+                        maxLength={255}
+                        className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

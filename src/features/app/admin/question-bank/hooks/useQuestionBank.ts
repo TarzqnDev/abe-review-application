@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   type AdminSubject,
   fetchSubjectAreas,
@@ -32,6 +32,9 @@ export const useQuestionBank = () => {
     useState<SubjectAreaFilter>("all");
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [successBannerMessage, setSuccessBannerMessage] = useState("");
+  const successBannerTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const [selectedAddSubjectAreaId, setSelectedAddSubjectAreaId] = useState<
     number | null
   >(null);
@@ -51,8 +54,16 @@ export const useQuestionBank = () => {
   >({});
 
   const showSuccessMessage = (message: string) => {
+    if (successBannerTimeoutRef.current) {
+      clearTimeout(successBannerTimeoutRef.current);
+    }
+
     setSuccessBannerMessage(message);
     setShowSuccessBanner(true);
+    successBannerTimeoutRef.current = setTimeout(() => {
+      setShowSuccessBanner(false);
+      successBannerTimeoutRef.current = null;
+    }, 3000);
   };
 
   const loadSubjectAreas = async () => {
@@ -95,15 +106,14 @@ export const useQuestionBank = () => {
     void Promise.resolve().then(loadSubjectAreas);
   }, []);
 
-  useEffect(() => {
-    if (!showSuccessBanner) return;
-
-    const timeout = setTimeout(() => {
-      setShowSuccessBanner(false);
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, [showSuccessBanner]);
+  useEffect(
+    () => () => {
+      if (successBannerTimeoutRef.current) {
+        clearTimeout(successBannerTimeoutRef.current);
+      }
+    },
+    [],
+  );
 
   const handleStartAreaEditing = (areaId: number, areaName: string) => {
     setEditingAreaId(areaId);
@@ -126,6 +136,11 @@ export const useQuestionBank = () => {
   };
 
   const handleHideSuccessBanner = () => {
+    if (successBannerTimeoutRef.current) {
+      clearTimeout(successBannerTimeoutRef.current);
+      successBannerTimeoutRef.current = null;
+    }
+
     setShowSuccessBanner(false);
   };
 

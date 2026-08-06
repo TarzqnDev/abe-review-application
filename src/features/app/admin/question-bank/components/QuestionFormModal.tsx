@@ -214,7 +214,7 @@ export default function QuestionFormModal({
                       Option {QUESTION_BANK_OPTION_LABELS[optionNumber - 1]}
                     </label>
                     <div
-                      className={`flex h-[64px] items-center gap-3 rounded border px-3 transition-colors focus-within:border-primary-accent ${
+                      className={`flex h-[50px] items-center gap-3 rounded border px-3 transition-colors focus-within:border-primary-accent ${
                         isSelected
                           ? "border-primary-accent bg-[#E0F2F1]"
                           : "border-border bg-surface"

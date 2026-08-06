@@ -199,9 +199,23 @@ export const useQuestionFormModal = ({
       }
 
       showSuccessMessage(result.message);
-      setOpenQuestionFormModal(false);
-      setSelectedEditQuestionId(null);
-      window.setTimeout(onClose, MODAL_ANIMATION_DURATION_MS);
+
+      if (questionFormMode === "create") {
+        setQuestionFormData((currentQuestionFormData) => ({
+          ...currentQuestionFormData,
+          correctOptionSortOrder: "",
+          option1: "",
+          option2: "",
+          option3: "",
+          option4: "",
+          questionText: "",
+        }));
+      } else {
+        setOpenQuestionFormModal(false);
+        setSelectedEditQuestionId(null);
+        window.setTimeout(onClose, MODAL_ANIMATION_DURATION_MS);
+      }
+
       await loadSubjectQuestions(selectedSubject.id);
     } finally {
       setIsSavingQuestion(false);

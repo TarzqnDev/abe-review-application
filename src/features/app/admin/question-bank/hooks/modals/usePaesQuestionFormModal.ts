@@ -103,8 +103,21 @@ export const usePaesQuestionFormModal = ({
       const savedSubjectId = Number(formDataSubmission.get("subjectId"));
 
       showSuccessMessage(result.message);
-      setOpenPaesQuestionFormModal(false);
-      window.setTimeout(onClose, MODAL_ANIMATION_DURATION_MS);
+
+      if (questionFormMode === "edit") {
+        setOpenPaesQuestionFormModal(false);
+        window.setTimeout(onClose, MODAL_ANIMATION_DURATION_MS);
+      } else {
+        setQuestionFormData((currentFormData) => ({
+          ...currentFormData,
+          correctOptionSortOrder: "",
+          option1: "",
+          option2: "",
+          option3: "",
+          option4: "",
+          questionText: "",
+        }));
+      }
 
       if (onSaved) {
         await onSaved(savedSubjectId);

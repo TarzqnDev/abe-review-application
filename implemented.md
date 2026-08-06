@@ -97,3 +97,4 @@
 - Manage Reviewees: payment-proof uploads are limited to 3 MiB in client and server validation, while Next.js accepts Server Action request bodies up to 4 MB to accommodate multipart overhead.
 - Account Access: authenticated accounts whose status is not active remain on their designated dashboard behind a non-dismissible blurred account-deactivation notice with logout access; the shell refreshes account status while open, and protected server actions, row-level policies, and privileged gameplay/history functions independently reject inactive accounts.
 - ABE Trivia: the reviewee today's-trivia card fills its parent width on desktop while keeping the overlapping Did You Know artwork fully visible.
+- Question Bank: standard and PAES create forms remain open after successful creation, reset only the question, answers, and correct-answer selection while retaining contextual dropdowns, and keep success banners visible for repeated entries.
