@@ -50,7 +50,7 @@ export default function TodaysTriviaCard({
   return (
     <aside
       aria-label="Today's trivia"
-      className="relative mb-8 mt-5 w-full rounded-2xl border border-primary-accent bg-teal-50/70 px-5 py-5 text-primary-text md:ml-8 md:w-[calc(100%-2rem)]"
+      className="relative mb-8 mt-5 w-full rounded-lg border border-primary-accent bg-teal-50/70 px-5 py-5 text-primary-text"
     >
       <button
         type="button"
