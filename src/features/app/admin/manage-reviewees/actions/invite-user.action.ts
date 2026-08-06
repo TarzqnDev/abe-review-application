@@ -12,7 +12,7 @@ import {
 import { randomUUID } from "crypto";
 import { headers } from "next/headers";
 
-const MAX_PAYMENT_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_PAYMENT_IMAGE_SIZE = 3 * 1024 * 1024;
 const PAYMENT_IMAGE_EXTENSIONS: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
@@ -56,7 +56,7 @@ export const inviteUser = async (formData: FormData) => {
     }
 
     if (paymentImage.size > MAX_PAYMENT_IMAGE_SIZE) {
-      throw new Error("Proof of payment must not exceed 5 MB");
+      throw new Error("Proof of payment must not exceed 3 MB");
     }
 
     const supabase = await createActiveSupabaseServerActionClient();

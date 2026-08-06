@@ -11,7 +11,7 @@ import { updateReviewee } from "@/features/app/admin/manage-reviewees/actions/up
 import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export type UserFormModalOptions = {
@@ -242,7 +242,7 @@ export const useUserFormModal = ({
       return "Payment must be a PNG, JPEG, or WebP image.";
     }
     if (file.size > MAX_FILE_SIZE) {
-      return "Payment image must be 5 MB or smaller.";
+      return "Payment image must be 3 MB or smaller.";
     }
     return "";
   };

@@ -14,6 +14,7 @@ import type {
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import { useTodaysTriviaCard } from "@/features/app/reviewee/trivia/hooks/useTodaysTriviaCard";
+import { createBrowserRequestId } from "@/utils/createBrowserRequestId";
 
 export type RevieweeFlashCardGameStage =
   | "idle"
@@ -124,11 +125,9 @@ export const useRevieweeFlashCards = () => {
     [flashCardDecks, selectedAreaId],
   );
 
-  const createRequestId = () => crypto.randomUUID();
-
   const openCreateFlashCardModal = () => {
     setFormModalRequest({
-      requestId: createRequestId(),
+      requestId: createBrowserRequestId(),
       mode: "create",
       areaId: null,
       lockArea: false,

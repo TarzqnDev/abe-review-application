@@ -12,6 +12,7 @@ import {
   getRemainingTriviaMonthDates,
   getTriviaMonthLabel,
 } from "@/features/app/admin/trivias/utils/adminTriviaDates";
+import { createBrowserRequestId } from "@/utils/createBrowserRequestId";
 
 export const useAdminTrivias = () => {
   const initialDateRange = getCurrentTriviaMonthRange();
@@ -120,7 +121,7 @@ export const useAdminTrivias = () => {
       initialPublishDate,
       isPublishDateLocked: initialPublishDate !== undefined,
       mode: "create",
-      requestId: crypto.randomUUID(),
+      requestId: createBrowserRequestId(),
       trivia: null,
     });
   };
@@ -129,7 +130,7 @@ export const useAdminTrivias = () => {
     setFormModalRequest({
       isPublishDateLocked: true,
       mode: "edit",
-      requestId: crypto.randomUUID(),
+      requestId: createBrowserRequestId(),
       trivia,
     });
   };

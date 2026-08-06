@@ -24,6 +24,7 @@
 - Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.
 - ABE Trivia: administrators can load, create, edit, and delete database-backed trivia through a reusable create/edit form modal with a nested delete confirmation.
 - Flash Cards: reviewees can manage database-backed flash cards grouped by subject area, create and edit cards through one reusable form, search cards in an area list, and delete cards after confirmation.
+- ABE Trivia and Flash Cards: modal request IDs use `crypto.randomUUID()` when available, with secure-random and legacy UI-only fallbacks for browsers and insecure development origins that do not support it.
 - Flash Card Games: Play Now prepares a randomized server-side snapshot of the selected area's cards, runs a three-second countdown and timed free-text game, records correct, incorrect, timed-out, and early-exit results, and ends with a persisted summary.
 - Flash Card Games: each newly prepared flash card allows 15 seconds for an answer while preserving historical 10-second sessions.
 - Flash Card Games: correct answers use green feedback, incorrect answers use red feedback and reveal the saved answer in green, and timed-out cards advance without revealing the answer.
@@ -93,4 +94,5 @@
 - PAES Series: each newly prepared PAES quiz question allows 15 seconds for an answer while preserving historical 60-second sessions.
 - Reviewee Games: MCQ and flash-card countdowns and final critical seconds use a softened race-inspired standard cue; only countdown-modal loading uses its distinct fourth start cue after one, while perfect results pair reduced-motion-aware confetti with the supplied kids' “Yehey!” sound remixed with applause.
 - Manage Reviewees: inactive reviewees can be reactivated from the edit modal; deactivation confirmation is required only for reviewees whose original status was active; proof-of-payment images can be optionally replaced while removing the old private-storage object after a successful replacement, and saved or newly selected proofs open in a full-viewport viewer.
+- Manage Reviewees: payment-proof uploads are limited to 3 MiB in client and server validation, while Next.js accepts Server Action request bodies up to 4 MB to accommodate multipart overhead.
 - Account Access: authenticated accounts whose status is not active remain on their designated dashboard behind a non-dismissible blurred account-deactivation notice with logout access; the shell refreshes account status while open, and protected server actions, row-level policies, and privileged gameplay/history functions independently reject inactive accounts.

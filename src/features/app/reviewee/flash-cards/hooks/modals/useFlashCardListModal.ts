@@ -11,6 +11,7 @@ import type {
   FlashCardDeck,
 } from "@/features/app/reviewee/flash-cards/types/flashCard";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { createBrowserRequestId } from "@/utils/createBrowserRequestId";
 
 type UseFlashCardListModalProps = {
   flashCardDeck: FlashCardDeck | null;
@@ -142,7 +143,7 @@ export const useFlashCardListModal = ({
       flashCard: null,
       lockArea: true,
       mode: "create",
-      requestId: crypto.randomUUID(),
+      requestId: createBrowserRequestId(),
     });
   };
 
@@ -154,7 +155,7 @@ export const useFlashCardListModal = ({
       flashCard,
       lockArea: true,
       mode: "edit",
-      requestId: crypto.randomUUID(),
+      requestId: createBrowserRequestId(),
     });
   };
 

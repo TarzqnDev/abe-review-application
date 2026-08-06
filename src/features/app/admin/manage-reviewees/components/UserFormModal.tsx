@@ -263,7 +263,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
                     </p>
                   )}
                   <p className="mt-2 text-xs text-slate-400">
-                    PNG, JPEG, or WebP up to 5 MB
+                    PNG, JPEG, or WebP up to 3 MB
                   </p>
                 </div>
               ) : (
@@ -316,7 +316,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
                       />
                     </label>
                     <p className="mt-2 text-xs text-slate-400">
-                      PNG, JPEG, or WebP up to 5 MB
+                      PNG, JPEG, or WebP up to 3 MB
                     </p>
                   </div>
                 </div>

@@ -2,7 +2,7 @@
 
 - Question Bank database changes are provided as a Supabase SQL editor script, not as a local migration, because this project uses the cloud Supabase project directly.
 - Manage Reviewees payment proofs use the private `payments` bucket and the path `payment-images/<auth-user-id>/<unique-image-file>`; the database stores only the object path.
-- Payment proof uploads accept PNG, JPEG, or WebP images up to 5 MB.
+- Payment proof uploads accept PNG, JPEG, or WebP images up to 3 MiB, displayed as 3 MB in the UI; the Next.js Server Action body transport limit is 4 MB to allow multipart request overhead.
 - Manage Reviewees invitation sends are logged in the database and atomically throttled per reviewee for five minutes; failed email-provider requests do not consume the cooldown.
 - Supabase Auth email delivery and Postgres logging cannot share one transaction, so invitation actions reserve the cooldown before requesting delivery and finalize the log immediately afterward; interrupted `sending` reservations conservatively expire after five minutes.
 - Accept-invite database changes are provided as a Supabase SQL Editor script under `supabase/sql-editor`, not as a migration.
