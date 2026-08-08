@@ -53,6 +53,8 @@ export const useQuizGameModal = ({
   preparedSession,
 }: UseQuizGameModalOptions) => {
   const answerDeadlineRef = useRef(0);
+  const answerServerStartedAtRef = useRef(0);
+  const answerStartedAtRef = useRef(0);
   const phaseDeadlineRef = useRef(0);
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
@@ -102,8 +104,11 @@ export const useQuizGameModal = ({
     (timing: QuizQuestionTiming) => {
       const serverNow = Date.parse(timing.serverNow);
       const serverDeadline = Date.parse(timing.deadlineAt);
+      const startedAt = performance.now();
+      answerServerStartedAtRef.current = serverNow;
+      answerStartedAtRef.current = startedAt;
       answerDeadlineRef.current =
-        performance.now() + Math.max(0, serverDeadline - serverNow);
+        startedAt + Math.max(0, serverDeadline - serverNow);
       phaseDeadlineRef.current = 0;
       timeoutRecordedRef.current = false;
       lastCriticalCueRef.current = null;
@@ -405,11 +410,16 @@ export const useQuizGameModal = ({
     isActionInProgressRef.current = true;
     setError("");
     setPhase("checking");
+    const clientSubmittedAt = new Date(
+      answerServerStartedAtRef.current +
+        Math.max(0, performance.now() - answerStartedAtRef.current),
+    ).toISOString();
     phaseDeadlineRef.current = performance.now() + 2000;
     const activeOperationId = operationIdRef.current;
     const result = await submitQuizAnswer({
       selectedOptionId,
       sessionQuestionId: currentTiming.sessionQuestionId,
+      submittedAt: clientSubmittedAt,
     });
 
     if (

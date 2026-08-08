@@ -54,6 +54,8 @@ export const useFlashCardGameModal = ({
 }: UseFlashCardGameModalOptions) => {
   const answerInputRef = useRef<HTMLTextAreaElement>(null);
   const answerDeadlineRef = useRef(0);
+  const answerServerStartedAtRef = useRef(0);
+  const answerStartedAtRef = useRef(0);
   const phaseDeadlineRef = useRef(0);
   const operationIdRef = useRef(0);
   const isActionInProgressRef = useRef(false);
@@ -103,7 +105,10 @@ export const useFlashCardGameModal = ({
       const serverNow = Date.parse(timing.serverNow);
       const serverDeadline = Date.parse(timing.deadlineAt);
       const answerDurationMs = Math.max(0, serverDeadline - serverNow);
-      answerDeadlineRef.current = performance.now() + answerDurationMs;
+      const startedAt = performance.now();
+      answerServerStartedAtRef.current = serverNow;
+      answerStartedAtRef.current = startedAt;
+      answerDeadlineRef.current = startedAt + answerDurationMs;
       phaseDeadlineRef.current = 0;
       timeoutRecordedRef.current = false;
       isTimingReadyRef.current = true;
@@ -422,11 +427,16 @@ export const useFlashCardGameModal = ({
     isActionInProgressRef.current = true;
     setError("");
     setPhase("checking");
+    const clientSubmittedAt = new Date(
+      answerServerStartedAtRef.current +
+        Math.max(0, performance.now() - answerStartedAtRef.current),
+    ).toISOString();
     phaseDeadlineRef.current = performance.now() + 2000;
     const activeOperationId = operationIdRef.current;
     const result = await submitFlashCardAnswer({
       answer: submittedAnswer,
       sessionFlashCardId: currentTiming.sessionFlashCardId,
+      submittedAt: clientSubmittedAt,
     });
 
     if (

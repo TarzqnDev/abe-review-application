@@ -30,6 +30,12 @@ export const assertSessionId = (sessionId: string) => {
   }
 };
 
+export const assertIsoDateTime = (value: string, fieldName: string) => {
+  if (!value.trim() || Number.isNaN(Date.parse(value))) {
+    throw new Error(`A valid ${fieldName} is required`);
+  }
+};
+
 export const getQuizActionError = (
   error: unknown,
   fallbackMessage: string,

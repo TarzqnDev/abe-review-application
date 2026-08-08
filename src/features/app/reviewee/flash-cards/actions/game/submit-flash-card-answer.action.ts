@@ -4,6 +4,7 @@ import type { FlashCardAnswerSubmission } from "@/features/app/reviewee/flash-ca
 import { createRevieweeFlashCardGameActionClient } from "@/features/app/reviewee/flash-cards/utils/game/createRevieweeFlashCardGameActionClient";
 import {
   assertFlashCardAnswer,
+  assertIsoDateTime,
   assertPositiveInteger,
   getFlashCardGameActionError,
 } from "@/features/app/reviewee/flash-cards/utils/game/validateFlashCardGameActionInput";
@@ -11,18 +12,22 @@ import {
 export type SubmitFlashCardAnswerInput = {
   sessionFlashCardId: number;
   answer: string;
+  submittedAt: string;
 };
 
 export const submitFlashCardAnswer = async ({
   sessionFlashCardId,
   answer,
+  submittedAt,
 }: SubmitFlashCardAnswerInput) => {
   try {
     assertPositiveInteger(sessionFlashCardId, "flash card");
     assertFlashCardAnswer(answer);
+    assertIsoDateTime(submittedAt, "answer submission time");
 
     const supabase = await createRevieweeFlashCardGameActionClient();
     const { data, error } = await supabase.rpc("submit_flash_card_answer", {
+      client_submitted_at: submittedAt,
       selected_answer: answer,
       selected_session_flash_card_id: sessionFlashCardId,
     });
