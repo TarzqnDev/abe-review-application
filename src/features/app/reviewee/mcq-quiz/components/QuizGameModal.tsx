@@ -71,7 +71,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
           <XMarkIcon className="h-7 w-7" />
         </button>
 
-        <div className="flex h-full flex-col overflow-hidden p-5 pb-28 sm:contents">
+        <div className="flex h-full flex-col overflow-hidden p-5 pb-[82px] sm:contents">
           <div className="shrink-0 bg-surface">
             <header className="border-b border-border pb-5 pr-10">
               <div className="flex flex-wrap items-center gap-2">
