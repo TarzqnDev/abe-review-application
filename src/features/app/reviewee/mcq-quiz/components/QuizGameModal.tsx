@@ -3,6 +3,7 @@ import ExitGameConfirmationModal from "@/features/app/reviewee/mcq-quiz/componen
 import QuizAnswerOption from "@/features/app/reviewee/mcq-quiz/components/QuizAnswerOption";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
 import { useQuizGameModal } from "@/features/app/reviewee/mcq-quiz/hooks/modals/useQuizGameModal";
+import { LoaderCircle } from "lucide-react";
 import type {
   PreparedQuizSession,
   QuizQuestionTiming,
@@ -45,8 +46,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
 
   const isAnswerLocked = phase !== "answering";
   const showResult =
-    (phase === "result" || phase === "transitioning") &&
-    answerReveal !== null;
+    (phase === "result" || phase === "transitioning") && answerReveal !== null;
   const showTimer = phase !== "result" && phase !== "transitioning";
   const resultIsCorrect = answerReveal?.isCorrect === true;
   const timerIsCritical = remainingSeconds <= 3;
@@ -203,11 +203,16 @@ export default function QuizGameModal(props: QuizGameModalProps) {
               disabled={selectedOptionId === null || phase !== "answering"}
               className="mt-5 hidden h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:flex"
             >
-              {phase === "checking"
-                ? "Checking Answer..."
-                : phase === "transitioning"
-                ? "Loading Next Question..."
-                  : "Submit Answer"}
+              {phase === "checking" ? (
+                <>
+                  <span>Checking answer &nbsp;</span>
+                  <LoaderCircle className="h-5 w-5 animate-spin" />
+                </>
+              ) : phase === "transitioning" ? (
+                "Loading Next Question..."
+              ) : (
+                "Submit Answer"
+              )}
             </button>
           </div>
         </div>
@@ -219,11 +224,16 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             disabled={selectedOptionId === null || phase !== "answering"}
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {phase === "checking"
-              ? "Checking Answer..."
-              : phase === "transitioning"
-                ? "Loading Next Question..."
-                : "Submit Answer"}
+            {phase === "checking" ? (
+              <>
+                <span>Checking answer &nbsp;</span>
+                <LoaderCircle className="h-5 w-5 animate-spin" />
+              </>
+            ) : phase === "transitioning" ? (
+              "Loading Next Question..."
+            ) : (
+              "Submit Answer"
+            )}
           </button>
         </div>
       </QuizModalShell>

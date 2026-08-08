@@ -453,11 +453,8 @@ export const useFlashCardGameModal = ({
       return;
     }
 
-    const revealAt = Date.parse(result.submission.revealAt);
-    const submittedAt = Date.parse(result.submission.submittedAt);
-    const revealDurationMs = Math.max(0, revealAt - submittedAt);
-    phaseDeadlineRef.current = performance.now() + revealDurationMs;
     isActionInProgressRef.current = false;
+    await resolveSubmittedAnswer();
   };
 
   const handleOpenExitConfirmation = handleRequestClose;

@@ -436,11 +436,8 @@ export const useQuizGameModal = ({
       return;
     }
 
-    const submittedAt = Date.parse(result.submission.submittedAt);
-    const revealAt = Date.parse(result.submission.revealAt);
-    phaseDeadlineRef.current =
-      performance.now() + Math.max(0, revealAt - submittedAt);
     isActionInProgressRef.current = false;
+    await resolveSubmittedAnswer();
   };
 
   const handleOpenExitConfirmation = handleRequestClose;

@@ -7,6 +7,7 @@ import type {
   PreparedFlashCardSession,
 } from "@/features/app/reviewee/flash-cards/types/flashCardGame";
 import QuizModalShell from "@/features/app/reviewee/mcq-quiz/components/QuizModalShell";
+import { LoaderCircle } from "lucide-react";
 
 export type FlashCardGameModalProps = {
   initialTiming: FlashCardTiming | null;
@@ -43,8 +44,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
 
   const isAnswerLocked = phase !== "answering";
   const showResult =
-    (phase === "result" || phase === "transitioning") &&
-    answerReveal !== null;
+    (phase === "result" || phase === "transitioning") && answerReveal !== null;
   const showTimer = phase !== "result" && phase !== "transitioning";
   const resultIsCorrect = answerReveal?.isCorrect === true;
   const resultIsIncorrect = answerReveal?.isCorrect === false;
@@ -214,11 +214,16 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
               disabled={!answer.trim() || phase !== "answering"}
               className="mt-5 hidden h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:flex"
             >
-              {phase === "checking"
-                ? "Checking Answer..."
-                : phase === "transitioning"
-                ? "Loading Next Flash Card..."
-                  : "Submit Answer"}
+              {phase === "checking" ? (
+                <>
+                  <span>Checking answer &nbsp;</span>
+                  <LoaderCircle className="h-5 w-5 animate-spin" />
+                </>
+              ) : phase === "transitioning" ? (
+                "Loading Next Flash Card..."
+              ) : (
+                "Submit Answer"
+              )}
             </button>
           </div>
         </div>
@@ -230,11 +235,16 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
             disabled={!answer.trim() || phase !== "answering"}
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {phase === "checking"
-              ? "Checking Answer..."
-              : phase === "transitioning"
-                ? "Loading Next Flash Card..."
-                : "Submit Answer"}
+            {phase === "checking" ? (
+              <>
+                <span>Checking answer &nbsp;</span>
+                <LoaderCircle className="h-5 w-5 animate-spin" />
+              </>
+            ) : phase === "transitioning" ? (
+              "Loading Next Flash Card..."
+            ) : (
+              "Submit Answer"
+            )}
           </button>
         </div>
       </QuizModalShell>
