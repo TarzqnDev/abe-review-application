@@ -2,11 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseProxyClient } from "./lib/supabase/proxy";
 
 import { protectedRoutes, authRoutes } from "./lib/auth/route-protection";
-import { getTokenRoles } from "./lib/auth/get-token-roles";
 import {
   AUTH_NOTICES,
   AUTH_NOTICE_QUERY_PARAMETER,
 } from "./features/app/layout/constants/authNotices";
+
+function createRedirectResponse(
+  redirectUrl: URL,
+  supabaseResponse: NextResponse,
+) {
+  const redirectResponse = NextResponse.redirect(redirectUrl);
+
+  supabaseResponse.cookies.getAll().forEach((cookie) => {
+    redirectResponse.cookies.set(cookie);
+  });
+
+  ["cache-control", "expires", "pragma"].forEach((header) => {
+    const value = supabaseResponse.headers.get(header);
+    if (value) redirectResponse.headers.set(header, value);
+  });
+
+  return redirectResponse;
+}
 
 export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
@@ -21,19 +38,22 @@ export async function proxy(request: NextRequest) {
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
   const isAcceptInviteRoute = pathname.startsWith("/auth/accept-invite");
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const claims = claimsData?.claims ?? null;
+  const roles = Array.isArray(claims?.app_metadata?.roles)
+    ? claims.app_metadata.roles.filter(
+        (role): role is string => typeof role === "string",
+      )
+    : [];
+  const isAuthenticated = Boolean(claims);
 
   // 🔒 App protection
-  if (!session && !isAuthRoute && !isAcceptInviteRoute) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (!isAuthenticated && !isAuthRoute && !isAcceptInviteRoute) {
+    return createRedirectResponse(new URL("/login", request.url), getResponse());
   }
 
-  const roles = getTokenRoles(session);
-
   // ✅ Already logged in, redirect to designated dashboard
-  if (isAuthRoute && session) {
+  if (isAuthRoute && isAuthenticated) {
     const authNotice = pathname.startsWith("/auth/forgot-password")
       ? AUTH_NOTICES.forgotPasswordAlreadyLoggedIn
       : pathname.startsWith("/auth/reset-password")
@@ -49,7 +69,7 @@ export async function proxy(request: NextRequest) {
     );
 
     if (roles.includes("admin") || roles.includes("reviewee")) {
-      return NextResponse.redirect(redirectUrl);
+      return createRedirectResponse(redirectUrl, getResponse());
     }
   }
 
@@ -59,7 +79,10 @@ export async function proxy(request: NextRequest) {
       const authorized = allowedRoles.some((role) => roles.includes(role));
 
       if (!authorized) {
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
+        return createRedirectResponse(
+          new URL("/unauthorized", request.url),
+          getResponse(),
+        );
       }
     }
   }
