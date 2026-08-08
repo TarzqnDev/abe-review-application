@@ -20,18 +20,18 @@ export default function LoginPage() {
   } = useLogin();
 
   return (
-    <main className="flex min-h-screen flex-col bg-surface lg:flex-row">
+    <main className="flex h-dvh flex-col overflow-hidden bg-surface lg:h-auto lg:min-h-screen lg:flex-row lg:overflow-visible">
       <MobileLoginHero />
       <AuthImagePanel />
 
-      <section className="relative z-10 -mt-16 flex min-h-[calc(100dvh-11rem)] w-full justify-center rounded-t-[4rem] bg-surface px-6 pb-10 pt-16 text-black sm:-mt-20 sm:min-h-[calc(100dvh-13rem)] sm:rounded-t-[5rem] sm:px-10 sm:pb-12 sm:pt-20 lg:mt-0 lg:min-h-screen lg:w-2/5 lg:rounded-none lg:px-12 lg:py-16 xl:px-20">
+      <section className="relative z-10 -mt-16 flex w-full shrink-0 justify-center rounded-t-[4rem] bg-surface px-6 pb-8 pt-14 text-black sm:-mt-20 sm:rounded-t-[5rem] sm:px-10 sm:pb-10 sm:pt-16 lg:mt-0 lg:min-h-screen lg:w-2/5 lg:rounded-none lg:px-12 lg:py-16 xl:px-20">
         <div className="flex w-full max-w-md flex-col">
           <div className="hidden lg:block">
             <AuthBrand />
           </div>
 
-          <div className="my-auto py-4 sm:py-8 lg:py-14">
-            <div className="mb-8 sm:mb-10">
+          <div className="lg:my-auto lg:py-14">
+            <div className="mb-6 sm:mb-8 lg:mb-10">
               <h1 className="text-3xl font-semibold tracking-tight text-primary-text sm:text-4xl lg:text-3xl">
                 Grow Your Knowledge
               </h1>
@@ -41,7 +41,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="flex flex-col gap-5 sm:gap-6 lg:gap-5">
+            <form onSubmit={handleLogin} className="flex flex-col gap-4 sm:gap-5 lg:gap-5">
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="font-medium">
                   Email Address

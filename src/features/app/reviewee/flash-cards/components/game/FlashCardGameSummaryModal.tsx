@@ -28,24 +28,26 @@ export default function FlashCardGameSummaryModal(
 
   return (
     <QuizModalShell
-      className="max-h-[calc(100vh-2rem)] max-w-[475px] overflow-y-auto"
+      className="flex h-dvh max-h-dvh max-w-none flex-col overflow-hidden rounded-none sm:h-auto sm:max-h-[calc(100vh-2rem)] sm:max-w-[475px] sm:rounded-lg"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="flash-card-game-summary-title"
+      overlayClassName="bg-slate-950/45 !px-0 !py-0 sm:!px-4 sm:!py-6"
       underlay={isPerfectResult ? <GameConfetti /> : undefined}
     >
-      <GameSummaryHeader
-        metadata={props.summary.areaName}
-        title={
-          props.summary.endReason === "completed"
-            ? "Flash Card Game Complete!"
-            : "Flash Card Game Ended!"
-        }
-        titleId="flash-card-game-summary-title"
-      />
+      <div className="min-h-0 flex-1 overflow-y-auto pb-4 sm:overflow-visible sm:pb-0">
+        <GameSummaryHeader
+          metadata={props.summary.areaName}
+          title={
+            props.summary.endReason === "completed"
+              ? "Flash Card Game Complete!"
+              : "Flash Card Game Ended!"
+          }
+          titleId="flash-card-game-summary-title"
+        />
 
-      <div className="px-6 py-9 sm:px-10 sm:pb-10 sm:pt-10">
+        <div className="px-6 py-9 sm:px-10 sm:pb-5 sm:pt-10">
         <p className="text-center text-base font-medium text-primary-text">
           Your score percentage was:
         </p>
@@ -120,12 +122,15 @@ export default function FlashCardGameSummaryModal(
             </div>
           </dl>
         </section>
+        </div>
+      </div>
 
+      <div className="shrink-0 bg-surface px-6 pb-6 pt-3 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:px-10 sm:pb-10 sm:pt-0 sm:shadow-none">
         <button
           ref={closeButtonRef}
           type="button"
           onClick={props.onClose}
-          className="mt-5 h-[50px] w-full cursor-pointer rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
+          className="h-[50px] w-full cursor-pointer rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
           Back to Flash Cards
         </button>

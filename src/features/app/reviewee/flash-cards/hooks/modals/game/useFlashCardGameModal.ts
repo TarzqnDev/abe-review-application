@@ -31,6 +31,21 @@ const CARD_FADE_DURATION_MS = 300;
 const wait = (durationMs: number) =>
   new Promise((resolve) => setTimeout(resolve, durationMs));
 
+const requestFlashCardSessionExitOnPageHide = (sessionId: string) => {
+  const body = JSON.stringify({ sessionId });
+  const endpoint = "/api/reviewee/flash-cards/exit-session";
+  const blob = new Blob([body], { type: "application/json" });
+
+  if (navigator.sendBeacon?.(endpoint, blob)) return;
+
+  void fetch(endpoint, {
+    body,
+    headers: { "Content-Type": "application/json" },
+    keepalive: true,
+    method: "POST",
+  });
+};
+
 export const useFlashCardGameModal = ({
   initialTiming,
   isOpen,
@@ -128,6 +143,32 @@ export const useFlashCardGameModal = ({
       isActionInProgressRef.current = false;
     };
   }, [applyTiming, initialTiming, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !preparedSession) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isSessionActiveRef.current) return;
+
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    const handlePageHide = () => {
+      if (!isSessionActiveRef.current) return;
+
+      requestFlashCardSessionExitOnPageHide(preparedSession.sessionId);
+      isSessionActiveRef.current = false;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("pagehide", handlePageHide);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [isOpen, preparedSession]);
 
   useEffect(() => {
     if (!isOpen || phase !== "answering" || !isFlashCardVisible) return;

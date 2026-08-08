@@ -4,7 +4,7 @@ import AuthBrand from "@/features/auth/components/AuthBrand";
 
 export default function MobileLoginHero() {
   return (
-    <section className="relative h-[clamp(15rem,32vh,21rem)] w-full shrink-0 overflow-hidden lg:hidden">
+    <section className="relative min-h-[11rem] w-full flex-1 overflow-hidden sm:min-h-[12rem] lg:hidden">
       <Image
         src={authBackground}
         alt="An open book"
