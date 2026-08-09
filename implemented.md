@@ -101,3 +101,4 @@
 - Supabase Email Templates: new timestamped invite-user and reset-password `v2` templates use one white rounded header brand container for the icon and hosted ABEquip image logo.
 - Reviewee Games: MCQ and flash-card answer submissions now carry the monotonic click-time equivalent to the server RPCs so slow network or delayed answer checking cannot turn an on-time submit into a deadline error.
 - Reviewee Games: MCQ and flash-card submitted answers now reveal immediately after successful submission, and checking buttons show the shared spinner beside `Checking answer`.
+- Mobile Gameplay: MCQ and flash-card game errors display above the anchored submit action below `sm`, the MCQ options scroller starts at the first option with the helper text kept in the shadowed top section, and flash-card games no longer focus the answer field when opened or advanced.

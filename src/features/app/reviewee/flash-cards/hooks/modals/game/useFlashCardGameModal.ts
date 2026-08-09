@@ -84,7 +84,6 @@ export const useFlashCardGameModal = ({
   }, [isExitConfirmationOpen]);
 
   const modalAccessibility = useQuizModalAccessibility({
-    initialFocusRef: answerInputRef,
     isFocusTrapSuspended: isExitConfirmationOpen,
     isOpen,
     onClose: handleRequestClose,
@@ -174,13 +173,6 @@ export const useFlashCardGameModal = ({
       window.removeEventListener("pagehide", handlePageHide);
     };
   }, [isOpen, preparedSession]);
-
-  useEffect(() => {
-    if (!isOpen || phase !== "answering" || !isFlashCardVisible) return;
-
-    const focusFrame = requestAnimationFrame(() => answerInputRef.current?.focus());
-    return () => cancelAnimationFrame(focusFrame);
-  }, [currentTiming, isFlashCardVisible, isOpen, phase]);
 
   useEffect(() => {
     if (

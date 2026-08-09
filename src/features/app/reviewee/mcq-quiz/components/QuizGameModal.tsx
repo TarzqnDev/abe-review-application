@@ -71,7 +71,11 @@ export default function QuizGameModal(props: QuizGameModalProps) {
           <XMarkIcon className="h-7 w-7" />
         </button>
 
-        <div className="flex h-full flex-col overflow-hidden p-5 pb-[82px] sm:contents">
+        <div
+          className={`flex h-full flex-col overflow-hidden p-5 sm:contents ${
+            error ? "pb-[158px]" : "pb-[82px]"
+          }`}
+        >
           <div className="shrink-0 bg-surface">
             <header className="border-b border-border pb-5 pr-10">
               <div className="flex flex-wrap items-center gap-2">
@@ -151,6 +155,14 @@ export default function QuizGameModal(props: QuizGameModalProps) {
                 </div>
               </div>
             </div>
+
+            <p
+              className={`mt-4 text-sm font-medium text-secondary-text sm:mt-5 ${
+                isQuestionVisible ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              Fill out the options and select the correct answer
+            </p>
           </div>
 
           <div
@@ -158,10 +170,6 @@ export default function QuizGameModal(props: QuizGameModalProps) {
               isQuestionVisible ? "opacity-100" : "opacity-0"
             }`}
           >
-            <p className="mb-4 text-sm font-medium text-secondary-text">
-              Fill out the options and select the correct answer
-            </p>
-
             <div className="grid gap-4 sm:grid-cols-2">
               {currentQuestion.options.map((option, optionIndex) => (
                 <QuizAnswerOption
@@ -181,7 +189,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
             </div>
 
             {error && (
-              <div className="mt-5 flex flex-col items-start gap-3 rounded border border-red-200 bg-red-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-5 hidden flex-col items-start gap-3 rounded border border-red-200 bg-red-50 p-4 sm:flex sm:flex-row sm:items-center sm:justify-between">
                 <p role="alert" className="text-sm text-red-600">
                   {error}
                 </p>
@@ -218,6 +226,22 @@ export default function QuizGameModal(props: QuizGameModalProps) {
         </div>
 
         <div className="absolute inset-x-0 bottom-0 z-10 bg-surface px-5 pt-3 pb-5 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:hidden">
+          {error && (
+            <div className="mb-3 flex flex-col items-start gap-2 rounded border border-red-200 bg-red-50 p-3">
+              <p role="alert" className="text-sm text-red-600">
+                {error}
+              </p>
+              {phase !== "answering" && (
+                <button
+                  type="button"
+                  onClick={handleRetry}
+                  className="shrink-0 cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-2"
+                >
+                  Try Again
+                </button>
+              )}
+            </div>
+          )}
           <button
             type="button"
             onClick={handleSubmitAnswer}
