@@ -1,9 +1,6 @@
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
-import Image from "next/image";
 import { DeactivateRevieweeConfirmationModal } from "@/features/app/admin/manage-reviewees/components/DeactivateRevieweeConfirmationModal";
-import { ProofOfPaymentModal } from "@/features/app/admin/manage-reviewees/components/ProofOfPaymentModal";
-import { ProofOfPaymentSkeleton } from "@/features/app/admin/manage-reviewees/components/skeletons/ProofOfPaymentSkeleton";
 import { useUserFormModal } from "@/features/app/admin/manage-reviewees/hooks/modals/useUserFormModal";
 import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
@@ -22,7 +19,6 @@ export const UserFormModal = (props: UserFormModalProps) => {
     deactivationReturnFocusRef,
     dialogRef,
     initialFocusRef,
-    paymentImageInputRef,
     statusSwitchRef,
     ...modal
   } = useUserFormModal(props);
@@ -38,8 +34,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
           if (
             event.target === event.currentTarget &&
             !modal.isSubmitting &&
-            !modal.isDeactivationConfirmationOpen &&
-            !modal.isPaymentViewerOpen
+            !modal.isDeactivationConfirmationOpen
           ) {
             props.onClose();
           }
@@ -47,16 +42,8 @@ export const UserFormModal = (props: UserFormModalProps) => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="user-form-title"
-        aria-hidden={
-          !props.isOpen ||
-          modal.isDeactivationConfirmationOpen ||
-          modal.isPaymentViewerOpen
-        }
-        inert={
-          !props.isOpen ||
-          modal.isDeactivationConfirmationOpen ||
-          modal.isPaymentViewerOpen
-        }
+        aria-hidden={!props.isOpen || modal.isDeactivationConfirmationOpen}
+        inert={!props.isOpen || modal.isDeactivationConfirmationOpen}
       >
         <div
           ref={dialogRef}
@@ -181,147 +168,6 @@ export const UserFormModal = (props: UserFormModalProps) => {
                 </span>
               </label>
 
-              {modal.isEditing && props.reviewee ? (
-                <div>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <p className="text-base font-medium text-primary-text">
-                      Proof of Payment
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => paymentImageInputRef.current?.click()}
-                      disabled={modal.isSubmitting}
-                      className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      {modal.paymentImage
-                        ? "Change selected file"
-                        : "Choose new file"}
-                    </button>
-                    <input
-                      ref={paymentImageInputRef}
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      className="sr-only"
-                      aria-label="Choose a new proof of payment image"
-                      disabled={modal.isSubmitting}
-                      onChange={(event) => {
-                        modal.selectPaymentImage(event.target.files?.[0]);
-                        event.target.value = "";
-                      }}
-                    />
-                  </div>
-                  <div className="flex min-h-[150px] items-center justify-center overflow-hidden rounded border border-border bg-secondary-bg">
-                    {modal.paymentImagePreviewUrl ? (
-                      <button
-                        type="button"
-                        onClick={(event) =>
-                          modal.openPaymentViewer(event.currentTarget)
-                        }
-                        className="relative h-[150px] w-full cursor-zoom-in rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
-                        aria-label="View selected proof of payment in full screen"
-                      >
-                        <Image
-                          src={modal.paymentImagePreviewUrl}
-                          alt={`Selected proof of payment: ${modal.paymentImage?.name ?? "new image"}`}
-                          fill
-                          unoptimized
-                          className="object-contain"
-                        />
-                      </button>
-                    ) : modal.isPaymentImageLoading ? (
-                      <ProofOfPaymentSkeleton />
-                    ) : modal.paymentImageError ? (
-                      <p className="px-6 text-center text-sm text-secondary-text">
-                        {modal.paymentImageError}
-                      </p>
-                    ) : modal.paymentImageUrl ? (
-                      <button
-                        type="button"
-                        onClick={(event) =>
-                          modal.openPaymentViewer(event.currentTarget)
-                        }
-                        className="relative h-[150px] w-full cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
-                        aria-label={`View proof of payment for ${props.reviewee.full_name} in full screen`}
-                      >
-                        <Image
-                          src={modal.paymentImageUrl}
-                          alt={`Proof of payment for ${props.reviewee.full_name}`}
-                          fill
-                          unoptimized
-                          className="object-contain"
-                        />
-                      </button>
-                    ) : (
-                      <p className="text-sm text-secondary-text">
-                        No proof of payment is available.
-                      </p>
-                    )}
-                  </div>
-                  {modal.paymentImage && (
-                    <p className="mt-2 truncate text-xs text-secondary-text">
-                      Selected: {modal.paymentImage.name}
-                    </p>
-                  )}
-                  <p className="mt-2 text-xs text-slate-400">
-                    PNG, JPEG, or WebP up to 3 MB
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <p className="mb-2 text-base font-medium text-primary-text">
-                    Payment
-                  </p>
-                  <div
-                    className={`flex min-h-[150px] flex-col items-center justify-center rounded border bg-secondary-bg px-5 py-5 text-center transition ${
-                      modal.isDragging
-                        ? "border-primary-light bg-teal-50"
-                        : "border-border"
-                    }`}
-                    onDragEnter={(event) => {
-                      event.preventDefault();
-                      modal.setIsDragging(true);
-                    }}
-                    onDragOver={(event) => event.preventDefault()}
-                    onDragLeave={(event) => {
-                      event.preventDefault();
-                      modal.setIsDragging(false);
-                    }}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      modal.setIsDragging(false);
-                      modal.selectPaymentImage(event.dataTransfer.files[0]);
-                    }}
-                  >
-                    {modal.paymentImage ? (
-                      <p className="max-w-full truncate text-sm font-medium text-slate-700">
-                        {modal.paymentImage.name}
-                      </p>
-                    ) : (
-                      <>
-                        <p className="text-sm font-medium text-slate-800">
-                          Drop files here
-                        </p>
-                        <p className="my-2 text-sm text-secondary-text">Or</p>
-                      </>
-                    )}
-                    <label className="mt-1 cursor-pointer rounded bg-primary-accent px-6 py-3 text-sm font-medium text-surface hover:bg-primary-dark">
-                      {modal.paymentImage ? "Change File" : "Choose File"}
-                      <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/webp"
-                        className="sr-only"
-                        onChange={(event) =>
-                          modal.selectPaymentImage(event.target.files?.[0])
-                        }
-                      />
-                    </label>
-                    <p className="mt-2 text-xs text-slate-400">
-                      PNG, JPEG, or WebP up to 3 MB
-                    </p>
-                  </div>
-                </div>
-              )}
-
               {modal.error && (
                 <p role="alert" className="text-sm text-error">
                   {modal.error}
@@ -373,16 +219,6 @@ export const UserFormModal = (props: UserFormModalProps) => {
         onClose={modal.cancelDeactivation}
         onConfirm={modal.confirmDeactivation}
         returnFocusRef={deactivationReturnFocusRef}
-      />
-      <ProofOfPaymentModal
-        isOpen={modal.isPaymentViewerOpen}
-        imagePath={props.reviewee?.payment_image_path ?? null}
-        sourceImageUrl={
-          modal.paymentImagePreviewUrl || modal.paymentImageUrl || undefined
-        }
-        revieweeName={props.reviewee?.full_name ?? ""}
-        onClose={modal.closePaymentViewer}
-        returnFocusRef={modal.paymentViewerReturnFocusRef}
       />
     </>
   );

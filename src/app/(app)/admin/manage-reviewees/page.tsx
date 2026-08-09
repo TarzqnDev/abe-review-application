@@ -7,7 +7,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { LoaderCircle } from "lucide-react";
 import SuccessBanner from "@/components/ui/SuccessBanner";
-import { ProofOfPaymentModal } from "@/features/app/admin/manage-reviewees/components/ProofOfPaymentModal";
 import { ResendInvitationConfirmationModal } from "@/features/app/admin/manage-reviewees/components/ResendInvitationConfirmationModal";
 import { RevieweesPagination } from "@/features/app/admin/manage-reviewees/components/RevieweesPagination";
 import { RevieweesTable } from "@/features/app/admin/manage-reviewees/components/RevieweesTable";
@@ -82,7 +81,6 @@ export default function AdminRevieweesPage() {
         emptyMessage={reviewees.emptyMessage}
         onEdit={reviewees.openEditModal}
         onResendInvitation={reviewees.openResendInvitationModal}
-        onViewPayment={reviewees.openPaymentModal}
       />
 
       <RevieweesPagination
@@ -105,12 +103,6 @@ export default function AdminRevieweesPage() {
         reviewee={reviewees.revieweeToResend}
         onClose={reviewees.closeResendInvitationModal}
         onNotice={reviewees.showNotice}
-      />
-      <ProofOfPaymentModal
-        isOpen={reviewees.isPaymentModalOpen}
-        imagePath={reviewees.selectedPaymentPath}
-        revieweeName={reviewees.selectedRevieweeName}
-        onClose={reviewees.closePaymentModal}
       />
     </section>
   );

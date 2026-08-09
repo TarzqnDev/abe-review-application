@@ -5,6 +5,5 @@ export type Reviewee = {
   status: string;
   mode_of_review: string;
   start_date: string;
-  payment_image_path: string | null;
   resend_available_at: string | null;
 };

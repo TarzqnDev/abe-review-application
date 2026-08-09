@@ -15,11 +15,6 @@ export const useAdminManageReviewees = () => {
   const [revieweeToResend, setRevieweeToResend] = useState<Reviewee | null>(
     null,
   );
-  const [selectedPaymentPath, setSelectedPaymentPath] = useState<string | null>(
-    null,
-  );
-  const [selectedRevieweeName, setSelectedRevieweeName] = useState("");
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [noticeMessage, setNoticeMessage] = useState("");
   const requestSequence = useRef(0);
 
@@ -115,16 +110,7 @@ export const useAdminManageReviewees = () => {
 
   const closeUserFormModal = () => setIsUserFormModalOpen(false);
 
-  const openPaymentModal = (user: Reviewee) => {
-    setSelectedPaymentPath(user.payment_image_path);
-    setSelectedRevieweeName(user.full_name);
-    setIsPaymentModalOpen(true);
-  };
-
-  const closePaymentModal = () => setIsPaymentModalOpen(false);
-
   return {
-    closePaymentModal,
     closeResendInvitationModal: () => setRevieweeToResend(null),
     closeUserFormModal,
     currentPage: safeCurrentPage,
@@ -137,12 +123,10 @@ export const useAdminManageReviewees = () => {
     firstItem: filteredUsers.length ? startIndex + 1 : 0,
     handleUserSaved,
     isLoading,
-    isPaymentModalOpen,
     isUserFormModalOpen,
     lastItem: Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length),
     noticeMessage,
     openEditModal,
-    openPaymentModal,
     openRegisterModal,
     openResendInvitationModal: setRevieweeToResend,
     paginatedUsers,
@@ -150,8 +134,6 @@ export const useAdminManageReviewees = () => {
     revieweeToEdit,
     revieweeToResend,
     searchQuery,
-    selectedPaymentPath,
-    selectedRevieweeName,
     setCurrentPage,
     setSearchQuery: (query: string) => {
       setSearchQuery(query);

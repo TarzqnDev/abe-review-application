@@ -6,7 +6,7 @@ import {
   createActiveSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
 
-const INVITATION_COOLDOWN_MILLISECONDS = 5 * 60 * 1000;
+const INVITATION_COOLDOWN_MILLISECONDS = 3 * 60 * 1000;
 
 export type AdminDashboardUser = {
   user_id: string;
@@ -15,7 +15,6 @@ export type AdminDashboardUser = {
   status: string;
   start_date: string;
   mode_of_review: "online" | "in-house";
-  payment_image_path: string | null;
   resend_available_at: string | null;
 };
 
@@ -40,7 +39,7 @@ export const fetchUsers = async () => {
     const { data, error } = await supabase
       .from("users")
       .select(
-        "user_id, full_name, email, status, start_date, mode_of_review, payments(image_path), user_roles!inner(roles!inner(name))",
+        "user_id, full_name, email, status, start_date, mode_of_review, user_roles!inner(roles!inner(name))",
       )
       .eq("user_roles.roles.name", "reviewee")
       .order("start_date");
@@ -87,7 +86,6 @@ export const fetchUsers = async () => {
         status: user.status,
         start_date: user.start_date,
         mode_of_review: user.mode_of_review,
-        payment_image_path: user.payments?.image_path ?? null,
         resend_available_at: latestInvitationTimes.has(user.user_id)
           ? new Date(
               latestInvitationTimes.get(user.user_id)! +

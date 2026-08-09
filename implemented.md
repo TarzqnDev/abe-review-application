@@ -9,9 +9,8 @@
 - Question Bank: modals use a shared animation hook so modal-owned hooks still preserve entrance and exit transitions.
 - Question Bank: question set cards now view questions only; individual question edit and delete actions live inside the question list modal.
 - Question Bank: deleting a question now uses a confirmation modal and a server action that removes question options before deleting the question.
-- Manage Reviewees: registration now assigns the join date automatically, records online or in-house review mode, and stores a validated payment proof in private Supabase Storage.
-- Manage Reviewees: administrators can load payment proofs through short-lived signed URLs.
-- Manage Reviewees: reviewee listings and payment proofs are restricted to accounts assigned the reviewee role; invited accounts receive that role immediately.
+- Manage Reviewees: registration now assigns the join date automatically and records online or in-house review mode.
+- Manage Reviewees: reviewee listings are restricted to accounts assigned the reviewee role; invited accounts receive that role immediately.
 - Project Structure: all feature imports were aligned with the mirrored `src/features/app` and `src/features/auth` structure and verified.
 - Manage Reviewees: user fetching and invitation server actions now live with the reviewees feature.
 - App Layout: admin and reviewee routes share the role-aware `Navbar` and `Sidebar` app shell, including role labels and role-specific navigation links.
@@ -20,8 +19,7 @@
 - Authentication: invited users accept invitations at `/auth/accept-invite`, where they can complete their account in a centered branded flow or continue to the reviewee MCQ Quiz page when the invitation was already accepted.
 - Authentication: invited accounts track when account setup is completed.
 - Authentication: accept-invite session initialization runs once so auth user refreshes do not repeat the account-status loading sequence.
-- Payments: payment record IDs use generated bigint values.
-- Admin loading states: question bank subjects and question sets, reviewees, and payment proofs use reusable shimmer skeletons instead of loading text or spinners.
+- Admin loading states: question bank subjects and question sets, and reviewees use reusable shimmer skeletons instead of loading text or spinners.
 - ABE Trivia: administrators can load, create, edit, and delete database-backed trivia through a reusable create/edit form modal with a nested delete confirmation.
 - Flash Cards: reviewees can manage database-backed flash cards grouped by subject area, create and edit cards through one reusable form, search cards in an area list, and delete cards after confirmation.
 - ABE Trivia and Flash Cards: modal request IDs use `crypto.randomUUID()` when available, with secure-random and legacy UI-only fallbacks for browsers and insecure development origins that do not support it.
@@ -53,7 +51,7 @@
 - Authentication: successful logins show the shared animated teal success banner on the designated dashboard, while authenticated visits to `/login` explain that the current account must be logged out before another account can sign in.
 - Authentication: login success notices preserve their message and complete their entrance and exit animation when users navigate through the persistent app layout; delayed notice cleanup now uses the current route and keeps unrelated query parameters.
 - Manage Reviewees: administrators can refresh the reviewee listing in place from the search toolbar without reloading the page.
-- Manage Reviewees: administrators can edit a reviewee's name and review mode, deactivate active reviewees, and resend pending invitations with a database-backed five-minute cooldown shared with the initial invitation.
+- Manage Reviewees: administrators can edit a reviewee's name and review mode, deactivate active reviewees, and resend pending invitations with a database-backed three-minute cooldown shared with the initial invitation.
 - Manage Reviewees: the shared register/edit form stays within the viewport with internal scrolling, and active reviewee deactivation requires confirmation before the pending form change is applied.
 - Authentication: the centered `/auth/forgot-password` flow supports password-reset emails with a five-minute minutes-and-seconds resend countdown; verified recovery links store a signed, expiring user ID cookie, and password changes use `auth.admin.updateUserById` without creating Supabase recovery session cookies.
 - Authentication: authenticated visits to `/auth/forgot-password` or `/auth/reset-password` redirect to the account's designated dashboard and explain that the user must log out before requesting or completing a password reset.
@@ -81,7 +79,7 @@
 - Design System: transient success banners share the reference-matched opaque pale teal background, teal outline, and centered teal message treatment.
 - Question Bank: adding or editing a question from a specific non-PAES question list keeps its preselected game type and difficulty locked, and subject deletion uses the warning-notice confirmation design.
 - ABE Trivia: empty calendar cards use the compact Write Trivia action, while edit forms keep their Edit Trivia title, lock the original publish date, and use the reference-matched save and delete actions.
-- Manage Reviewees: table actions use reference-matched edit and resend icons, resend remains visible with status- and cooldown-aware native title tooltips, and the edit form hides the join date while presenting status and proof of payment in the updated layout.
+- Manage Reviewees: table actions use reference-matched edit and resend icons, resend remains visible with status- and cooldown-aware native title tooltips, pending cooldown clicks show a fading custom tooltip, and the edit form hides the join date while presenting status in the updated layout.
 - ABE Trivia: creating trivia from an empty calendar date keeps the preselected publish date locked, while the global Create Trivia action keeps its date selectable.
 - Question Bank: selected correct-answer fields use the teal reference treatment, PAES forms opened from a subject list lock their preselected series, and question deletion uses the caution-icon notice design with teal confirmation actions.
 - Design System: confirmation notices share the caution artwork, teal confirmation action, and outlined cancel treatment; modal close icons use the shared error red on hover.
@@ -94,8 +92,7 @@
 - Mobile Modals: below the `sm` breakpoint, scrollable reviewee, question, PAES question, MCQ game, and flash-card game forms keep their primary submit action anchored above the modal bottom while their content scrolls with dedicated bottom clearance; `sm` and larger layouts retain their existing in-flow actions.
 - PAES Series: each newly prepared PAES quiz question allows 15 seconds for an answer while preserving historical 60-second sessions.
 - Reviewee Games: MCQ and flash-card countdowns and final critical seconds use a softened race-inspired standard cue; only countdown-modal loading uses its distinct fourth start cue after one, while perfect results pair reduced-motion-aware confetti with the supplied kids' “Yehey!” sound remixed with applause.
-- Manage Reviewees: inactive reviewees can be reactivated from the edit modal; deactivation confirmation is required only for reviewees whose original status was active; proof-of-payment images can be optionally replaced while removing the old private-storage object after a successful replacement, and saved or newly selected proofs open in a full-viewport viewer.
-- Manage Reviewees: payment-proof uploads are limited to 3 MiB in client and server validation, while Next.js accepts Server Action request bodies up to 4 MB to accommodate multipart overhead.
+- Manage Reviewees: inactive reviewees can be reactivated from the edit modal; deactivation confirmation is required only for reviewees whose original status was active.
 - Account Access: authenticated accounts whose status is not active remain on their designated dashboard behind a non-dismissible blurred account-deactivation notice with logout access after page load, and protected server actions, row-level policies, and privileged gameplay/history functions independently reject inactive accounts.
 - ABE Trivia: the reviewee today's-trivia card fills its parent width on desktop while keeping the overlapping Did You Know artwork fully visible.
 - Question Bank: standard and PAES create forms remain open after successful creation, reset only the question, answers, and correct-answer selection while retaining contextual dropdowns, and keep success banners visible for repeated entries.

@@ -415,35 +415,6 @@ export type Database = {
           },
         ]
       }
-      payments: {
-        Row: {
-          created_at: string
-          id: number
-          image_path: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          image_path: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          image_path?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
       reviewee_invitation_email_logs: {
         Row: {
           delivery_status: string

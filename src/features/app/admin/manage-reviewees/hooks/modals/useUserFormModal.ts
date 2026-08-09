@@ -5,14 +5,10 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { getPaymentProofUrl } from "@/features/app/admin/manage-reviewees/actions/get-payment-proof-url.action";
 import { inviteUser } from "@/features/app/admin/manage-reviewees/actions/invite-user.action";
 import { updateReviewee } from "@/features/app/admin/manage-reviewees/actions/update-reviewee.action";
 import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
-
-const MAX_FILE_SIZE = 3 * 1024 * 1024;
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export type UserFormModalOptions = {
   isOpen: boolean;
@@ -31,15 +27,8 @@ export const useUserFormModal = ({
   const [email, setEmail] = useState("");
   const [modeOfReview, setModeOfReview] = useState("online");
   const [status, setStatus] = useState("");
-  const [paymentImage, setPaymentImage] = useState<File | null>(null);
-  const [paymentImagePreviewUrl, setPaymentImagePreviewUrl] = useState("");
-  const [paymentImageUrl, setPaymentImageUrl] = useState("");
-  const [paymentImageError, setPaymentImageError] = useState("");
-  const [isPaymentImageLoading, setIsPaymentImageLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isPaymentViewerOpen, setIsPaymentViewerOpen] = useState(false);
   const [
     isDeactivationConfirmationOpen,
     setIsDeactivationConfirmationOpen,
@@ -48,33 +37,18 @@ export const useUserFormModal = ({
   const initialFocusRef = useRef<HTMLInputElement>(null);
   const deactivationReturnFocusRef = useRef<HTMLElement | null>(null);
   const isSubmittingRef = useRef(false);
-  const paymentImageInputRef = useRef<HTMLInputElement>(null);
-  const paymentViewerReturnFocusRef = useRef<HTMLElement | null>(null);
   const statusSwitchRef = useRef<HTMLButtonElement>(null);
-  const paymentImagePreviewUrlRef = useRef("");
 
   const isEditing = reviewee !== null;
 
   useBodyScrollLock(isOpen);
 
   const resetForm = () => {
-    if (paymentImagePreviewUrlRef.current) {
-      URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
-      paymentImagePreviewUrlRef.current = "";
-    }
-
     setFullName("");
     setEmail("");
     setModeOfReview("online");
     setStatus("");
-    setPaymentImage(null);
-    setPaymentImagePreviewUrl("");
-    setPaymentImageUrl("");
-    setPaymentImageError("");
-    setIsPaymentImageLoading(false);
     setError("");
-    setIsDragging(false);
-    setIsPaymentViewerOpen(false);
     setIsDeactivationConfirmationOpen(false);
   };
 
@@ -87,59 +61,15 @@ export const useUserFormModal = ({
     let isCurrentEffect = true;
     void Promise.resolve().then(() => {
       if (!isCurrentEffect) return;
-      if (paymentImagePreviewUrlRef.current) {
-        URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
-        paymentImagePreviewUrlRef.current = "";
-      }
       setFullName(reviewee?.full_name ?? "");
       setEmail(reviewee?.email ?? "");
       setModeOfReview(reviewee?.mode_of_review ?? "online");
       setStatus(reviewee?.status.toLowerCase() ?? "");
-      setPaymentImage(null);
-      setPaymentImagePreviewUrl("");
-      setPaymentImageUrl("");
-      setPaymentImageError("");
-      setIsPaymentImageLoading(false);
       setError("");
-      setIsPaymentViewerOpen(false);
     });
 
     return () => {
       isCurrentEffect = false;
-    };
-  }, [isOpen, reviewee]);
-
-  useEffect(
-    () => () => {
-      if (paymentImagePreviewUrlRef.current) {
-        URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    if (!isOpen || !reviewee?.payment_image_path) return;
-
-    let isCurrentRequest = true;
-    void Promise.resolve().then(async () => {
-      setIsPaymentImageLoading(true);
-      setPaymentImageError("");
-      const result = await getPaymentProofUrl(reviewee.payment_image_path!);
-
-      if (!isCurrentRequest) return;
-      if (result.success && result.signedUrl) {
-        setPaymentImageUrl(result.signedUrl);
-      } else {
-        setPaymentImageError(
-          result.error ?? "Unable to load proof of payment.",
-        );
-      }
-      setIsPaymentImageLoading(false);
-    });
-
-    return () => {
-      isCurrentRequest = false;
     };
   }, [isOpen, reviewee]);
 
@@ -164,18 +94,13 @@ export const useUserFormModal = ({
       if (
         event.key === "Escape" &&
         !isSubmittingRef.current &&
-        !isDeactivationConfirmationOpen &&
-        !isPaymentViewerOpen
+        !isDeactivationConfirmationOpen
       ) {
         onClose();
         return;
       }
 
-      if (
-        event.key !== "Tab" ||
-        isDeactivationConfirmationOpen ||
-        isPaymentViewerOpen
-      ) {
+      if (event.key !== "Tab" || isDeactivationConfirmationOpen) {
         return;
       }
 
@@ -205,16 +130,7 @@ export const useUserFormModal = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isDeactivationConfirmationOpen, isOpen, isPaymentViewerOpen, onClose]);
-
-  const openPaymentViewer = useCallback((trigger: HTMLElement) => {
-    paymentViewerReturnFocusRef.current = trigger;
-    setIsPaymentViewerOpen(true);
-  }, []);
-
-  const closePaymentViewer = useCallback(() => {
-    setIsPaymentViewerOpen(false);
-  }, []);
+  }, [isDeactivationConfirmationOpen, isOpen, onClose]);
 
   const handleStatusToggle = useCallback(() => {
     const originalStatus = reviewee?.status.toLowerCase();
@@ -237,41 +153,6 @@ export const useUserFormModal = ({
     setIsDeactivationConfirmationOpen(false);
   }, []);
 
-  const validateImage = (file: File) => {
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      return "Payment must be a PNG, JPEG, or WebP image.";
-    }
-    if (file.size > MAX_FILE_SIZE) {
-      return "Payment image must be 3 MB or smaller.";
-    }
-    return "";
-  };
-
-  const selectPaymentImage = (file?: File) => {
-    if (!file) return;
-    const validationError = validateImage(file);
-    if (validationError) {
-      setPaymentImage(null);
-      if (paymentImagePreviewUrlRef.current) {
-        URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
-        paymentImagePreviewUrlRef.current = "";
-      }
-      setPaymentImagePreviewUrl("");
-      setError(validationError);
-      return;
-    }
-
-    if (paymentImagePreviewUrlRef.current) {
-      URL.revokeObjectURL(paymentImagePreviewUrlRef.current);
-    }
-    const previewUrl = URL.createObjectURL(file);
-    paymentImagePreviewUrlRef.current = previewUrl;
-    setPaymentImage(file);
-    setPaymentImagePreviewUrl(previewUrl);
-    setPaymentImageError("");
-    setError("");
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
@@ -286,19 +167,6 @@ export const useUserFormModal = ({
       return;
     }
 
-    if (!isEditing && !paymentImage) {
-      setError("Proof of payment is required.");
-      return;
-    }
-
-    if (paymentImage) {
-      const imageError = validateImage(paymentImage);
-      if (imageError) {
-        setError(imageError);
-        return;
-      }
-    }
-
     isSubmittingRef.current = true;
     setIsSubmitting(true);
     const formData = new FormData();
@@ -311,16 +179,12 @@ export const useUserFormModal = ({
             (() => {
               formData.set("userId", reviewee.user_id);
               formData.set("status", status);
-              if (paymentImage) {
-                formData.set("paymentImage", paymentImage);
-              }
               return formData;
             })(),
           )
         : await inviteUser(
             (() => {
               formData.set("email", email.trim());
-              formData.set("paymentImage", paymentImage!);
               return formData;
             })(),
           );
@@ -364,26 +228,13 @@ export const useUserFormModal = ({
     confirmDeactivation,
     handleSubmit,
     handleStatusToggle,
-    isDragging,
     isDeactivationConfirmationOpen,
     isEditing,
-    isPaymentImageLoading,
-    isPaymentViewerOpen,
     isSubmitting,
     initialFocusRef,
     modeOfReview,
-    paymentImage,
-    paymentImageError,
-    paymentImageInputRef,
-    paymentImagePreviewUrl,
-    paymentImageUrl,
-    paymentViewerReturnFocusRef,
-    openPaymentViewer,
-    closePaymentViewer,
-    selectPaymentImage,
     setEmail,
     setFullName,
-    setIsDragging,
     setModeOfReview,
     setStatus,
     status,
