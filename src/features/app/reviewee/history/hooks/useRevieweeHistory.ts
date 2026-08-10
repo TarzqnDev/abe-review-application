@@ -8,10 +8,11 @@ import type {
 export type ActivityTypeFilter = "all" | "mcq_quiz" | "flash_cards";
 export type ActivityStatusFilter = "all" | "completed" | "exited";
 
-const HISTORY_PAGE_SIZE = 8;
+const HISTORY_PAGE_SIZE = 5;
 const EMPTY_OVERVIEW_STATS: ActivityHistoryOverviewStats = {
   averageAccuracy: 0,
   completedSessions: 0,
+  reviewStreakDays: 0,
   totalSessions: 0,
   totalStudySeconds: 0,
 };
@@ -116,6 +117,7 @@ export const useRevieweeHistory = () => {
     isLoadingHistory,
     openHistoryDetails: setSelectedHistory,
     overviewStats,
+    pageSize: HISTORY_PAGE_SIZE,
     paginatedHistory,
     retryLoadHistory: () => void loadHistory(true),
     searchQuery,

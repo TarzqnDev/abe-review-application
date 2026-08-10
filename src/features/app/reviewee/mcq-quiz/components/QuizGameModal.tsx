@@ -150,7 +150,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
                 <h3 className="mb-2 text-base font-semibold text-primary-text">
                   Question
                 </h3>
-                <div className="min-h-[130px] rounded border border-border bg-surface p-4 text-sm leading-6 text-primary-text sm:min-h-[145px] sm:p-5">
+                <div className="min-h-[125px] whitespace-pre-wrap rounded border border-border bg-secondary-bg p-4 text-sm leading-6 text-primary-text sm:p-5">
                   {currentQuestion.questionText}
                 </div>
               </div>

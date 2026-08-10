@@ -378,6 +378,8 @@ export type Database = {
         Row: {
           completed_sessions: number
           created_at: string
+          last_review_activity_date: string | null
+          review_streak_days: number
           total_answered_items: number
           total_correct_answers: number
           total_sessions: number
@@ -388,6 +390,8 @@ export type Database = {
         Insert: {
           completed_sessions?: number
           created_at?: string
+          last_review_activity_date?: string | null
+          review_streak_days?: number
           total_answered_items?: number
           total_correct_answers?: number
           total_sessions?: number
@@ -398,6 +402,8 @@ export type Database = {
         Update: {
           completed_sessions?: number
           created_at?: string
+          last_review_activity_date?: string | null
+          review_streak_days?: number
           total_answered_items?: number
           total_correct_answers?: number
           total_sessions?: number

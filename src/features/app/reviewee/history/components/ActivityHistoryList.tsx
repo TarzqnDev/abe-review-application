@@ -1,8 +1,6 @@
 import {
   ArrowTopRightOnSquareIcon,
-  BoltIcon,
   ClockIcon,
-  RectangleStackIcon,
 } from "@heroicons/react/24/outline";
 import type { ActivityHistoryEntry } from "@/features/app/reviewee/history/types/activityHistory";
 
@@ -49,89 +47,64 @@ export default function ActivityHistoryList({
     <div className="space-y-3">
       {history.map((historyEntry) => {
         const isMcqQuiz = historyEntry.sessionType === "mcq_quiz";
-        const TypeIcon = isMcqQuiz ? BoltIcon : RectangleStackIcon;
+        const activityTitle = isMcqQuiz ? "MCQ Quiz Game" : "Flash Card Game";
 
         return (
           <article
             key={historyEntry.id}
-            className="rounded-lg border border-border bg-surface p-5 transition-colors hover:border-slate-300"
+            className="rounded border border-border bg-surface px-5 py-4 transition-colors hover:border-slate-300"
           >
-            <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-              <div className="min-w-0 xl:w-[32%]">
-                <div className="flex items-start gap-3">
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-teal-50 text-primary-accent">
-                    <TypeIcon className="h-5 w-5" />
+            <div className="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(520px,2fr)_150px] xl:items-center">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="truncate text-base font-semibold text-primary-text">
+                    {activityTitle}
+                  </h3>
+                  <span
+                    className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${statusStyles[historyEntry.status]}`}
+                  >
+                    {formatStatus(historyEntry.status)}
                   </span>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="truncate text-base font-semibold text-primary-text">
-                        {historyEntry.areaName}
-                      </h3>
-                      <span
-                        className={`rounded-full border px-2 py-0.5 text-[11px] font-medium ${statusStyles[historyEntry.status]}`}
-                      >
-                        {formatStatus(historyEntry.status)}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-sm text-secondary-text">
-                      {isMcqQuiz
-                        ? `MCQ Quiz · ${historyEntry.gameType}`
-                        : historyEntry.gameType}
-                      {historyEntry.difficulty
-                        ? ` · ${historyEntry.difficulty}`
-                        : ""}
-                    </p>
-                    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-slate-400">
-                      <ClockIcon className="h-4 w-4" />
-                      {formatDateTime(historyEntry.terminalAt)}
-                    </p>
-                  </div>
                 </div>
+                <p className="mt-1 text-sm font-medium text-secondary-text">
+                  {historyEntry.areaName}
+                  {isMcqQuiz ? ` · ${historyEntry.gameType}` : ""}
+                  {historyEntry.difficulty ? ` · ${historyEntry.difficulty}` : ""}
+                </p>
+                <p className="mt-1.5 flex items-center gap-1.5 text-xs text-slate-400">
+                  <ClockIcon className="h-4 w-4" />
+                  {formatDateTime(historyEntry.terminalAt)}
+                </p>
               </div>
 
-              <dl className="grid flex-1 grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
                 <div>
-                  <dt className="text-xs font-medium text-slate-400">Score</dt>
-                  <dd className="mt-1 text-sm font-semibold text-slate-800">
+                  <dt className="text-sm font-medium text-secondary-text">Score</dt>
+                  <dd className="mt-1 text-sm font-semibold text-primary-text">
                     {historyEntry.correct}/{historyEntry.totalQuestions}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-medium text-slate-400">
+                  <dt className="text-sm font-medium text-secondary-text">
                     Accuracy
                   </dt>
-                  <dd className="mt-1 text-sm font-semibold text-slate-800">
+                  <dd className="mt-1 text-sm font-semibold text-primary-text">
                     {historyEntry.accuracyPercentage}%
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-medium text-slate-400">
+                  <dt className="text-sm font-medium text-secondary-text">
                     Progress
                   </dt>
-                  <dd className="mt-1 text-sm font-semibold text-slate-800">
+                  <dd className="mt-1 text-sm font-semibold text-primary-text">
                     {historyEntry.questionsReached}/{historyEntry.totalQuestions}
                   </dd>
-                  <div
-                    role="progressbar"
-                    aria-label={`${historyEntry.areaName} session progress`}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-valuenow={historyEntry.completionPercentage}
-                    className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-100"
-                  >
-                    <div
-                      className="h-full rounded-full bg-primary-accent"
-                      style={{
-                        width: `${Math.min(100, historyEntry.completionPercentage)}%`,
-                      }}
-                    />
-                  </div>
                 </div>
                 <div>
-                  <dt className="text-xs font-medium text-slate-400">
+                  <dt className="text-sm font-medium text-secondary-text">
                     Duration
                   </dt>
-                  <dd className="mt-1 text-sm font-semibold text-slate-800">
+                  <dd className="mt-1 text-sm font-semibold text-primary-text">
                     {formatDuration(historyEntry.durationSeconds)}
                   </dd>
                 </div>
@@ -140,7 +113,7 @@ export default function ActivityHistoryList({
               <button
                 type="button"
                 onClick={() => onViewDetails(historyEntry)}
-                className="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded border border-primary-accent bg-surface px-4 text-xs font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
+                className="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded border border-primary-accent bg-surface px-4 text-xs font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
               >
                 View Details
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />

@@ -1,13 +1,8 @@
-import {
-  AcademicCapIcon,
-  ChartBarIcon,
-  CheckCircleIcon,
-  ClockIcon,
-} from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 type ActivityHistoryOverviewProps = {
   averageAccuracy: number;
-  completedSessions: number;
+  reviewStreakDays: number;
   totalSessions: number;
   totalStudySeconds: number;
 };
@@ -24,62 +19,58 @@ const formatStudyTime = (totalSeconds: number) => {
 
 export default function ActivityHistoryOverview({
   averageAccuracy,
-  completedSessions,
+  reviewStreakDays,
   totalSessions,
   totalStudySeconds,
 }: ActivityHistoryOverviewProps) {
   const overviewItems = [
     {
-      icon: AcademicCapIcon,
+      iconSrc: "/history-session.png",
       label: "Total Sessions",
       value: totalSessions.toLocaleString(),
     },
     {
-      icon: ChartBarIcon,
+      iconSrc: "/history-accuracy.png",
       label: "Average Accuracy",
       value: `${averageAccuracy}%`,
     },
     {
-      icon: CheckCircleIcon,
-      label: "Completed",
-      value: completedSessions.toLocaleString(),
+      iconSrc: "/history-time.png",
+      label: "Total Review Time",
+      value: formatStudyTime(totalStudySeconds),
     },
     {
-      icon: ClockIcon,
-      label: "Total Study Time",
-      value: formatStudyTime(totalStudySeconds),
+      iconSrc: "/history-streak.png",
+      label: "Review Streak",
+      value: `${reviewStreakDays.toLocaleString()} ${reviewStreakDays === 1 ? "Day" : "Days"}`,
     },
   ];
 
   return (
     <section
       aria-label="Activity overview"
-      className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
     >
-      {overviewItems.map((overviewItem) => {
-        const Icon = overviewItem.icon;
-
-        return (
-          <article
-            key={overviewItem.label}
-            className="rounded-lg border border-border bg-surface p-5"
-          >
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-teal-50 text-primary-accent">
-                <Icon className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-xs font-medium text-secondary-text">
-                  {overviewItem.label}
-                </p>
-                <p className="mt-0.5 text-xl font-semibold text-primary-text">
-                  {overviewItem.value}
-                </p>
-              </div>
-            </div>
-          </article>
-        );
-      })}
+      {overviewItems.map((overviewItem) => (
+        <article
+          key={overviewItem.label}
+          className="rounded border border-border bg-surface px-5 py-4 text-center"
+        >
+          <Image
+            src={overviewItem.iconSrc}
+            alt=""
+            width={28}
+            height={28}
+            className="mx-auto h-7 w-7 object-contain"
+          />
+          <p className="mt-2 text-xl font-semibold leading-tight text-secondary-text">
+            {overviewItem.value}
+          </p>
+          <p className="mt-1 text-sm font-medium text-secondary-text">
+            {overviewItem.label}
+          </p>
+        </article>
+      ))}
     </section>
   );
 }

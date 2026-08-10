@@ -40,7 +40,7 @@ export default function McqHistoryDetailsItem({
   const responseTime = formatResponseTime(item.responseTimeMs);
 
   return (
-    <article className="rounded border border-border bg-secondary-bg p-4 sm:p-5">
+    <article className="rounded border border-border bg-surface p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-secondary-text">

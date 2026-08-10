@@ -10,6 +10,7 @@ type GameSessionRow = Database["public"]["Tables"]["game_sessions"]["Row"];
 type RevieweeActivityStatsRow = Pick<
   Database["public"]["Tables"]["reviewee_activity_stats"]["Row"],
   | "completed_sessions"
+  | "review_streak_days"
   | "total_answered_items"
   | "total_correct_answers"
   | "total_sessions"
@@ -100,6 +101,7 @@ export const mapActivityHistoryRow = (
 export const emptyActivityHistoryOverviewStats: ActivityHistoryOverviewStats = {
   averageAccuracy: 0,
   completedSessions: 0,
+  reviewStreakDays: 0,
   totalSessions: 0,
   totalStudySeconds: 0,
 };
@@ -115,6 +117,7 @@ export const mapActivityHistoryOverviewStats = (
       stats.total_answered_items,
     ),
     completedSessions: stats.completed_sessions,
+    reviewStreakDays: stats.review_streak_days,
     totalSessions: stats.total_sessions,
     totalStudySeconds: stats.total_study_seconds,
   };

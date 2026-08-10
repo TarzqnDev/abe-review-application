@@ -76,6 +76,7 @@ export type ActivityHistoryDetails = {
 export type ActivityHistoryOverviewStats = {
   averageAccuracy: number;
   completedSessions: number;
+  reviewStreakDays: number;
   totalSessions: number;
   totalStudySeconds: number;
 };

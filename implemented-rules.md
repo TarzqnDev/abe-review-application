@@ -21,8 +21,9 @@
 - All successful application operations use the established animated teal success banner that slides down into view and slides back up after completion.
 - Password recovery uses cloud-managed Supabase Auth and email-template settings, stores only a signed and expiring user ID recovery cookie, and never persists a Supabase recovery session in cookies.
 - Subject areas and subjects remain readable by authenticated users, while their create, update, and delete operations are restricted to administrators through row-level security.
-- MCQ and flash-card sessions and snapshots are created atomically only after the three-second countdown finishes; countdown cancellations are not persisted, and activity-history retention keeps each user's newest 20 completed or exited `game_sessions` with older linked items and answer keys cascade-deleted.
-- Activity-history overview cards use `reviewee_activity_stats` for lifetime totals; the visible history list stays limited to the newest 20 detailed terminal `game_sessions`.
+- MCQ and flash-card sessions and snapshots are created atomically only after the three-second countdown finishes; countdown cancellations are not persisted, and activity-history retention keeps each user's newest 50 completed or exited `game_sessions` with older linked items and answer keys cascade-deleted.
+- Activity-history overview cards use `reviewee_activity_stats` for lifetime totals; the visible history list stays limited to the newest 50 detailed terminal `game_sessions`.
+- Activity-history review streaks are aggregate stats on `reviewee_activity_stats`; keep `completed_sessions` in the database even though the current reviewee history UI shows review streak instead.
 - PAES question sets use `game_type = 'PAES'` with a null difficulty, and PAES Series area and subject immutability is enforced by both the admin interface and subject-management server actions.
 - Predefined PAES Series subject data is supplied as an idempotent timestamped script under `supabase/seeds` for manual execution in the Supabase SQL Editor.
 - `PAES Series` remains the canonical database area name; only its subject-area card title on the reviewee flash-card page is shortened to `PAES`.

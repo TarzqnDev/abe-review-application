@@ -14,7 +14,7 @@ export default function RevieweeHistoryPage() {
   const historyPage = useRevieweeHistory();
 
   return (
-    <section>
+    <section className="mx-auto w-full max-w-[910px]">
       <header className="mb-8">
         <h1 className="text-2xl font-semibold text-primary-text">
           Activity History
@@ -46,17 +46,10 @@ export default function RevieweeHistoryPage() {
 
           {historyPage.paginatedHistory.length > 0 ? (
             <>
-              <div className="mb-3 flex items-end justify-between gap-4">
-                <div>
-                  <h2 className="text-base font-semibold text-primary-text">
-                    Recent Activities
-                  </h2>
-                  <p className="mt-0.5 text-xs text-secondary-text">
-                    Showing your latest{" "}
-                    {historyPage.filteredHistoryCount.toLocaleString()} saved
-                    activities
-                  </p>
-                </div>
+              <div className="mb-3">
+                <h2 className="text-base font-semibold text-primary-text">
+                  Recent Activities
+                </h2>
               </div>
               <ActivityHistoryList
                 history={historyPage.paginatedHistory}
@@ -65,6 +58,7 @@ export default function RevieweeHistoryPage() {
               <ActivityHistoryPagination
                 currentPage={historyPage.currentPage}
                 onPageChange={historyPage.setCurrentPage}
+                pageSize={historyPage.pageSize}
                 totalItems={historyPage.filteredHistoryCount}
                 totalPages={historyPage.totalPages}
               />

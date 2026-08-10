@@ -3,6 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 type ActivityHistoryPaginationProps = {
   currentPage: number;
   onPageChange: (page: number) => void;
+  pageSize: number;
   totalItems: number;
   totalPages: number;
 };
@@ -10,18 +11,25 @@ type ActivityHistoryPaginationProps = {
 export default function ActivityHistoryPagination({
   currentPage,
   onPageChange,
+  pageSize,
   totalItems,
   totalPages,
 }: ActivityHistoryPaginationProps) {
   if (totalPages <= 1) return null;
 
+  const visibleItems =
+    currentPage === totalPages
+      ? totalItems - (currentPage - 1) * pageSize
+      : pageSize;
+
   return (
     <nav
       aria-label="Activity history pagination"
-      className="mt-6 flex flex-col items-center justify-between gap-3 sm:flex-row"
+      className="mt-3 flex flex-col items-center justify-between gap-3 sm:flex-row"
     >
-      <p className="text-xs text-secondary-text">
-        {totalItems.toLocaleString()} activities · Page {currentPage} of {totalPages}
+      <p className="text-sm font-medium text-secondary-text">
+        Showing {visibleItems.toLocaleString()} of {totalItems.toLocaleString()}{" "}
+        activities
       </p>
       <div className="flex items-center gap-2">
         <button

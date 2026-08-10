@@ -23,12 +23,13 @@ export const fetchActivityHistory = async (): Promise<FetchActivityHistoryResult
         .in("status", ["completed", "exited"])
         .order("ended_at", { ascending: false, nullsFirst: false })
         .order("id", { ascending: false })
-        .limit(20),
+        .limit(50),
       supabase
         .from("reviewee_activity_stats")
         .select(`
           total_sessions,
           completed_sessions,
+          review_streak_days,
           total_correct_answers,
           total_answered_items,
           total_study_seconds,

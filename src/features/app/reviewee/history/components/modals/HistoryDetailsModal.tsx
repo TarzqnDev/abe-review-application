@@ -43,7 +43,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
 
   return (
     <QuizModalShell
-      className="flex max-h-[calc(100dvh-2rem)] max-w-[1050px] flex-col overflow-hidden sm:max-h-[calc(100vh-3rem)]"
+      className="flex max-h-[calc(100dvh-2rem)] max-w-[980px] flex-col overflow-hidden sm:max-h-[calc(100vh-3rem)]"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
@@ -51,16 +51,20 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
       onBackdropMouseDown={handleBackdropMouseDown}
       overlayClassName="bg-slate-950/45"
     >
-      <header className="shrink-0 border-b border-border px-5 py-5 sm:px-7">
+      <header className="shrink-0 border-b border-border bg-secondary-bg px-5 py-5 sm:px-7">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 id="history-details-title" className="text-xl font-semibold text-primary-text">
-                Activity Details
+                {history
+                  ? history.sessionType === "mcq_quiz"
+                    ? "MCQ Quiz Game"
+                    : "Flash Card Game"
+                  : "Activity Details"}
               </h2>
               {history && (
                 <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                  className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
                     history.status === "completed"
                       ? "bg-teal-50 text-primary-dark"
                       : "bg-amber-50 text-amber-700"
@@ -71,7 +75,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
               )}
             </div>
             {history && (
-              <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-secondary-text">
+              <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-secondary-text">
                 <span className="font-medium text-slate-700">{history.areaName}</span>
                 <span aria-hidden="true">·</span>
                 <span>

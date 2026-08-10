@@ -43,7 +43,7 @@ export default function FlashCardHistoryDetailsItem({
     (item.result === "correct" || item.result === "incorrect");
 
   return (
-    <article className="rounded border border-border bg-secondary-bg p-4 sm:p-5">
+    <article className="rounded border border-border bg-surface p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <p className="text-xs font-medium uppercase tracking-wide text-secondary-text">
           Flash Card {item.order}
