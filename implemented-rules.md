@@ -7,6 +7,7 @@
 - Accept-invite database changes are provided as a Supabase SQL Editor script under `supabase/sql-editor`, not as a migration.
 - Protected application server actions must use the active-account Supabase action client before role checks or service-role work; database access also requires an exact `active` account status through restrictive RLS and privileged RPC guards.
 - Inactive-account enforcement database changes are delivered through `supabase/sql-editor/20260804120000_inactive_account_enforcement.sql`; the script also restricts user-profile and role-assignment policies that could otherwise allow self-reactivation or role escalation.
+- Assigned account roles must remain independent from account status. Use `get_user_roles` and JWT role claims for assigned dashboard identity, and use active-account helpers such as `is_current_user_active` or `is_current_user_active_admin` for access enforcement.
 - Admin and reviewee app pages use the shared role-aware app shell and navigation components.
 - The unfinished gray content block in the ABE Trivia reference is intentionally omitted.
 - Reviewee quiz gameplay database changes are supplied as a Supabase SQL Editor script, and answer keys remain server-private instead of being returned with playable questions.
