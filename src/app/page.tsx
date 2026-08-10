@@ -1,23 +1,16 @@
-import { getTokenRoles } from "@/lib/auth/get-token-roles";
+import { getAuthRouteIdentity } from "@/lib/auth/route-identity";
 import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
   const supabase = await createSupabaseServerComponentClient();
+  const identity = await getAuthRouteIdentity(supabase);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (!identity.isAuthenticated) redirect("/login");
 
-  if (!user) redirect("/login");
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const roles = getTokenRoles(session);
-
-  if (roles.includes("admin")) redirect("/admin");
-  if (roles.includes("reviewee")) redirect("/reviewee");
+  if (identity.assignedDashboardPath) {
+    redirect(identity.assignedDashboardPath);
+  }
 
   redirect("/unauthorized");
 }

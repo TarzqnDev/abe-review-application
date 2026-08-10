@@ -1,6 +1,6 @@
 import AppLayoutClient from "@/components/AppLayoutClient";
 import type { AppRole } from "@/features/app/layout/types/appRole";
-import { getTokenRoles } from "@/lib/auth/get-token-roles";
+import { getAuthRouteIdentity } from "@/lib/auth/route-identity";
 import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -11,27 +11,16 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createSupabaseServerComponentClient();
+  const identity = await getAuthRouteIdentity(supabase);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (!identity.isAuthenticated || !identity.userId) redirect("/login");
 
-  if (!user) redirect("/login");
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const roles = getTokenRoles(session);
-  const role: AppRole | null = roles.includes("admin")
-    ? "admin"
-    : roles.includes("reviewee")
-      ? "reviewee"
-      : null;
+  const role: AppRole | null = identity.assignedRole;
 
   const { data: account, error: accountError } = await supabase
     .from("users")
     .select("status")
-    .eq("user_id", user.id)
+    .eq("user_id", identity.userId)
     .maybeSingle();
 
   if (accountError || !account) {

@@ -1,4 +1,4 @@
-import { getTokenRoles } from "@/lib/auth/get-token-roles";
+import { getAuthRouteIdentity } from "@/lib/auth/route-identity";
 import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
 import { redirect } from "next/navigation";
 
@@ -8,13 +8,11 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createSupabaseServerComponentClient();
+  const identity = await getAuthRouteIdentity(supabase);
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const roles = getTokenRoles(session);
+  if (!identity.isAuthenticated) redirect("/login");
 
-  if (!roles.includes("admin")) redirect("/unauthorized");
+  if (!identity.roles.includes("admin")) redirect("/unauthorized");
 
   return children;
 }

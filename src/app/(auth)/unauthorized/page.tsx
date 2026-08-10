@@ -2,21 +2,13 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 import AuthPageShell from "@/features/auth/components/AuthPageShell";
-import { getTokenRoles } from "@/lib/auth/get-token-roles";
+import { getAuthRouteIdentity } from "@/lib/auth/route-identity";
 import { createSupabaseServerComponentClient } from "@/lib/supabase/server-component";
 
 export default async function UnauthorizedPage() {
   const supabase = await createSupabaseServerComponentClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const roles = getTokenRoles(session);
-  const dashboardHref = roles.includes("admin")
-    ? "/admin"
-    : roles.includes("reviewee")
-      ? "/reviewee"
-      : "/login";
+  const identity = await getAuthRouteIdentity(supabase);
+  const dashboardHref = identity.assignedDashboardPath ?? "/login";
 
   return (
     <AuthPageShell>
