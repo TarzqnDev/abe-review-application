@@ -60,22 +60,23 @@ export const DeactivateRevieweeConfirmationModal = (
             id="deactivate-reviewee-title"
             className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            <Image
-              src="/caution.png"
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 object-contain"
-            />
+            <div className="flex h-7 w-7 items-center justify-center">
+              <Image
+                src="/caution.png"
+                alt=""
+                width={26}
+                height={26}
+                className="h-8 w-8 object-cover"
+              />
+            </div>
             Reviewee Deactivation Notice
           </h2>
           <p
             id="deactivate-reviewee-description"
             className="mt-7 text-base leading-6 text-secondary-text"
           >
-            Are you sure you want to deactivate this reviewee? Once
-            deactivated, this reviewee will no longer be able to access or use
-            their account.
+            Are you sure you want to deactivate this reviewee? Once deactivated,
+            this reviewee will no longer be able to access or use their account.
           </p>
         </div>
 

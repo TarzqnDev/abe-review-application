@@ -73,13 +73,15 @@ export default function DeleteQuestionConfirmationModal({
         />
 
         <div className="flex items-center gap-3 pr-9">
-          <Image
-            src="/caution.png"
-            alt=""
-            width={24}
-            height={24}
-            className="h-6 w-6 object-contain"
-          />
+          <div className="flex h-7 w-7 items-center justify-center">
+            <Image
+              src="/caution.png"
+              alt=""
+              width={26}
+              height={26}
+              className="h-8 w-8 object-cover"
+            />
+          </div>
           <h2 className="text-xl font-semibold text-primary-text">
             Question Deletion Notice
           </h2>

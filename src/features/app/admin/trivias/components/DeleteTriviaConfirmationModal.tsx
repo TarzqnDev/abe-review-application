@@ -84,13 +84,15 @@ export default function DeleteTriviaConfirmationModal({
             id="delete-trivia-modal-title"
             className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            <Image
-              src="/caution.png"
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 object-contain"
-            />
+            <div className="flex h-7 w-7 items-center justify-center">
+              <Image
+                src="/caution.png"
+                alt=""
+                width={26}
+                height={26}
+                className="h-8 w-8 object-cover"
+              />
+            </div>
             Trivia Deletion Notice
           </h2>
           <p
@@ -121,7 +123,10 @@ export default function DeleteTriviaConfirmationModal({
             className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isDeleting ? (
-              <LoaderCircle className="h-5 w-5 animate-spin" aria-label="Deleting" />
+              <LoaderCircle
+                className="h-5 w-5 animate-spin"
+                aria-label="Deleting"
+              />
             ) : (
               "Yes, Continue"
             )}

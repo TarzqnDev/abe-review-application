@@ -14,13 +14,8 @@ export type ExitGameConfirmationModalProps = {
 export default function ExitGameConfirmationModal(
   props: ExitGameConfirmationModalProps,
 ) {
-  const {
-    cancelButtonRef,
-    error,
-    handleExit,
-    isExiting,
-    modalAccessibility,
-  } = useExitGameConfirmationModal(props);
+  const { cancelButtonRef, error, handleExit, isExiting, modalAccessibility } =
+    useExitGameConfirmationModal(props);
   const { dialogRef, isVisible } = modalAccessibility;
 
   return (
@@ -34,13 +29,15 @@ export default function ExitGameConfirmationModal(
       zIndexClassName="z-[70]"
     >
       <div className="flex items-center gap-2.5">
-        <Image
-          src="/caution.png"
-          alt=""
-          width={20}
-          height={20}
-          className="h-5 w-5 shrink-0 object-contain"
-        />
+        <div className="flex h-7 w-7 items-center justify-center">
+          <Image
+            src="/caution.png"
+            alt=""
+            width={26}
+            height={26}
+            className="h-8 w-8 object-cover"
+          />
+        </div>
         <h2
           id="exit-game-title"
           className="text-xl font-semibold leading-6 text-primary-text"
@@ -68,7 +65,10 @@ export default function ExitGameConfirmationModal(
         >
           {isExiting ? (
             <>
-              <LoaderCircle aria-hidden="true" className="h-5 w-5 animate-spin" />
+              <LoaderCircle
+                aria-hidden="true"
+                className="h-5 w-5 animate-spin"
+              />
               <span className="sr-only">Ending game...</span>
             </>
           ) : (

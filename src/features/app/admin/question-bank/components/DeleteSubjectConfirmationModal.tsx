@@ -76,13 +76,15 @@ export default function DeleteSubjectConfirmationModal({
             id="delete-subject-modal-title"
             className="flex items-center gap-3 text-xl font-semibold text-primary-text"
           >
-            <Image
-              src="/caution.png"
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 object-contain"
-            />
+            <div className="h-7 w-7 flex justify-center items-center">
+              <Image
+                src="/caution.png"
+                alt=""
+                width={26}
+                height={26}
+                className="h-8 w-8 object-cover"
+              />
+            </div>
             Subject Deletion Notice
           </h2>
           <p
