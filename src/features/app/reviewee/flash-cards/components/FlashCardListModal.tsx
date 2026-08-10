@@ -58,7 +58,7 @@ export default function FlashCardListModal({
   return (
     <>
       <div
-        className={`fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto px-4 py-6 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto px-4 py-4 transition-opacity duration-300 sm:py-6 ${
           isModalVisible
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -78,7 +78,7 @@ export default function FlashCardListModal({
 
         <div
           ref={dialogRef}
-          className={`relative flex max-h-[calc(100vh-3rem)] w-full max-w-[935px] flex-col rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:p-9 ${
+          className={`relative flex max-h-[calc(100dvh-2rem)] w-full max-w-[935px] flex-col rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[calc(100vh-3rem)] sm:p-9 ${
             isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"

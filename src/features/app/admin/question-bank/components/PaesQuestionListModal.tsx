@@ -61,7 +61,7 @@ export default function PaesQuestionListModal({
   return (
     <>
       <div
-        className={`fixed inset-0 z-[60] flex items-center justify-center px-4 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto px-4 py-4 transition-opacity duration-300 ${
           isModalVisible
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -75,7 +75,7 @@ export default function PaesQuestionListModal({
         ></div>
 
         <div
-          className={`relative max-h-[88vh] w-full max-w-[940px] overflow-y-auto rounded-md bg-surface p-10 shadow-xl transition-all duration-300 ease-out ${
+          className={`relative max-h-[calc(100dvh-2rem)] w-full max-w-[940px] overflow-y-auto rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[88vh] sm:p-10 ${
             isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"

@@ -43,12 +43,13 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
 
   return (
     <QuizModalShell
-      className="flex max-h-[calc(100vh-2rem)] max-w-[1050px] flex-col overflow-hidden sm:max-h-[calc(100vh-3rem)]"
+      className="flex max-h-[calc(100dvh-2rem)] max-w-[1050px] flex-col overflow-hidden sm:max-h-[calc(100vh-3rem)]"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="history-details-title"
       onBackdropMouseDown={handleBackdropMouseDown}
+      overlayClassName="bg-slate-950/45"
     >
       <header className="shrink-0 border-b border-border px-5 py-5 sm:px-7">
         <div className="flex items-start justify-between gap-4">

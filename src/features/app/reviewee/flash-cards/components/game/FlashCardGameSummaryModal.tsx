@@ -28,12 +28,12 @@ export default function FlashCardGameSummaryModal(
 
   return (
     <QuizModalShell
-      className="flex h-dvh max-h-dvh max-w-none flex-col overflow-hidden rounded-none sm:h-auto sm:max-h-[calc(100vh-2rem)] sm:max-w-[475px] sm:rounded-lg"
+      className="flex max-h-[calc(100dvh-2rem)] max-w-[475px] flex-col overflow-hidden"
       dialogRef={dialogRef}
       isOpen={props.isOpen}
       isVisible={isVisible}
       labelledBy="flash-card-game-summary-title"
-      overlayClassName="bg-slate-950/45 !px-0 !py-0 sm:!px-4 sm:!py-6"
+      overlayClassName="bg-slate-950/45"
       underlay={isPerfectResult ? <GameConfetti /> : undefined}
     >
       <div className="min-h-0 flex-1 overflow-y-auto pb-4 sm:overflow-visible sm:pb-0">
