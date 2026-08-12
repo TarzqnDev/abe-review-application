@@ -3,6 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { createAdminSubjectActionClient } from "@/features/app/admin/question-bank/utils/assertAdminSession";
 import { PAES_AREA_NAME } from "@/features/app/admin/question-bank/constants/questionBank";
+import { assertSubjectNameIsAvailable } from "@/features/app/admin/question-bank/utils/assertSubjectNameIsAvailable";
+import {
+  DUPLICATE_SUBJECT_NAME_ERROR,
+  formatSubjectName,
+} from "@/features/app/admin/question-bank/utils/subjectName";
 
 const validateSubjectName = (subjectName: string) => {
   if (!subjectName) return "Subject name is required";
@@ -17,7 +22,9 @@ export const updateSubject = async (formData: FormData) => {
   try {
     const subjectId = Number(formData.get("subjectId"));
     const areaId = Number(formData.get("areaId"));
-    const subjectName = String(formData.get("subjectName") ?? "").trim();
+    const subjectName = formatSubjectName(
+      String(formData.get("subjectName") ?? ""),
+    );
 
     if (!Number.isInteger(subjectId) || subjectId <= 0) {
       throw new Error("A valid subject is required");
@@ -48,6 +55,12 @@ export const updateSubject = async (formData: FormData) => {
       throw new Error("PAES Series subjects cannot be edited");
     }
 
+    await assertSubjectNameIsAvailable(supabase, {
+      areaId,
+      excludedSubjectId: subjectId,
+      subjectName,
+    });
+
     const { data: updatedSubject, error } = await supabase
       .from("subjects")
       .update({ name: subjectName })
@@ -57,6 +70,10 @@ export const updateSubject = async (formData: FormData) => {
       .maybeSingle();
 
     if (error) {
+      if (error.code === "23505") {
+        throw new Error(DUPLICATE_SUBJECT_NAME_ERROR);
+      }
+
       throw new Error(error.message);
     }
 

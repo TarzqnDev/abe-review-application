@@ -15,6 +15,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
     closeButtonRef,
     donutBackground,
     duration,
+    gameProgress,
     isPerfectResult,
     modalAccessibility,
     performanceMessage,
@@ -57,7 +58,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
         </p>
 
         <div
-          aria-label={`${scorePercentage}% correct. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, ${props.summary.timedOut} timed out, and ${props.summary.notPlayed} not played.`}
+          aria-label={`${scorePercentage}% correct across ${gameProgress} played questions. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, and ${props.summary.timedOut} timed out.`}
           className="mx-auto mt-5 flex h-28 w-28 items-center justify-center rounded-full"
           role="img"
           style={{ background: donutBackground }}
@@ -85,10 +86,10 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
           <dl className="mt-1 grid grid-cols-2 gap-2.5">
             <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-border bg-secondary-bg px-2 text-center">
               <dt className="order-2 mt-1 text-[13px] text-secondary-text">
-                Questions Answered
+                Game Progress
               </dt>
               <dd className="order-1 text-xl font-semibold text-secondary-text">
-                {props.summary.answered}/{props.summary.totalQuestions}
+                {gameProgress}/{props.summary.totalQuestions}
               </dd>
             </div>
             <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-border bg-secondary-bg px-2 text-center">

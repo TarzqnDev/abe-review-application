@@ -24,7 +24,7 @@ export default function HistoryDetailsSummary({
   const summaryItems = [
     {
       label: "Score",
-      value: `${history.correct}/${history.totalQuestions}`,
+      value: `${history.correct}/${history.questionsReached}`,
     },
     {
       label: "Accuracy",
@@ -44,7 +44,6 @@ export default function HistoryDetailsSummary({
     { label: "Correct", value: history.correct },
     { label: "Incorrect", value: history.incorrect },
     { label: "Timed Out", value: history.timedOut },
-    { label: "Not Played", value: history.notPlayed },
   ];
 
   return (
@@ -65,7 +64,7 @@ export default function HistoryDetailsSummary({
         ))}
       </dl>
 
-      <dl className="mt-3 grid gap-3 rounded border border-border bg-secondary-bg p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="mt-3 grid gap-3 rounded border border-border bg-secondary-bg p-4 sm:grid-cols-3">
         {resultItems.map((resultItem) => (
           <div key={resultItem.label}>
             <dt className="text-xs font-medium text-secondary-text">

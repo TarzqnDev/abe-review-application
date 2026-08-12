@@ -19,7 +19,6 @@ export type ActivityHistoryEntry = {
   correct: number;
   incorrect: number;
   timedOut: number;
-  notPlayed: number;
   questionsReached: number;
   answered: number;
   accuracyPercentage: number;
@@ -47,7 +46,6 @@ type ActivityHistoryItemBase = {
   submittedAt: string | null;
   revealAt: string | null;
   resolvedAt: string | null;
-  responseTimeMs: number | null;
 };
 
 export type ActivityHistoryMcqItem = ActivityHistoryItemBase & {

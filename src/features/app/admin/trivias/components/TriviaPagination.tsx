@@ -1,4 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { getPaginationPageNumbers } from "@/utils/getPaginationPageNumbers";
 
 type TriviaPaginationProps = {
   currentPage: number;
@@ -17,6 +18,8 @@ export default function TriviaPagination({
   totalDates,
   totalPages,
 }: TriviaPaginationProps) {
+  const pageNumbers = getPaginationPageNumbers(currentPage, totalPages);
+
   return (
     <div className="mt-5 flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-secondary-text" aria-live="polite">
@@ -36,23 +39,21 @@ export default function TriviaPagination({
             <ChevronLeftIcon className="h-4 w-4" />
           </button>
 
-          {Array.from({ length: totalPages }, (_, pageIndex) => pageIndex + 1).map(
-            (pageNumber) => (
-              <button
-                key={pageNumber}
-                type="button"
-                onClick={() => onPageChange(pageNumber)}
-                aria-current={pageNumber === currentPage ? "page" : undefined}
-                className={`flex h-8 min-w-8 cursor-pointer items-center justify-center rounded px-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent ${
-                  pageNumber === currentPage
-                    ? "bg-primary-accent text-surface"
-                    : "border border-border bg-surface text-slate-600 hover:border-primary-accent hover:text-primary-accent"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            ),
-          )}
+          {pageNumbers.map((pageNumber) => (
+            <button
+              key={pageNumber}
+              type="button"
+              onClick={() => onPageChange(pageNumber)}
+              aria-current={pageNumber === currentPage ? "page" : undefined}
+              className={`flex h-8 min-w-8 cursor-pointer items-center justify-center rounded px-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent ${
+                pageNumber === currentPage
+                  ? "bg-primary-accent text-surface"
+                  : "border border-border bg-surface text-slate-600 hover:border-primary-accent hover:text-primary-accent"
+              }`}
+            >
+              {pageNumber}
+            </button>
+          ))}
 
           <button
             type="button"

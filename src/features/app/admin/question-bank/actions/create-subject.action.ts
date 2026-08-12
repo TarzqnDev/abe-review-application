@@ -1,8 +1,14 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { createActiveSupabaseServerActionClient } from "@/lib/supabase/server-action";
 import { PAES_AREA_NAME } from "@/features/app/admin/question-bank/constants/questionBank";
+import { assertSubjectNameIsAvailable } from "@/features/app/admin/question-bank/utils/assertSubjectNameIsAvailable";
+import {
+  DUPLICATE_SUBJECT_NAME_ERROR,
+  formatSubjectName,
+} from "@/features/app/admin/question-bank/utils/subjectName";
 
 const validateSubjectName = (subjectName: string) => {
   if (!subjectName) return "Subject name is required";
@@ -16,7 +22,9 @@ const validateSubjectName = (subjectName: string) => {
 export const createSubject = async (formData: FormData) => {
   try {
     const areaId = Number(formData.get("areaId"));
-    const subjectName = String(formData.get("subjectName") ?? "").trim();
+    const subjectName = formatSubjectName(
+      String(formData.get("subjectName") ?? ""),
+    );
 
     if (!Number.isInteger(areaId) || areaId <= 0) {
       throw new Error("A valid subject area is required");
@@ -57,14 +65,25 @@ export const createSubject = async (formData: FormData) => {
       throw new Error("PAES Series subjects are predefined");
     }
 
+    await assertSubjectNameIsAvailable(supabase, {
+      areaId,
+      subjectName,
+    });
+
     const { error } = await supabase.from("subjects").insert({
       area_id: areaId,
       name: subjectName,
     });
 
     if (error) {
+      if (error.code === "23505") {
+        throw new Error(DUPLICATE_SUBJECT_NAME_ERROR);
+      }
+
       throw new Error(error.message);
     }
+
+    revalidatePath("/admin/question-bank");
 
     return {
       success: true,

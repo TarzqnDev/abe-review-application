@@ -97,20 +97,22 @@ export default function SubjectAreaSection({
               key={subject.id}
               type="button"
               onClick={() => onSelectSubject(subject)}
-              className={`group flex min-h-12 w-full cursor-pointer items-center justify-between rounded border bg-surface px-5 text-left text-base font-medium text-primary-text transition-colors ${
+              className={`group flex min-h-12 w-full cursor-pointer items-center gap-3 rounded border bg-surface px-5 text-left text-base font-medium text-primary-text transition-colors ${
                 isPredefined
                   ? "border-border hover:border-primary-accent"
                   : subjectButtonClassName
               }`}
               aria-label={`${activeMode === "edit" ? "Edit" : activeMode === "remove" ? "Remove" : "Open"} ${subject.name}`}
             >
-              <span>{subject.name}</span>
+              <span className="min-w-0 flex-1 truncate" title={subject.name}>
+                {subject.name}
+              </span>
               {activeMode === "edit" ? (
-                <PencilSquareIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-warning" />
+                <PencilSquareIcon className="h-5 w-5 shrink-0 text-secondary-text transition-colors group-hover:text-warning" />
               ) : activeMode === "remove" ? (
-                <TrashIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-error" />
+                <TrashIcon className="h-5 w-5 shrink-0 text-secondary-text transition-colors group-hover:text-error" />
               ) : (
-                <ArrowTopRightOnSquareIcon className="h-5 w-5 text-secondary-text transition-colors group-hover:text-primary-accent" />
+                <ArrowTopRightOnSquareIcon className="h-5 w-5 shrink-0 text-secondary-text transition-colors group-hover:text-primary-accent" />
               )}
             </button>
           ))

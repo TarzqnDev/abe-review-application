@@ -2,6 +2,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
+import { getPaginationPageNumbers } from "@/utils/getPaginationPageNumbers";
 
 type FlashCardListPaginationProps = {
   currentPage: number;
@@ -22,6 +23,8 @@ export default function FlashCardListPagination({
 }: FlashCardListPaginationProps) {
   if (!totalFlashCards) return null;
 
+  const pageNumbers = getPaginationPageNumbers(currentPage, totalPages);
+
   return (
     <div className="mt-6 flex flex-col gap-4 text-sm font-medium text-secondary-text sm:flex-row sm:items-center sm:justify-between">
       <p>
@@ -40,10 +43,7 @@ export default function FlashCardListPagination({
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
 
-        {Array.from(
-          { length: totalPages },
-          (_, pageIndex) => pageIndex + 1,
-        ).map((page) => (
+        {pageNumbers.map((page) => (
           <button
             key={page}
             type="button"

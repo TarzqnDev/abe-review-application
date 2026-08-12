@@ -1,7 +1,6 @@
 import {
   CheckCircleIcon,
   ClockIcon,
-  MinusCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import type { ActivityHistoryFlashCardItem } from "@/features/app/reviewee/history/types/activityHistory";
@@ -20,24 +19,14 @@ const resultDetails = (item: ActivityHistoryFlashCardItem) => {
   if (item.status === "timed_out") {
     return { icon: ClockIcon, label: "Timed Out", className: "text-amber-600" };
   }
-  return { icon: MinusCircleIcon, label: "Not Played", className: "text-secondary-text" };
+  return { icon: ClockIcon, label: "Timed Out", className: "text-amber-600" };
 };
-
-const formatItemStatus = (status: string) =>
-  status
-    .split("_")
-    .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
-    .join(" ");
 
 export default function FlashCardHistoryDetailsItem({
   item,
 }: FlashCardHistoryDetailsItemProps) {
   const result = resultDetails(item);
   const ResultIcon = result.icon;
-  const responseTime =
-    item.responseTimeMs === null
-      ? null
-      : `${(item.responseTimeMs / 1000).toFixed(1)}s`;
   const wasAnswered =
     item.submittedAnswer !== null &&
     (item.result === "correct" || item.result === "incorrect");
@@ -51,10 +40,6 @@ export default function FlashCardHistoryDetailsItem({
         <div className={`flex items-center gap-1.5 text-sm font-medium ${result.className}`}>
           <ResultIcon className="h-4 w-4" />
           {result.label}
-          <span className="font-normal text-slate-400">
-            · {formatItemStatus(item.status)}
-          </span>
-          {responseTime && <span className="font-normal">· {responseTime}</span>}
         </div>
       </div>
 
@@ -85,9 +70,7 @@ export default function FlashCardHistoryDetailsItem({
               Submitted answer
             </p>
             <p className="mt-1 text-sm text-secondary-text">
-              {item.status === "timed_out"
-                ? "No answer was submitted before time ran out."
-                : "This flash card was not played."}
+              No answer was submitted before time ran out.
             </p>
           </div>
         )}

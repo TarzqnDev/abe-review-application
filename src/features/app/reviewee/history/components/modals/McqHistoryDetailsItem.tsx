@@ -1,7 +1,6 @@
 import {
   CheckCircleIcon,
   ClockIcon,
-  MinusCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import type { ActivityHistoryMcqItem } from "@/features/app/reviewee/history/types/activityHistory";
@@ -20,24 +19,14 @@ const resultDetails = (item: ActivityHistoryMcqItem) => {
   if (item.status === "timed_out") {
     return { icon: ClockIcon, label: "Timed Out", className: "text-amber-600" };
   }
-  return { icon: MinusCircleIcon, label: "Not Played", className: "text-secondary-text" };
+  return { icon: ClockIcon, label: "Timed Out", className: "text-amber-600" };
 };
-
-const formatResponseTime = (responseTimeMs: number | null) =>
-  responseTimeMs === null ? null : `${(responseTimeMs / 1000).toFixed(1)}s`;
-
-const formatItemStatus = (status: string) =>
-  status
-    .split("_")
-    .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
-    .join(" ");
 
 export default function McqHistoryDetailsItem({
   item,
 }: McqHistoryDetailsItemProps) {
   const result = resultDetails(item);
   const ResultIcon = result.icon;
-  const responseTime = formatResponseTime(item.responseTimeMs);
 
   return (
     <article className="rounded border border-border bg-surface p-4 sm:p-5">
@@ -51,10 +40,6 @@ export default function McqHistoryDetailsItem({
         <div className={`flex items-center gap-1.5 text-sm font-medium ${result.className}`}>
           <ResultIcon className="h-4 w-4" />
           {result.label}
-          <span className="font-normal text-slate-400">
-            · {formatItemStatus(item.status)}
-          </span>
-          {responseTime && <span className="font-normal">· {responseTime}</span>}
         </div>
       </div>
 

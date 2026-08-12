@@ -48,28 +48,36 @@ export default function ActivityHistoryList({
       {history.map((historyEntry) => {
         const isMcqQuiz = historyEntry.sessionType === "mcq_quiz";
         const activityTitle = isMcqQuiz ? "MCQ Quiz Game" : "Flash Card Game";
+        const activityMetadata = [
+          historyEntry.areaName,
+          isMcqQuiz ? historyEntry.gameType : null,
+          historyEntry.difficulty,
+        ]
+          .filter(Boolean)
+          .join(" · ");
 
         return (
           <article
             key={historyEntry.id}
-            className="rounded border border-border bg-surface px-5 py-4 transition-colors hover:border-slate-300"
+            className="rounded border border-border bg-surface px-4 py-3.5 transition-colors hover:border-slate-300 sm:px-5"
           >
-            <div className="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(520px,2fr)_150px] xl:items-center">
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(340px,1.8fr)_132px] lg:items-center">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="truncate text-base font-semibold text-primary-text">
+                <div className="flex min-w-0 items-center gap-2">
+                  <h3 className="min-w-0 truncate text-base font-semibold text-primary-text">
                     {activityTitle}
                   </h3>
                   <span
-                    className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${statusStyles[historyEntry.status]}`}
+                    className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium ${statusStyles[historyEntry.status]}`}
                   >
                     {formatStatus(historyEntry.status)}
                   </span>
                 </div>
-                <p className="mt-1 text-sm font-medium text-secondary-text">
-                  {historyEntry.areaName}
-                  {isMcqQuiz ? ` · ${historyEntry.gameType}` : ""}
-                  {historyEntry.difficulty ? ` · ${historyEntry.difficulty}` : ""}
+                <p
+                  className="mt-1 truncate text-sm font-medium text-secondary-text"
+                  title={activityMetadata}
+                >
+                  {activityMetadata}
                 </p>
                 <p className="mt-1.5 flex items-center gap-1.5 text-xs text-slate-400">
                   <ClockIcon className="h-4 w-4" />
@@ -77,14 +85,16 @@ export default function ActivityHistoryList({
                 </p>
               </div>
 
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
-                <div>
-                  <dt className="text-sm font-medium text-secondary-text">Score</dt>
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
+                <div className="min-w-0">
+                  <dt className="whitespace-nowrap text-[13px] font-medium text-secondary-text">
+                    Score
+                  </dt>
                   <dd className="mt-1 text-sm font-semibold text-primary-text">
-                    {historyEntry.correct}/{historyEntry.totalQuestions}
+                    {historyEntry.correct}/{historyEntry.questionsReached}
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-sm font-medium text-secondary-text">
                     Accuracy
                   </dt>
@@ -92,7 +102,7 @@ export default function ActivityHistoryList({
                     {historyEntry.accuracyPercentage}%
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-sm font-medium text-secondary-text">
                     Progress
                   </dt>
@@ -100,7 +110,7 @@ export default function ActivityHistoryList({
                     {historyEntry.questionsReached}/{historyEntry.totalQuestions}
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-sm font-medium text-secondary-text">
                     Duration
                   </dt>
@@ -113,10 +123,10 @@ export default function ActivityHistoryList({
               <button
                 type="button"
                 onClick={() => onViewDetails(historyEntry)}
-                className="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded border border-primary-accent bg-surface px-4 text-xs font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
+                className="inline-flex h-8 w-full shrink-0 cursor-pointer items-center justify-center gap-1 rounded border border-primary-accent bg-surface px-3 text-[11px] font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
               >
                 View Details
-                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
               </button>
             </div>
           </article>

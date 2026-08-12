@@ -139,7 +139,7 @@ Notes:
 
 - Use any testing tools, libraries available to the project for testing your changes
 - Never assume your changes simply work, always test!
-- If the project does not have any testing tools, scripts, MCP tools, skills, etc. available for testing, ask the user whether testing should be skipped.
+<!-- - If the project does not have any testing tools, scripts, MCP tools, skills, etc. available for testing, ask the user whether testing should be skipped. -->
 
 ## Backend Guidelines
 

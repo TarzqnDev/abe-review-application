@@ -1,4 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { getPaginationPageNumbers } from "@/utils/getPaginationPageNumbers";
 
 type ActivityHistoryPaginationProps = {
   currentPage: number;
@@ -21,6 +22,7 @@ export default function ActivityHistoryPagination({
     currentPage === totalPages
       ? totalItems - (currentPage - 1) * pageSize
       : pageSize;
+  const pageNumbers = getPaginationPageNumbers(currentPage, totalPages);
 
   return (
     <nav
@@ -41,9 +43,21 @@ export default function ActivityHistoryPagination({
         >
           <ChevronLeftIcon className="h-4 w-4" />
         </button>
-        <span className="inline-flex h-9 min-w-9 items-center justify-center rounded bg-primary-accent px-3 text-xs font-medium text-surface">
-          {currentPage}
-        </span>
+        {pageNumbers.map((pageNumber) => (
+          <button
+            key={pageNumber}
+            type="button"
+            onClick={() => onPageChange(pageNumber)}
+            aria-current={pageNumber === currentPage ? "page" : undefined}
+            className={`inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded px-3 text-xs font-medium transition-colors ${
+              pageNumber === currentPage
+                ? "bg-primary-accent text-surface"
+                : "border border-border bg-surface text-slate-600 hover:border-primary-accent hover:text-primary-accent"
+            }`}
+          >
+            {pageNumber}
+          </button>
+        ))}
         <button
           type="button"
           onClick={() => onPageChange(currentPage + 1)}

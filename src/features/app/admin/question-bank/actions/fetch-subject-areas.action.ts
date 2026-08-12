@@ -3,6 +3,11 @@
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 import { createActiveSupabaseServerActionClient } from "@/lib/supabase/server-action";
 
+const subjectNameCollator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: "base",
+});
+
 export type AdminSubject = {
   id: number;
   name: string;
@@ -50,7 +55,8 @@ export const fetchSubjectAreas = async () => {
     const subjectAreas = ((data ?? []) as AdminSubjectArea[]).map((area) => ({
       ...area,
       subjects: [...(area.subjects ?? [])].sort(
-        (firstSubject, secondSubject) => firstSubject.id - secondSubject.id,
+        (firstSubject, secondSubject) =>
+          subjectNameCollator.compare(firstSubject.name, secondSubject.name),
       ),
     }));
 

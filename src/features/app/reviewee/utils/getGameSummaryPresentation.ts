@@ -23,22 +23,22 @@ const formatDuration = (durationSeconds: number) => {
 export const getGameSummaryPresentation = (
   summary: GameSummaryPresentationInput | null,
 ) => {
-  const totalQuestions = Math.max(0, summary?.totalQuestions ?? 0);
+  const correct = Math.max(0, summary?.correct ?? 0);
+  const incorrect = Math.max(0, summary?.incorrect ?? 0);
+  const timedOut = Math.max(0, summary?.timedOut ?? 0);
+  const gameProgress = correct + incorrect + timedOut;
   const correctPercentage =
-    totalQuestions === 0
+    gameProgress === 0
       ? 0
-      : Math.min(
-          100,
-          (Math.max(0, summary?.correct ?? 0) / totalQuestions) * 100,
-        );
+      : Math.min(100, (correct / gameProgress) * 100);
   const incorrectPercentage =
-    totalQuestions === 0
+    gameProgress === 0
       ? 0
-      : (Math.max(0, summary?.incorrect ?? 0) / totalQuestions) * 100;
+      : (incorrect / gameProgress) * 100;
   const timedOutPercentage =
-    totalQuestions === 0
+    gameProgress === 0
       ? 0
-      : (Math.max(0, summary?.timedOut ?? 0) / totalQuestions) * 100;
+      : (timedOut / gameProgress) * 100;
   const scorePercentage = Math.round(correctPercentage);
   const correctEnd = correctPercentage;
   const incorrectEnd = Math.min(100, correctEnd + incorrectPercentage);
@@ -47,6 +47,7 @@ export const getGameSummaryPresentation = (
   return {
     donutBackground: `conic-gradient(var(--color-primary-accent) 0% ${correctEnd}%, var(--color-error) ${correctEnd}% ${incorrectEnd}%, var(--color-warning) ${incorrectEnd}% ${timedOutEnd}%, var(--color-border) ${timedOutEnd}% 100%)`,
     duration: formatDuration(summary?.durationSeconds ?? 0),
+    gameProgress,
     performanceMessage: getPerformanceMessage(scorePercentage),
     scorePercentage,
   };
