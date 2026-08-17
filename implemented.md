@@ -110,3 +110,4 @@
 - Question Bank: subject names are unique within an area after normalizing case and spacing, alphabetically ordered within each area, and truncated with an ellipsis when their card space is constrained.
 - Pagination: every numbered pagination control uses a moving window of no more than five page buttons.
 - Reviewee Games and History: game summary donuts and score stats use played progress (correct, incorrect, and timed-out items); terminal history retains only those played items, and history detail cards omit response-time and redundant status suffixes.
+- Reviewee MCQ Quiz: timer durations are database-backed per game type and difficulty, with 30 seconds for Easy, 40 seconds for Medium, 90 seconds for Hard across standard games, and a separate 15-second PAES configuration.

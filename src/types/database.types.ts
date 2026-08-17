@@ -374,6 +374,24 @@ export type Database = {
           },
         ]
       }
+      quiz_timer_configurations: {
+        Row: {
+          difficulty: string | null
+          game_type: string
+          timer_seconds: number
+        }
+        Insert: {
+          difficulty?: string | null
+          game_type: string
+          timer_seconds: number
+        }
+        Update: {
+          difficulty?: string | null
+          game_type?: string
+          timer_seconds?: number
+        }
+        Relationships: []
+      }
       reviewee_activity_stats: {
         Row: {
           completed_sessions: number

@@ -33,3 +33,4 @@
 - Reviewee MCQ Quiz and Flash Cards initial data must each use one page-specific server-action request so today's trivia is resolved before the completed page UI appears; `TodaysTriviaCard` remains controlled and must not start an independent mount fetch.
 - Reviewee Flash Cards must handle deck and trivia failures independently inside the coordinated initial request, and later deck retries, trivia retries, and Asia/Manila date-rollover refreshes must reload only their respective data.
 - Supabase email template HTML files are treated like migration files: do not edit old timestamped templates directly; create a new timestamped file and append the next incremental `v#` suffix to the filename for updates.
+- MCQ timer configuration is stored in the RLS-protected `quiz_timer_configurations` table. Configure the three standard game types by difficulty and PAES with a null difficulty; gameplay snapshots the configured value into each new `game_sessions` record.
