@@ -111,3 +111,4 @@
 - Pagination: every numbered pagination control uses a moving window of no more than five page buttons.
 - Reviewee Games and History: game summary donuts and score stats use played progress (correct, incorrect, and timed-out items); terminal history retains only those played items, and history detail cards omit response-time and redundant status suffixes.
 - Reviewee MCQ Quiz: timer durations are database-backed per game type and difficulty, with 30 seconds for Easy, 40 seconds for Medium, 90 seconds for Hard across standard games, and a separate 15-second PAES configuration.
+- Flash Card Games: the timer duration is database-backed through the shared timer configuration table, seeded at 15 seconds and snapshotted into each new game session.

@@ -378,16 +378,19 @@ export type Database = {
         Row: {
           difficulty: string | null
           game_type: string
+          id: number
           timer_seconds: number
         }
         Insert: {
           difficulty?: string | null
           game_type: string
+          id?: number
           timer_seconds: number
         }
         Update: {
           difficulty?: string | null
           game_type?: string
+          id?: number
           timer_seconds?: number
         }
         Relationships: []
