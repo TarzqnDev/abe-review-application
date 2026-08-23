@@ -7,6 +7,8 @@ import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
 import { getTokenRoles } from "@/lib/auth/get-token-roles";
 
+const ACCOUNT_SETUP_LINK_TYPES = new Set(["invite", "recovery"]);
+
 export const useAcceptInvite = () => {
   const { getUser, user } = useAuth();
 
@@ -68,8 +70,26 @@ export const useAcceptInvite = () => {
       const hashParams = new URLSearchParams(window.location.hash.slice(1));
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
+      const linkType = hashParams.get("type");
+      const hasSupabaseLinkFragment = Boolean(
+        accessToken ||
+          refreshToken ||
+          linkType ||
+          hashParams.get("error") ||
+          hashParams.get("error_description"),
+      );
 
-      if (accessToken && refreshToken) {
+      if (hasSupabaseLinkFragment) {
+        if (
+          !accessToken ||
+          !refreshToken ||
+          !linkType ||
+          !ACCOUNT_SETUP_LINK_TYPES.has(linkType)
+        ) {
+          setHasInviteSession(false);
+          return;
+        }
+
         const { error } = await supabase.auth.setSession({
           access_token: accessToken,
           refresh_token: refreshToken,

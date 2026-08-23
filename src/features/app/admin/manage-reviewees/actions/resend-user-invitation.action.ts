@@ -9,7 +9,12 @@ import {
   formatInvitationCooldown,
   parseInvitationClaim,
 } from "@/features/app/admin/manage-reviewees/utils/invitationCooldown";
+import { createInvitationEmailHtml } from "@/features/app/admin/manage-reviewees/utils/createInvitationEmailHtml";
+import { createResendClient } from "@/lib/resend";
 import { headers } from "next/headers";
+
+const INVITATION_EMAIL_SENDER = "Supabase Auth <noreply@abequip.site>";
+const INVITATION_EMAIL_SUBJECT = "You have been invited";
 
 export const resendUserInvitation = async (userId: string) => {
   let emailWasSent = false;
@@ -40,7 +45,9 @@ export const resendUserInvitation = async (userId: string) => {
 
     const { data: reviewee, error: revieweeError } = await supabaseAdmin
       .from("users")
-      .select("email, full_name, status, user_roles!inner(roles!inner(name))")
+      .select(
+        "email, full_name, status, account_setup_completed_at, user_roles!inner(roles!inner(name))",
+      )
       .eq("user_id", userId)
       .eq("user_roles.roles.name", "reviewee")
       .single();
@@ -52,6 +59,19 @@ export const resendUserInvitation = async (userId: string) => {
     if (reviewee.status !== "pending") {
       throw new Error("Invitations can only be resent to pending reviewees");
     }
+
+    const { data: authUserData, error: authUserError } =
+      await supabaseAdmin.auth.admin.getUserById(userId);
+
+    if (authUserError || !authUserData.user) {
+      throw new Error(
+        authUserError?.message ?? "Reviewee authentication account not found",
+      );
+    }
+
+    const requiresAccountSetupEmail =
+      Boolean(authUserData.user.email_confirmed_at) &&
+      !reviewee.account_setup_completed_at;
 
     const { data: claimData, error: claimError } = await supabaseAdmin.rpc(
       "claim_reviewee_invitation",
@@ -85,19 +105,53 @@ export const resendUserInvitation = async (userId: string) => {
     invitationLogId = claim.logId;
 
     const headerStore = await headers();
-    const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "";
+    const host =
+      headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "";
     const protocol = headerStore.get("x-forwarded-proto") ?? "http";
     const origin = headerStore.get("origin") ?? `${protocol}://${host}`;
 
-    const { error: invitationError } =
-      await supabaseAdmin.auth.admin.inviteUserByEmail(reviewee.email, {
-        data: { full_name: reviewee.full_name },
-        redirectTo: `${origin}/auth/accept-invite`,
+    if (requiresAccountSetupEmail) {
+      const { data: recoveryLinkData, error: recoveryLinkError } =
+        await supabaseAdmin.auth.admin.generateLink({
+          type: "recovery",
+          email: reviewee.email,
+          options: {
+            redirectTo: `${origin}/auth/accept-invite`,
+          },
+        });
+
+      if (recoveryLinkError || !recoveryLinkData.properties.action_link) {
+        throw new Error(
+          recoveryLinkError?.message ?? "Unable to create the invitation link",
+        );
+      }
+
+      const resend = createResendClient();
+      const { error: resendError } = await resend.emails.send({
+        from: INVITATION_EMAIL_SENDER,
+        to: reviewee.email,
+        subject: INVITATION_EMAIL_SUBJECT,
+        html: createInvitationEmailHtml({
+          confirmationUrl: recoveryLinkData.properties.action_link,
+          siteUrl: origin,
+        }),
       });
 
-    if (invitationError) {
-      throw new Error(invitationError.message);
+      if (resendError) {
+        throw new Error(resendError.message);
+      }
+    } else {
+      const { error: invitationError } =
+        await supabaseAdmin.auth.admin.inviteUserByEmail(reviewee.email, {
+          data: { full_name: reviewee.full_name },
+          redirectTo: `${origin}/auth/accept-invite`,
+        });
+
+      if (invitationError) {
+        throw new Error(invitationError.message);
+      }
     }
+
     emailWasSent = true;
 
     const { error: completeLogError } = await supabaseAdmin.rpc(
@@ -117,7 +171,8 @@ export const resendUserInvitation = async (userId: string) => {
 
     return {
       success: true,
-      message: "Email invitation resent successfully",
+      message:
+        "Email invitation resent successfully. Please check the spam or trash folder if it does not appear in the inbox.",
     };
   } catch (error: unknown) {
     if (invitationLogId) {
