@@ -2,8 +2,8 @@
 
 - Question Bank database changes are provided as a Supabase SQL editor script, not as a local migration, because this project uses the cloud Supabase project directly.
 - Existing files in `supabase/migrations/` and `supabase/sql-editor/` are immutable migration history; never edit old SQL files. Put every new database change in a new timestamped SQL file.
-- Manage Reviewees invitation sends are logged in the database and atomically throttled per reviewee for three minutes; failed email-provider requests do not consume the cooldown.
-- Supabase Auth email delivery and Postgres logging cannot share one transaction, so invitation actions reserve the cooldown before requesting delivery and finalize the log immediately afterward; interrupted `sending` reservations conservatively expire after three minutes.
+- Manage Reviewees invitation sends are logged in the database and atomically throttled per reviewee for one minute; failed email-provider requests do not consume the cooldown.
+- Supabase Auth email delivery and Postgres logging cannot share one transaction, so invitation actions reserve the cooldown before requesting delivery and finalize the log immediately afterward; interrupted `sending` reservations conservatively expire after one minute.
 - Accept-invite database changes are provided as a Supabase SQL Editor script under `supabase/sql-editor`, not as a migration.
 - Protected application server actions must use the active-account Supabase action client before role checks or service-role work; database access also requires an exact `active` account status through restrictive RLS and privileged RPC guards.
 - Inactive-account enforcement database changes are delivered through `supabase/sql-editor/20260804120000_inactive_account_enforcement.sql`; the script also restricts user-profile and role-assignment policies that could otherwise allow self-reactivation or role escalation.

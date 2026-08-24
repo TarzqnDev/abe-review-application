@@ -6,7 +6,7 @@ import {
   createActiveSupabaseServerActionClient,
 } from "@/lib/supabase/server-action";
 
-const INVITATION_COOLDOWN_MILLISECONDS = 3 * 60 * 1000;
+const INVITATION_COOLDOWN_MILLISECONDS = 60 * 1000;
 
 export type AdminDashboardUser = {
   user_id: string;
