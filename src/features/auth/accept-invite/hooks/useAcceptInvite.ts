@@ -71,20 +71,20 @@ export const useAcceptInvite = () => {
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
       const linkType = hashParams.get("type");
-      const hasSupabaseLinkFragment = Boolean(
-        accessToken ||
-          refreshToken ||
-          linkType ||
-          hashParams.get("error") ||
+      const hasLinkError = Boolean(
+        hashParams.get("error") ||
+          hashParams.get("error_code") ||
           hashParams.get("error_description"),
       );
+      const hasSessionTokens = Boolean(accessToken || refreshToken);
 
-      if (hasSupabaseLinkFragment) {
+      if (hasSessionTokens) {
         if (
           !accessToken ||
           !refreshToken ||
           !linkType ||
-          !ACCOUNT_SETUP_LINK_TYPES.has(linkType)
+          !ACCOUNT_SETUP_LINK_TYPES.has(linkType) ||
+          hasLinkError
         ) {
           setHasInviteSession(false);
           return;
@@ -108,6 +108,26 @@ export const useAcceptInvite = () => {
         nextUrl.hash = "";
 
         window.history.replaceState({}, "", nextUrl.toString());
+        return;
+      }
+
+      if (linkType && !hasLinkError) {
+        setHasInviteSession(false);
+        return;
+      }
+
+      if (hasLinkError) {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        setHasInviteSession(Boolean(session));
+
+        if (session) {
+          await syncUser();
+          await syncAccountSetupStatus();
+        }
+
         return;
       }
 
