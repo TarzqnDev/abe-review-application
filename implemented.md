@@ -113,3 +113,4 @@
 - Reviewee MCQ Quiz: timer durations are database-backed per game type and difficulty, with 30 seconds for Easy, 40 seconds for Medium, 90 seconds for Hard across standard games, and a separate 15-second PAES configuration.
 - Flash Card Games: the timer duration is database-backed through the shared timer configuration table, seeded at 15 seconds and snapshotted into each new game session.
 - Manage Reviewees: pending reviewees who already verified an invitation but have not completed account setup receive a custom Resend-delivered account invitation email containing a fresh Supabase recovery link, while unverified pending reviewees continue to receive Supabase invite emails.
+- Account Access: pending or unfinished accounts are redirected from protected admin and reviewee dashboards to `/auth/accept-invite` until account setup is complete.

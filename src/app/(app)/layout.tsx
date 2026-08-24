@@ -19,12 +19,19 @@ export default async function AppLayout({
 
   const { data: account, error: accountError } = await supabase
     .from("users")
-    .select("status")
+    .select("status, account_setup_completed_at")
     .eq("user_id", identity.userId)
     .maybeSingle();
 
   if (accountError || !account) {
     throw new Error("Unable to verify your account status");
+  }
+
+  if (
+    account.status.toLowerCase() === "pending" ||
+    !account.account_setup_completed_at
+  ) {
+    redirect("/auth/accept-invite");
   }
 
   const isInactive = account.status.toLowerCase() !== "active";
