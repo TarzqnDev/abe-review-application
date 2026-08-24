@@ -3,6 +3,7 @@ import { getPaginationPageNumbers } from "@/utils/getPaginationPageNumbers";
 
 type ActivityHistoryPaginationProps = {
   currentPage: number;
+  itemLabel?: string;
   onPageChange: (page: number) => void;
   pageSize: number;
   totalItems: number;
@@ -11,6 +12,7 @@ type ActivityHistoryPaginationProps = {
 
 export default function ActivityHistoryPagination({
   currentPage,
+  itemLabel = "activities",
   onPageChange,
   pageSize,
   totalItems,
@@ -26,12 +28,12 @@ export default function ActivityHistoryPagination({
 
   return (
     <nav
-      aria-label="Activity history pagination"
+      aria-label={`${itemLabel} pagination`}
       className="mt-3 flex flex-col items-center justify-between gap-3 sm:flex-row"
     >
       <p className="text-sm font-medium text-secondary-text">
         Showing {visibleItems.toLocaleString()} of {totalItems.toLocaleString()}{" "}
-        activities
+        {itemLabel}
       </p>
       <div className="flex items-center gap-2">
         <button

@@ -1,4 +1,5 @@
 import { ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import ActivityHistoryPagination from "@/features/app/reviewee/history/components/ActivityHistoryPagination";
 import FlashCardHistoryDetailsItem from "@/features/app/reviewee/history/components/modals/FlashCardHistoryDetailsItem";
 import HistoryDetailsSkeleton from "@/features/app/reviewee/history/components/modals/HistoryDetailsSkeleton";
 import HistoryDetailsSummary from "@/features/app/reviewee/history/components/modals/HistoryDetailsSummary";
@@ -29,12 +30,18 @@ const statusLabel = {
 export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
   const {
     closeButtonRef,
+    activeItemPage,
     details,
     error,
     handleClose,
     isLoading,
     loadDetails,
     modalAccessibility,
+    paginatedItems,
+    setCurrentPage,
+    summaryPresentation,
+    totalItemPages,
+    itemPageSize,
   } = useHistoryDetailsModal(props);
   const { dialogRef, handleBackdropMouseDown, isVisible } = modalAccessibility;
   const history = details?.history ?? null;
@@ -127,7 +134,7 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
           </div>
         ) : details && history ? (
           <>
-            <HistoryDetailsSummary history={history} />
+            <HistoryDetailsSummary history={history} {...summaryPresentation} />
 
             <section className="mt-7" aria-labelledby="activity-items-title">
               <div className="flex items-end justify-between gap-3">
@@ -136,14 +143,14 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
                     {history.sessionType === "flash_cards" ? "Flash Cards" : "Questions"}
                   </h3>
                   <p className="mt-1 text-sm text-secondary-text">
-                    {details.items.length} {details.items.length === 1 ? "item" : "items"}
+                  {details.items.length} {details.items.length === 1 ? "item" : "items"}
                   </p>
                 </div>
               </div>
 
               {details.items.length > 0 ? (
                 <div className="mt-4 space-y-3">
-                  {details.items.map((item) =>
+                  {paginatedItems.map((item) =>
                     item.sessionType === "mcq_quiz" ? (
                       <McqHistoryDetailsItem key={`${item.sessionType}-${item.id}`} item={item} />
                     ) : (
@@ -158,6 +165,15 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
                   </p>
                 </div>
               )}
+
+              <ActivityHistoryPagination
+                currentPage={activeItemPage}
+                itemLabel={history.sessionType === "flash_cards" ? "flash cards" : "questions"}
+                onPageChange={setCurrentPage}
+                pageSize={itemPageSize}
+                totalItems={details.items.length}
+                totalPages={totalItemPages}
+              />
             </section>
           </>
         ) : null}

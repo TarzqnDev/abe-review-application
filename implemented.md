@@ -114,3 +114,6 @@
 - Flash Card Games: the timer duration is database-backed through the shared timer configuration table, seeded at 15 seconds and snapshotted into each new game session.
 - Manage Reviewees: pending reviewees who already verified an invitation but have not completed account setup receive a custom Resend-delivered account invitation email containing a fresh Supabase recovery link, while unverified pending reviewees continue to receive Supabase invite emails.
 - Account Access: pending or unfinished accounts are redirected from protected admin and reviewee dashboards to `/auth/accept-invite` until account setup is complete.
+- Activity History: detail modals now use the score-summary donut with Game Progress and Game Duration, retain accuracy and score data without displaying their old cards, and paginate played questions or flash cards five at a time.
+- Activity History: history detail summaries now place the donut and performance feedback beside the larger stat-card group on desktop, while smaller screens center that visual above the stats; the loading skeleton mirrors the same responsive layout.
+- Activity History: desktop detail summaries reserve a balanced two-fifths column for the score donut and feedback, with the remaining three-fifths for session stats; the matching loading skeleton uses the same proportions.
