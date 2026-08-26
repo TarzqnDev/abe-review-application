@@ -1,4 +1,4 @@
-export const MAX_FLASH_CARDS_PER_DECK = 100;
+export const MAX_FLASH_CARDS_PER_DECK = 250;
 
 export type FlashCard = {
   id: number;

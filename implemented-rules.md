@@ -11,7 +11,7 @@
 - Admin and reviewee app pages use the shared role-aware app shell and navigation components.
 - The unfinished gray content block in the ABE Trivia reference is intentionally omitted.
 - Reviewee quiz gameplay database changes are maintained through local Supabase migrations, and answer keys remain server-private instead of being returned with playable questions.
-- Reviewee flash-card database changes are maintained through local Supabase migrations; each reviewee has at most one deck per subject area and each deck is limited to 100 cards.
+- Reviewee flash-card database changes are maintained through local Supabase migrations; each reviewee has at most one deck per subject area and each deck is limited to 250 cards.
 - MCQ and flash-card client timers must not run until server timing is initialized, and local deadline scheduling must use monotonic elapsed durations while the database remains authoritative.
 - `game_sessions` is the sole canonical activity-history source for MCQ and flash-card attempts; summary metrics are derived from the mode-specific session-item tables, and private answer-key tables remain the source for detailed results.
 - Reviewee history database changes are maintained through local Supabase migrations, including removal of the redundant activity-history table and UUID-based, ownership-checked detail access.

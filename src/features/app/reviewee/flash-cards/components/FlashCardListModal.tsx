@@ -8,7 +8,10 @@ import DeleteFlashCardConfirmationModal from "@/features/app/reviewee/flash-card
 import FlashCardFormModal from "@/features/app/reviewee/flash-cards/components/FlashCardFormModal";
 import FlashCardListPagination from "@/features/app/reviewee/flash-cards/components/FlashCardListPagination";
 import { useFlashCardListModal } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardListModal";
-import type { FlashCardDeck } from "@/features/app/reviewee/flash-cards/types/flashCard";
+import {
+  MAX_FLASH_CARDS_PER_DECK,
+  type FlashCardDeck,
+} from "@/features/app/reviewee/flash-cards/types/flashCard";
 import { useModalAnimation } from "@/hooks/useModalAnimation";
 
 type FlashCardListModalProps = {
@@ -53,7 +56,8 @@ export default function FlashCardListModal({
     flashCardDeck !== null,
   );
   const flashCardCount = flashCardDeck?.cards.length ?? 0;
-  const hasReachedCardLimit = flashCardCount >= (flashCardDeck?.maxCards ?? 100);
+  const hasReachedCardLimit =
+    flashCardCount >= (flashCardDeck?.maxCards ?? MAX_FLASH_CARDS_PER_DECK);
 
   return (
     <>
