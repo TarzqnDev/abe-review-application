@@ -19,7 +19,6 @@ export default function GameSelectionModal(
   props: GameSelectionModalProps,
 ) {
   const {
-    areaSelectRef,
     difficulty,
     error,
     handleClose,
@@ -74,7 +73,6 @@ export default function GameSelectionModal(
           {isPaesGame ? "Select PAES Subject" : "Select Area"}
           <span className="relative mt-2 block">
             <select
-              ref={areaSelectRef}
               value={selectedOptionId}
               onChange={(event) => setSelectedOptionId(event.target.value)}
               disabled={

@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict SyKFUTJRLH2m616T3LdYUrRdQyacpDOD4xH01koEWfJ4cgE77HBjE5KFHVLhKHC
+-- \restrict hm6RGfQAmaspZOnkxBv1sjSaRfMtlk5oVRgkJ1HtvFLSdugvfpHgGvbXgGJgZUT
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
@@ -28,7 +28,50 @@ SET row_security = off;
 INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
 	('00000000-0000-0000-0000-000000000000', '2c591ec5-54e2-4c4d-a09d-98249011e374', '{"action":"user_signedup","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"provider":"email","user_email":"uhenyou@gmail.com","user_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","user_phone":""}}', '2026-08-26 11:52:33.233443+00', ''),
 	('00000000-0000-0000-0000-000000000000', '6e935109-4a66-4621-93d1-6e8ee929798c', '{"action":"login","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 11:55:53.924241+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'b7cba581-1453-463b-9e30-c8fb765d7600', '{"action":"logout","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 11:55:57.224155+00', '');
+	('00000000-0000-0000-0000-000000000000', 'b7cba581-1453-463b-9e30-c8fb765d7600', '{"action":"logout","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 11:55:57.224155+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b5791503-6850-4724-8d13-18af2c379a8c', '{"action":"login","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 12:02:52.462871+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ede748a9-1a09-4d56-9221-9d74fd5c6ffb', '{"action":"token_refreshed","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-08-26 13:03:45.051981+00', ''),
+	('00000000-0000-0000-0000-000000000000', '95df4073-bb4c-49cb-9563-23da7a7ead1e', '{"action":"token_revoked","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-08-26 13:03:45.054202+00', ''),
+	('00000000-0000-0000-0000-000000000000', '30dfda4c-db1a-4c20-a2d2-47aa8c723406', '{"action":"user_signedup","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"provider":"email","user_email":"gdashrobtob@gmail.com","user_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","user_phone":""}}', '2026-08-26 13:57:27.039772+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a0668e10-b94f-407e-8b1b-b044d921268e', '{"action":"logout","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 13:58:56.062819+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd8725b3f-81de-4507-b2e4-a8c9b6aa8e4d', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 13:59:05.757976+00', ''),
+	('00000000-0000-0000-0000-000000000000', '500951c3-d6b8-4856-9663-38473694fd96', '{"action":"token_refreshed","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-08-26 15:03:36.900493+00', ''),
+	('00000000-0000-0000-0000-000000000000', '375d337b-d5c5-4d3c-9787-eca81064d958', '{"action":"token_revoked","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-08-26 15:03:36.902943+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f015fdc3-0303-4cac-96b1-3ea3381ae3e0', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:03:59.564794+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a3afa02e-e62e-442a-aa9f-f83ce164a3d2', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:06:03.560818+00', ''),
+	('00000000-0000-0000-0000-000000000000', '339c384b-4f7f-403a-82be-4b92ce705300', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:14:21.244635+00', ''),
+	('00000000-0000-0000-0000-000000000000', '15a34675-49e4-4bf2-99db-52eb36f2bd00', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:14:55.524295+00', ''),
+	('00000000-0000-0000-0000-000000000000', '062dc59f-1735-4afc-b61c-67d2cbce7032', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:18:05.523271+00', ''),
+	('00000000-0000-0000-0000-000000000000', '92cb1e67-6d5d-4913-91a6-7d25d18ed0d3', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:18:14.604105+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ca67159e-a923-4521-8527-e65fe98e355c', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:18:21.558874+00', ''),
+	('00000000-0000-0000-0000-000000000000', '249709ab-7943-4e78-be8f-980d8669ffb2', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:18:28.61434+00', ''),
+	('00000000-0000-0000-0000-000000000000', '424fc95d-1225-4e19-9e29-d6c67c4059bd', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:18:35.306235+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'e6a89972-84e5-4e72-8a34-750de20592f4', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:18:42.716974+00', ''),
+	('00000000-0000-0000-0000-000000000000', '4de1515a-de1f-4cc7-b028-6c035ec0dc29', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:25:48.028817+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b3418626-7a4d-4385-b178-8377b27e5800', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:25:55.653971+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b757308a-caf7-4ef2-950c-9b265f05a4f4', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:52:10.921052+00', ''),
+	('00000000-0000-0000-0000-000000000000', '11ef2354-ce6d-4c05-92c6-6448fb085e76', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:52:29.549805+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f0e4996c-6a63-4d23-af1a-be9681e5c3b8', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:52:37.115999+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ed585669-6d61-426d-8f77-650baf62ebfa', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:52:45.835744+00', ''),
+	('00000000-0000-0000-0000-000000000000', '5f565fac-5b3d-4a9e-99e6-82c2ff65a00d', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:52:52.970129+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b3bbd0e2-be7c-4d91-a13d-e68e2452f593', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:52:58.749505+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f2ce79d9-6656-484b-b133-e1e48b4b5a60', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:53:05.763323+00', ''),
+	('00000000-0000-0000-0000-000000000000', '5de914ff-7714-437d-8989-19c963c60b65', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:53:11.466329+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'afb355d4-792c-4693-852e-44e4e81cbcd8', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:53:17.983918+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'e25fe236-e115-497c-be67-a627c51ed8ae', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 15:54:21.127346+00', ''),
+	('00000000-0000-0000-0000-000000000000', '3241842d-3345-4cbf-845c-c75c2fcba1c7', '{"action":"login","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 15:54:34.455371+00', ''),
+	('00000000-0000-0000-0000-000000000000', '7e1f4d13-a75e-46f7-8dc6-ccf3e9a3bbd5', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:05:25.054925+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a1f260b3-8c0c-4380-a9a8-c209cd6f8416', '{"action":"logout","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 16:05:50.031071+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd48e588d-ebc8-42a7-9f97-b5af5036a14c', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:05:59.495325+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'eb519d89-7c54-435b-9d73-be814b85c349', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 16:06:05.982957+00', ''),
+	('00000000-0000-0000-0000-000000000000', '84dbd531-e115-41ca-a59a-a4501fa61338', '{"action":"login","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:06:15.575363+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f5622867-8725-499b-be1c-f797530783a3', '{"action":"logout","actor_id":"14a200fb-f0d6-4478-9379-4d7ab8de56d0","actor_username":"uhenyou@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 16:07:32.853488+00', ''),
+	('00000000-0000-0000-0000-000000000000', '63a3a1a8-203f-4dab-b35c-de21b14c9473', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:07:43.17522+00', ''),
+	('00000000-0000-0000-0000-000000000000', '994aaa17-a3e1-41ea-9577-6a48918dc87a', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:08:46.514401+00', ''),
+	('00000000-0000-0000-0000-000000000000', '3e6d775a-4137-46c3-b21e-1f533b3ce033', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:10:43.464683+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b780286f-ea11-4b39-abef-c628be87d7d3', '{"action":"logout","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-08-26 16:10:52.002752+00', ''),
+	('00000000-0000-0000-0000-000000000000', '418c55aa-06bd-47df-af8d-420edcec393a', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:11:03.547573+00', ''),
+	('00000000-0000-0000-0000-000000000000', '2361aea4-8c6d-401d-8ef7-6a802c1de3d6', '{"action":"login","actor_id":"5c7884ab-4836-4569-a774-5f74e8a9fa0a","actor_username":"gdashrobtob@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-08-26 16:31:23.832808+00', '');
 
 
 --
@@ -48,7 +91,8 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', '14a200fb-f0d6-4478-9379-4d7ab8de56d0', 'authenticated', 'authenticated', 'uhenyou@gmail.com', '$2a$10$rL3Vrj.mRXy42ZlspPrYCOHZ3iCPYXrroEwOHfMYDgfZv6h1oWq0C', '2026-08-26 11:52:33.235848+00', NULL, '', NULL, '', NULL, '', '', NULL, '2026-08-26 11:55:53.925785+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2026-08-26 11:52:33.228476+00', '2026-08-26 11:55:53.93059+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', '14a200fb-f0d6-4478-9379-4d7ab8de56d0', 'authenticated', 'authenticated', 'uhenyou@gmail.com', '$2a$10$rL3Vrj.mRXy42ZlspPrYCOHZ3iCPYXrroEwOHfMYDgfZv6h1oWq0C', '2026-08-26 11:52:33.235848+00', NULL, '', NULL, '', NULL, '', '', NULL, '2026-08-26 16:06:15.576534+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2026-08-26 11:52:33.228476+00', '2026-08-26 16:06:15.579044+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', '5c7884ab-4836-4569-a774-5f74e8a9fa0a', 'authenticated', 'authenticated', 'gdashrobtob@gmail.com', '$2a$10$hP2HmYkpSBxmqZeuh2961eVecqmQ./Ime14zaklmXGV5olZExQ9O.', '2026-08-26 13:57:27.04132+00', NULL, '', NULL, '', NULL, '', '', NULL, '2026-08-26 16:31:23.837022+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2026-08-26 13:57:27.030503+00', '2026-08-26 16:31:23.844475+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -56,7 +100,8 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('14a200fb-f0d6-4478-9379-4d7ab8de56d0', '14a200fb-f0d6-4478-9379-4d7ab8de56d0', '{"sub": "14a200fb-f0d6-4478-9379-4d7ab8de56d0", "email": "uhenyou@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-08-26 11:52:33.231683+00', '2026-08-26 11:52:33.231739+00', '2026-08-26 11:52:33.231739+00', 'dcd09031-4451-4c89-8c30-77f69311295b');
+	('14a200fb-f0d6-4478-9379-4d7ab8de56d0', '14a200fb-f0d6-4478-9379-4d7ab8de56d0', '{"sub": "14a200fb-f0d6-4478-9379-4d7ab8de56d0", "email": "uhenyou@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-08-26 11:52:33.231683+00', '2026-08-26 11:52:33.231739+00', '2026-08-26 11:52:33.231739+00', 'dcd09031-4451-4c89-8c30-77f69311295b'),
+	('5c7884ab-4836-4569-a774-5f74e8a9fa0a', '5c7884ab-4836-4569-a774-5f74e8a9fa0a', '{"sub": "5c7884ab-4836-4569-a774-5f74e8a9fa0a", "email": "gdashrobtob@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-08-26 13:57:27.036596+00', '2026-08-26 13:57:27.036643+00', '2026-08-26 13:57:27.036643+00', '14309b2f-eb93-4b2e-bf10-9aecec8be976');
 
 
 --
@@ -75,12 +120,18 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 -- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
+INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id", "refresh_token_hmac_key", "refresh_token_counter", "scopes") VALUES
+	('e68ba1e9-0618-4542-8039-d2d2d77d62e9', '5c7884ab-4836-4569-a774-5f74e8a9fa0a', '2026-08-26 16:11:03.548597+00', '2026-08-26 16:11:03.548597+00', NULL, 'aal1', NULL, NULL, 'node', '172.18.0.1', NULL, NULL, NULL, NULL, NULL),
+	('d1af1286-fbdd-44e0-8bf1-0402bfccef0f', '5c7884ab-4836-4569-a774-5f74e8a9fa0a', '2026-08-26 16:31:23.837523+00', '2026-08-26 16:31:23.837523+00', NULL, 'aal1', NULL, NULL, 'node', '172.18.0.1', NULL, NULL, NULL, NULL, NULL);
 
 
 --
 -- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
+INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
+	('e68ba1e9-0618-4542-8039-d2d2d77d62e9', '2026-08-26 16:11:03.553974+00', '2026-08-26 16:11:03.553974+00', 'password', 'b8ce3d72-d67c-42ad-ac80-8d60d3f2e6bc'),
+	('d1af1286-fbdd-44e0-8bf1-0402bfccef0f', '2026-08-26 16:31:23.845+00', '2026-08-26 16:31:23.845+00', 'password', 'edf8d989-be3d-453f-b75b-a06e1f6cc637');
 
 
 --
@@ -123,6 +174,9 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 -- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
+INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked", "created_at", "updated_at", "parent", "session_id") VALUES
+	('00000000-0000-0000-0000-000000000000', 26, 'esbms6i7hyvc', '5c7884ab-4836-4569-a774-5f74e8a9fa0a', false, '2026-08-26 16:11:03.552667+00', '2026-08-26 16:11:03.552667+00', NULL, 'e68ba1e9-0618-4542-8039-d2d2d77d62e9'),
+	('00000000-0000-0000-0000-000000000000', 27, 'ty5pqevnt7kv', '5c7884ab-4836-4569-a774-5f74e8a9fa0a', false, '2026-08-26 16:31:23.841665+00', '2026-08-26 16:31:23.841665+00', NULL, 'd1af1286-fbdd-44e0-8bf1-0402bfccef0f');
 
 
 --
@@ -177,7 +231,8 @@ INSERT INTO "public"."subject_areas" ("id", "name", "created_at", "updated_at") 
 --
 
 INSERT INTO "public"."users" ("user_id", "status", "full_name", "start_date", "email", "mode_of_review", "account_setup_completed_at") VALUES
-	('14a200fb-f0d6-4478-9379-4d7ab8de56d0', 'active', 'James Ricarte', '2026-08-26 11:53:06+00', 'uhenyou@gmail.com', 'online', '2026-08-26 11:53:23+00');
+	('14a200fb-f0d6-4478-9379-4d7ab8de56d0', 'active', 'James Ricarte', '2026-08-26 11:53:06+00', 'uhenyou@gmail.com', 'online', '2026-08-26 11:53:23+00'),
+	('5c7884ab-4836-4569-a774-5f74e8a9fa0a', 'active', 'Gdash Robtob', '2026-08-26 13:58:06+00', 'gdashrobtob@gmail.com', 'online', '2026-08-26 13:58:19+00');
 
 
 --
@@ -4837,7 +4892,8 @@ INSERT INTO "public"."trivias" ("id", "content", "publish_date", "created_at", "
 --
 
 INSERT INTO "public"."user_roles" ("id", "user_id", "role_id") VALUES
-	(167, '14a200fb-f0d6-4478-9379-4d7ab8de56d0', 1);
+	(167, '14a200fb-f0d6-4478-9379-4d7ab8de56d0', 1),
+	(168, '5c7884ab-4836-4569-a774-5f74e8a9fa0a', 2);
 
 
 --
@@ -4904,7 +4960,7 @@ INSERT INTO "public"."user_roles" ("id", "user_id", "role_id") VALUES
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 1, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 27, true);
 
 
 --
@@ -4995,14 +5051,14 @@ SELECT pg_catalog.setval('"public"."subjects_id_seq"', 67, true);
 -- Name: trivias_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."trivias_id_seq"', 32, true);
+SELECT pg_catalog.setval('"public"."trivias_id_seq"', 35, true);
 
 
 --
 -- Name: user_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."user_roles_id_seq"', 167, true);
+SELECT pg_catalog.setval('"public"."user_roles_id_seq"', 168, true);
 
 
 --
@@ -5016,6 +5072,6 @@ SELECT pg_catalog.setval('"supabase_functions"."hooks_id_seq"', 1, false);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict SyKFUTJRLH2m616T3LdYUrRdQyacpDOD4xH01koEWfJ4cgE77HBjE5KFHVLhKHC
+-- \unrestrict hm6RGfQAmaspZOnkxBv1sjSaRfMtlk5oVRgkJ1HtvFLSdugvfpHgGvbXgGJgZUT
 
 RESET ALL;

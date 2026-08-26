@@ -49,10 +49,7 @@ export const useQuizModalAccessibility = ({
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
 
     const focusFrame = requestAnimationFrame(() => {
-      const firstFocusableElement =
-        initialFocusRef?.current ??
-        dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-      firstFocusableElement?.focus();
+      (initialFocusRef?.current ?? dialogRef.current)?.focus();
     });
 
     const handleKeyDown = (event: KeyboardEvent) => {

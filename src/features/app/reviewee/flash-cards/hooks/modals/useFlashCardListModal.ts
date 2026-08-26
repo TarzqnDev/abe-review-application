@@ -31,7 +31,6 @@ export const useFlashCardListModal = ({
     useState<FlashCardFormModalRequest | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const onCloseRef = useRef(onClose);
   const isNestedModalOpen = Boolean(
     flashCardFormRequest || selectedDeleteFlashCard,
@@ -50,9 +49,7 @@ export const useFlashCardListModal = ({
     if (!isOpen) return;
 
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    const focusFrame = requestAnimationFrame(() =>
-      searchInputRef.current?.focus(),
-    );
+    const focusFrame = requestAnimationFrame(() => dialogRef.current?.focus());
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isNestedModalOpenRef.current) return;
@@ -198,7 +195,6 @@ export const useFlashCardListModal = ({
     isNestedModalOpen,
     paginatedFlashCards,
     searchQuery,
-    searchInputRef,
     selectedDeleteFlashCard,
     totalPages,
   };

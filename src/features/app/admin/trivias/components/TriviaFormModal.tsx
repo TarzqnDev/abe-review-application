@@ -29,7 +29,6 @@ export default function TriviaFormModal({
   );
   const {
     content,
-    contentInputRef,
     dialogRef,
     formError,
     handleClose,
@@ -73,6 +72,7 @@ export default function TriviaFormModal({
 
       <div
         ref={dialogRef}
+        tabIndex={-1}
         className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[560px] overflow-y-auto rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-9 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
@@ -103,7 +103,6 @@ export default function TriviaFormModal({
           >
             Trivia Content
             <textarea
-              ref={contentInputRef}
               id="trivia-content"
               value={content}
               onChange={(event) => setContent(event.target.value)}

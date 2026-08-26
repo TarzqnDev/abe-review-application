@@ -65,7 +65,6 @@ export const useSubjectFormModal = ({
   const isEditing = subject !== null;
   const openSubjectFormModal = areaId !== null || subject !== null;
   const dialogRef = useRef<HTMLDivElement>(null);
-  const subjectNameInputRef = useRef<HTMLInputElement>(null);
 
   useBodyScrollLock(openSubjectFormModal);
 
@@ -73,9 +72,7 @@ export const useSubjectFormModal = ({
     if (!openSubjectFormModal) return;
 
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    const focusFrame = requestAnimationFrame(() =>
-      subjectNameInputRef.current?.focus(),
-    );
+    const focusFrame = requestAnimationFrame(() => dialogRef.current?.focus());
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && !isSavingSubject) {
@@ -182,7 +179,6 @@ export const useSubjectFormModal = ({
     isSavingSubject,
     openSubjectFormModal,
     selectedSubjectAreaName: selectedSubjectArea?.name ?? "",
-    subjectNameInputRef,
     subjectFormData,
   };
 };

@@ -29,7 +29,6 @@ export const useTriviaFormModal = ({
     request?.trivia?.publishDate ?? request?.initialPublishDate ?? "",
   );
   const closeWithAnimationRef = useRef(closeWithAnimation);
-  const contentInputRef = useRef<HTMLTextAreaElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   const isEditMode = request?.mode === "edit";
@@ -48,9 +47,7 @@ export const useTriviaFormModal = ({
     if (!isOpen) return;
 
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    const focusFrame = requestAnimationFrame(() =>
-      contentInputRef.current?.focus(),
-    );
+    const focusFrame = requestAnimationFrame(() => dialogRef.current?.focus());
 
     return () => {
       cancelAnimationFrame(focusFrame);
@@ -162,7 +159,6 @@ export const useTriviaFormModal = ({
 
   return {
     content,
-    contentInputRef,
     dialogRef,
     formError,
     handleClose,

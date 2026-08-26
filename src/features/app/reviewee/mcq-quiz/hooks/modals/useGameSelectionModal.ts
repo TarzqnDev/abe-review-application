@@ -28,7 +28,6 @@ export const useGameSelectionModal = ({
   onNoQuestions,
   onPreviewed,
 }: UseGameSelectionModalOptions) => {
-  const areaSelectRef = useRef<HTMLSelectElement>(null);
   const requestIdRef = useRef(0);
   const [selectionOptions, setSelectionOptions] = useState<QuizArea[]>([]);
   const [selectedOptionId, setSelectedOptionId] = useState("");
@@ -37,7 +36,6 @@ export const useGameSelectionModal = ({
   const [isPreparing, setIsPreparing] = useState(false);
   const [error, setError] = useState("");
   const modalAccessibility = useQuizModalAccessibility({
-    initialFocusRef: areaSelectRef,
     isOpen,
     onClose: isPreparing ? undefined : onClose,
   });
@@ -144,7 +142,6 @@ export const useGameSelectionModal = ({
   };
 
   return {
-    areaSelectRef,
     difficulty,
     error,
     handleClose,

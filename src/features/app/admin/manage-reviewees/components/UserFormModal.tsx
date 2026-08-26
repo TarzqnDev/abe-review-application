@@ -18,7 +18,6 @@ export const UserFormModal = (props: UserFormModalProps) => {
   const {
     deactivationReturnFocusRef,
     dialogRef,
-    initialFocusRef,
     statusSwitchRef,
     ...modal
   } = useUserFormModal(props);
@@ -47,6 +46,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
       >
         <div
           ref={dialogRef}
+          tabIndex={-1}
           className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-hidden rounded-lg bg-surface shadow-xl transition-all duration-300 sm:overflow-y-auto sm:px-9 sm:py-10 ${
             props.isOpen ? "translate-y-0 scale-100" : "-translate-y-3 scale-95"
           }`}
@@ -78,7 +78,6 @@ export const UserFormModal = (props: UserFormModalProps) => {
               <label className="block text-base font-medium text-primary-text">
                 Full Name
                 <input
-                  ref={initialFocusRef}
                   type="text"
                   value={modal.fullName}
                   onChange={(event) => modal.setFullName(event.target.value)}

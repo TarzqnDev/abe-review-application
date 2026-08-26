@@ -39,7 +39,6 @@ export default function SubjectFormModal({
     isSavingSubject,
     openSubjectFormModal,
     selectedSubjectAreaName,
-    subjectNameInputRef,
     subjectFormData,
   } = useSubjectFormModal({
     areaId,
@@ -81,6 +80,7 @@ export default function SubjectFormModal({
 
       <div
         ref={dialogRef}
+        tabIndex={-1}
         className={`relative w-full max-w-[525px] rounded-md bg-surface p-9 shadow-xl transition-all duration-300 ease-out ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
@@ -127,7 +127,6 @@ export default function SubjectFormModal({
             </label>
             <input
               id="subjectName"
-              ref={subjectNameInputRef}
               name="subjectName"
               type="text"
               value={subjectFormData.subjectName}

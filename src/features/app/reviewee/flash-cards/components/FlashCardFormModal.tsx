@@ -34,7 +34,6 @@ export default function FlashCardFormModal({
     isOpen,
     isSaving,
     question,
-    questionInputRef,
     setAnswer,
     setQuestion,
   } = useFlashCardFormModal({
@@ -66,6 +65,7 @@ export default function FlashCardFormModal({
 
       <div
         ref={dialogRef}
+        tabIndex={-1}
         className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-y-auto rounded-md bg-surface px-6 py-8 shadow-xl transition-all duration-300 ease-out sm:px-9 sm:py-10 ${
           isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
@@ -127,7 +127,6 @@ export default function FlashCardFormModal({
           >
             Question
             <textarea
-              ref={questionInputRef}
               id="flash-card-question"
               value={question}
               onChange={(event) => setQuestion(event.target.value)}

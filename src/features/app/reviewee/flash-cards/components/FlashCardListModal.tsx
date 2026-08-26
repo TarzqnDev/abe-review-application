@@ -45,7 +45,6 @@ export default function FlashCardListModal({
     lastFlashCardNumber,
     paginatedFlashCards,
     searchQuery,
-    searchInputRef,
     selectedDeleteFlashCard,
     totalPages,
   } = useFlashCardListModal({
@@ -82,6 +81,7 @@ export default function FlashCardListModal({
 
         <div
           ref={dialogRef}
+          tabIndex={-1}
           className={`relative flex max-h-[calc(100dvh-2rem)] w-full max-w-[935px] flex-col rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[calc(100vh-3rem)] sm:p-9 ${
             isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
@@ -106,7 +106,6 @@ export default function FlashCardListModal({
                 <span className="sr-only">Search flash cards</span>
                 <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
-                  ref={searchInputRef}
                   type="search"
                   value={searchQuery}
                   onChange={handleSearchQueryChange}

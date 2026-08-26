@@ -49,7 +49,6 @@ export const useFlashCardFormModal = ({
   const [isSaving, setIsSaving] = useState(false);
   const [question, setQuestion] = useState(request?.flashCard?.question ?? "");
   const dialogRef = useRef<HTMLDivElement>(null);
-  const questionInputRef = useRef<HTMLTextAreaElement>(null);
   const onCloseRef = useRef(onClose);
 
   const isEditMode = request?.mode === "edit";
@@ -65,9 +64,7 @@ export const useFlashCardFormModal = ({
     if (!isOpen) return;
 
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    const focusFrame = requestAnimationFrame(() =>
-      questionInputRef.current?.focus(),
-    );
+    const focusFrame = requestAnimationFrame(() => dialogRef.current?.focus());
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -183,7 +180,6 @@ export const useFlashCardFormModal = ({
     isOpen,
     isSaving,
     question,
-    questionInputRef,
     setAnswer,
     setQuestion,
   };

@@ -34,7 +34,6 @@ export const useUserFormModal = ({
     setIsDeactivationConfirmationOpen,
   ] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const initialFocusRef = useRef<HTMLInputElement>(null);
   const deactivationReturnFocusRef = useRef<HTMLElement | null>(null);
   const isSubmittingRef = useRef(false);
   const statusSwitchRef = useRef<HTMLButtonElement>(null);
@@ -77,9 +76,7 @@ export const useUserFormModal = ({
     if (!isOpen) return;
 
     const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    const focusFrame = window.requestAnimationFrame(() =>
-      initialFocusRef.current?.focus(),
-    );
+    const focusFrame = window.requestAnimationFrame(() => dialogRef.current?.focus());
 
     return () => {
       window.cancelAnimationFrame(focusFrame);
@@ -231,7 +228,6 @@ export const useUserFormModal = ({
     isDeactivationConfirmationOpen,
     isEditing,
     isSubmitting,
-    initialFocusRef,
     modeOfReview,
     setEmail,
     setFullName,
