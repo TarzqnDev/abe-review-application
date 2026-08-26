@@ -69,7 +69,7 @@
 - Activity History: the reviewee history page matches the updated reference layout with image-based stat cards, review streak replacing the visible completed-session card, a status radio popover beside search, compact five-item history pagination, icon-free activity rows, and a lighter details modal.
 - Activity History: review streak data is stored on `reviewee_activity_stats` through the `review_streak_days` and `last_review_activity_date` aggregate fields while preserving `completed_sessions`.
 - Question Bank: PAES Series is displayed as a predefined area whose subjects cannot be added, renamed, or removed; administrators manage difficulty-free PAES questions through a dedicated reusable subject-aware add/edit form and searchable question-list modal with confirmed deletion.
-- PAES Series: a repeatable Supabase SQL Editor seed adds the predefined PAES Series area and PAES 100, 200, 300, 400, and 500 Series subjects without duplicating existing records.
+- PAES Series: the local Supabase seed file at `supabase/seed.sql` includes the predefined PAES Series area and PAES 100, 200, 300, 400, and 500 Series subjects.
 - Flash Cards: the database-backed `PAES Series` area card is titled `PAES` on the reviewee flash-card page without changing its stored name or its labels elsewhere.
 - Activity History: PAES MCQ sessions use the existing generic MCQ history pipeline, including nullable difficulty, session summaries, filtering, pagination, and item details.
 - ABE Trivia: the admin listing shows every remaining Asia/Manila date in the current month plus the first date of the next month as calendar-style cards, paginated four date slots at a time; scheduled dates show trivia details and editing, while empty dates prefill the create form.
