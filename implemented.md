@@ -1,5 +1,7 @@
 # Implemented Features
 
+- Supabase connections now use the publishable and secret API keys instead of the legacy anon and service-role keys across browser, SSR, server-action, proxy, admin, and password-recovery flows.
+
 - Question Bank: all question types now use the same question form shape.
   - Guess the Word, AB-Solution, and Situationship all use Question plus answer choices A-D.
   - Question choices A-D are required, unique, and include a selected correct answer.

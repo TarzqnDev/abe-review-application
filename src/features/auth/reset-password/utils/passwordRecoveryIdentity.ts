@@ -13,10 +13,10 @@ const USER_ID_PATTERN =
 const SIGNATURE_CONTEXT = "abe-password-recovery";
 
 const getSigningSecret = () => {
-  const signingSecret = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const signingSecret = process.env.SUPABASE_SECRET_KEY;
 
   if (!signingSecret) {
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured");
+    throw new Error("SUPABASE_SECRET_KEY is not configured");
   }
 
   return signingSecret;
