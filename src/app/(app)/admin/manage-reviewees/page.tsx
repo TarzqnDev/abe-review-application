@@ -20,6 +20,7 @@ export default function AdminRevieweesPage() {
     <section>
       <SuccessBanner
         message={reviewees.noticeMessage}
+        onDismiss={reviewees.hideNotice}
         show={Boolean(reviewees.noticeMessage)}
       />
 

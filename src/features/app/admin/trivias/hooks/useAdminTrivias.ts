@@ -126,6 +126,10 @@ export const useAdminTrivias = () => {
     });
   };
 
+  const hideSuccessMessage = () => {
+    setSuccessMessage("");
+  };
+
   const openEditTriviaModal = (trivia: AdminTrivia) => {
     setFormModalRequest({
       isPublishDateLocked: true,
@@ -154,6 +158,7 @@ export const useAdminTrivias = () => {
     formModalRequest,
     handleTriviaDeleted,
     hasCurrentMonthDateSlots,
+    hideSuccessMessage,
     isLoadingTrivias,
     lastDateNumber: Math.min(
       firstDateIndex + TRIVIAS_PAGE_SIZE,

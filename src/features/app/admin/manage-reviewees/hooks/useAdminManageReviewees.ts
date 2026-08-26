@@ -125,6 +125,7 @@ export const useAdminManageReviewees = () => {
     isLoading,
     isUserFormModalOpen,
     lastItem: Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length),
+    hideNotice: () => setNoticeMessage(""),
     noticeMessage,
     openEditModal,
     openRegisterModal,

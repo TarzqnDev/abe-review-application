@@ -21,6 +21,7 @@ export default function AcceptInvitePage() {
     formData,
     handleCompleteAccountSetup,
     handleConfirmPasswordVisibility,
+    hideAccountSetupSuccessBanner,
     handleGoToDashboard,
     handlePasswordVisibility,
     handleUserInput,
@@ -36,6 +37,7 @@ export default function AcceptInvitePage() {
     <>
       <SuccessBanner
         message={`${accountSetupSuccessBannerMessage} You can now go to your dashboard.`}
+        onDismiss={hideAccountSetupSuccessBanner}
         show={showAccountSetupSuccessBanner}
       />
 

@@ -4,11 +4,13 @@ import AuthenticationSuccessBanner from "@/features/app/layout/components/Authen
 import { useAppLayout } from "@/features/app/layout/hooks/useAppLayout";
 
 export default function AuthenticationSuccessNotice() {
-  const { showSuccessBanner, successMessage } = useAppLayout();
+  const { dismissSuccessBanner, showSuccessBanner, successMessage } =
+    useAppLayout();
 
   return (
     <AuthenticationSuccessBanner
       message={successMessage}
+      onDismiss={dismissSuccessBanner}
       show={showSuccessBanner}
     />
   );

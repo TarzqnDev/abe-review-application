@@ -51,7 +51,10 @@ export default function RevieweeFlashCardsPage() {
         trivia={flashCardsPage.todaysTriviaCard.trivia}
       />
 
-      <FlashCardSuccessBanner message={flashCardsPage.successMessage} />
+      <FlashCardSuccessBanner
+        message={flashCardsPage.successMessage}
+        onDismiss={flashCardsPage.hideSuccessMessage}
+      />
 
       <header className="mb-8">
         <h1 className="text-2xl font-semibold text-primary-text">

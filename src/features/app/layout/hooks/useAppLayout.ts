@@ -6,7 +6,7 @@ import {
   type AuthNotice,
 } from "@/features/app/layout/constants/authNotices";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const SUCCESS_BANNER_DURATION = 4000;
 const SUCCESS_BANNER_TRANSITION_DURATION = 500;
@@ -23,6 +23,25 @@ export const useAppLayout = () => {
     return notice && isAuthNotice(notice) ? AUTH_NOTICE_MESSAGES[notice] : "";
   });
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
+  const removeAuthNotice = useCallback(() => {
+    const currentUrl = new URL(window.location.href);
+
+    if (!currentUrl.searchParams.has(AUTH_NOTICE_QUERY_PARAMETER)) return;
+
+    currentUrl.searchParams.delete(AUTH_NOTICE_QUERY_PARAMETER);
+
+    const queryString = currentUrl.searchParams.toString();
+    const currentPath = `${currentUrl.pathname}${
+      queryString ? `?${queryString}` : ""
+    }${currentUrl.hash}`;
+
+    router.replace(currentPath, { scroll: false });
+  }, [router]);
+
+  const dismissSuccessBanner = useCallback(() => {
+    setShowSuccessBanner(false);
+    removeAuthNotice();
+  }, [removeAuthNotice]);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -34,18 +53,7 @@ export const useAppLayout = () => {
       setShowSuccessBanner(false);
     }, SUCCESS_BANNER_DURATION - SUCCESS_BANNER_TRANSITION_DURATION);
     const cleanupTimeout = setTimeout(() => {
-      const currentUrl = new URL(window.location.href);
-
-      if (!currentUrl.searchParams.has(AUTH_NOTICE_QUERY_PARAMETER)) return;
-
-      currentUrl.searchParams.delete(AUTH_NOTICE_QUERY_PARAMETER);
-
-      const queryString = currentUrl.searchParams.toString();
-      const currentPath = `${currentUrl.pathname}${
-        queryString ? `?${queryString}` : ""
-      }${currentUrl.hash}`;
-
-      router.replace(currentPath, { scroll: false });
+      removeAuthNotice();
     }, SUCCESS_BANNER_DURATION);
 
     return () => {
@@ -53,9 +61,10 @@ export const useAppLayout = () => {
       clearTimeout(hideTimeout);
       clearTimeout(cleanupTimeout);
     };
-  }, [router, successMessage]);
+  }, [removeAuthNotice, successMessage]);
 
   return {
+    dismissSuccessBanner,
     showSuccessBanner,
     successMessage,
   };

@@ -38,6 +38,9 @@ export const useAcceptInvite = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const hasInitializedInviteSession = useRef(false);
+  const accountSetupSuccessBannerTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   const router = useRouter();
 
@@ -209,12 +212,22 @@ export const useAcceptInvite = () => {
       setAccountSetupSuccessBannerMessage(message);
       setShowAccountSetupSuccessBanner(true);
 
-      setTimeout(() => {
+      accountSetupSuccessBannerTimeoutRef.current = setTimeout(() => {
         setShowAccountSetupSuccessBanner(false);
+        accountSetupSuccessBannerTimeoutRef.current = null;
       }, 4000);
     } finally {
       setIsCompletingAccountSetup(false);
     }
+  };
+
+  const hideAccountSetupSuccessBanner = () => {
+    if (accountSetupSuccessBannerTimeoutRef.current) {
+      clearTimeout(accountSetupSuccessBannerTimeoutRef.current);
+      accountSetupSuccessBannerTimeoutRef.current = null;
+    }
+
+    setShowAccountSetupSuccessBanner(false);
   };
 
   const handleGoToDashboard = async () => {
@@ -242,6 +255,7 @@ export const useAcceptInvite = () => {
     handlePasswordVisibility,
     handleUserInput,
     hasInviteSession,
+    hideAccountSetupSuccessBanner,
     isAccountSetupCompleted,
     isCompletingAccountSetup,
     showAccountSetupSuccessBanner,

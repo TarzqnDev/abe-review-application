@@ -20,6 +20,7 @@ export default function AdminTriviasPage() {
     formModalRequest,
     handleTriviaDeleted,
     hasCurrentMonthDateSlots,
+    hideSuccessMessage,
     isLoadingTrivias,
     lastDateNumber,
     loadError,
@@ -42,7 +43,10 @@ export default function AdminTriviasPage() {
 
   return (
     <section className="w-full max-w-5xl">
-      <TriviaSuccessBanner message={successMessage} />
+      <TriviaSuccessBanner
+        message={successMessage}
+        onDismiss={hideSuccessMessage}
+      />
 
       <div>
         <h1 className="text-2xl font-semibold text-primary-text">ABE Trivia</h1>

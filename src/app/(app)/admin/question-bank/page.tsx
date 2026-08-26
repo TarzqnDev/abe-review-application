@@ -23,6 +23,7 @@ export default function AdminSubjectPage() {
     handleClosePaesQuestionList,
     handleCloseSubjectDetails,
     handleCloseSubjectFormModal,
+    handleHideSuccessBanner,
     handleOpenAddSubjectModal,
     handleOpenAddPaesQuestionModal,
     handleSearchQueryChange,
@@ -51,6 +52,7 @@ export default function AdminSubjectPage() {
     <section>
       <SubjectSuccessBanner
         message={successBannerMessage}
+        onDismiss={handleHideSuccessBanner}
         show={showSuccessBanner}
       />
 

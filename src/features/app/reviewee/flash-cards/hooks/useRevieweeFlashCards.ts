@@ -125,6 +125,10 @@ export const useRevieweeFlashCards = () => {
     [flashCardDecks, selectedAreaId],
   );
 
+  const hideSuccessMessage = () => {
+    setSuccessMessage("");
+  };
+
   const openCreateFlashCardModal = () => {
     setFormModalRequest({
       requestId: createBrowserRequestId(),
@@ -225,6 +229,7 @@ export const useRevieweeFlashCards = () => {
     gameError,
     gameStage,
     gameSummary,
+    hideSuccessMessage,
     handleCountdownCancelled: resetFlashCardGame,
     handleGameFinished,
     handleNoFlashCardsAfterCountdown,
