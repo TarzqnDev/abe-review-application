@@ -105,7 +105,7 @@
 - Mobile Gameplay: MCQ and flash-card game modals use full-screen layouts below `md`, keep timer and progress side by side when space allows, constrain small-screen scrolling to the answer area with sticky submit actions, and prompt before page unload while sending an exit request as the page closes.
 - Mobile Summaries and Login: MCQ and flash-card summaries become full-screen below `sm` with scrollable content and anchored return actions, while the mobile login hero gives up height before the form so short screens avoid page scrolling.
 - Mobile Modals: list, detail, MCQ summary, and flash-card summary modals keep an inset mobile layout with visible backdrop space below `sm`.
-- Supabase Email Templates: new timestamped invite-user and reset-password `v2` templates use one white rounded header brand container for the icon and hosted ABEquip image logo.
+- Supabase Email Templates: the local Supabase project uses committed invite and password-recovery templates in `supabase/templates/`, configured through `supabase/config.toml` and retaining the branded email designs.
 - Reviewee Games: MCQ and flash-card answer submissions now carry the monotonic click-time equivalent to the server RPCs so slow network or delayed answer checking cannot turn an on-time submit into a deadline error.
 - Reviewee Games: MCQ and flash-card submitted answers now reveal immediately after successful submission, and checking buttons show the shared spinner beside `Checking answer`.
 - Mobile Gameplay: MCQ and flash-card game errors display above the anchored submit action below `sm`, the MCQ options scroller starts at the first option with the helper text kept in the shadowed top section, and flash-card games no longer focus the answer field when opened or advanced.
