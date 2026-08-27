@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchRevieweeMcqQuizPageData } from "@/features/app/reviewee/mcq-quiz/actions/fetch-reviewee-mcq-quiz-page-data.action";
 import type {
   PreparedQuizSession,
@@ -20,11 +21,25 @@ const DEFAULT_NO_QUESTIONS_MESSAGE =
   "There are no questions available for this area and difficulty yet.";
 
 export const useRevieweeMcqQuiz = () => {
-  const hasStartedInitialLoadRef = useRef(false);
-  const todaysTriviaCard = useTodaysTriviaCard();
-  const { applyTriviaResult, beginTriviaRequest } = todaysTriviaCard;
-  const [isLoadingInitialPageData, setIsLoadingInitialPageData] =
-    useState(true);
+  const pageDataQuery = useQuery({
+    queryKey: ["reviewee", "mcq-quiz", "page-data"],
+    queryFn: fetchRevieweeMcqQuizPageData,
+    staleTime: 0,
+    gcTime: Infinity,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const todaysTriviaCard = useTodaysTriviaCard({
+    initialTriviaResult:
+      pageDataQuery.data?.todaysTrivia ??
+      (pageDataQuery.isError
+        ? {
+            success: false,
+            error: "Unable to load today's trivia.",
+            trivia: null,
+          }
+        : undefined),
+  });
   const [selectedGameType, setSelectedGameType] =
     useState<QuizGameType | null>(null);
   const [stage, setStage] = useState<RevieweeMcqQuizStage>("idle");
@@ -39,28 +54,6 @@ export const useRevieweeMcqQuiz = () => {
     isOpen: false,
     message: DEFAULT_NO_QUESTIONS_MESSAGE,
   });
-
-  useEffect(() => {
-    if (hasStartedInitialLoadRef.current) return;
-
-    hasStartedInitialLoadRef.current = true;
-    const triviaRequestId = beginTriviaRequest(true);
-
-    void Promise.resolve().then(async () => {
-      try {
-        const result = await fetchRevieweeMcqQuizPageData();
-        applyTriviaResult(triviaRequestId, result.todaysTrivia);
-      } catch {
-        applyTriviaResult(triviaRequestId, {
-          success: false,
-          error: "Unable to load today's trivia.",
-          trivia: null,
-        });
-      } finally {
-        setIsLoadingInitialPageData(false);
-      }
-    });
-  }, [applyTriviaResult, beginTriviaRequest]);
 
   const resetMcqQuizGame = useCallback(() => {
     setSelectedGameType(null);
@@ -146,7 +139,7 @@ export const useRevieweeMcqQuiz = () => {
     handleNoQuestions,
     handleSessionPreviewed,
     initialTiming,
-    isLoadingInitialPageData,
+    isLoadingInitialPageData: pageDataQuery.isPending,
     noQuestions,
     openGameSelection,
     preparedSession,

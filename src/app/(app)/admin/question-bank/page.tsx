@@ -39,7 +39,6 @@ export default function AdminSubjectPage() {
     selectedSubject,
     selectedPaesSubject,
     selectedSubjectToDelete,
-    setIsLoadingSubjectAreas,
     showSuccessBanner,
     showSuccessMessage,
     subjectAreas,
@@ -155,7 +154,6 @@ export default function AdminSubjectPage() {
         loadSubjectAreas={loadSubjectAreas}
         onClose={handleCloseSubjectFormModal}
         onEditSuccess={handleSubjectModeOperationSuccess}
-        setIsLoadingSubjectAreas={setIsLoadingSubjectAreas}
         showSuccessMessage={showSuccessMessage}
         subject={selectedEditSubject}
         subjectAreas={subjectAreas}

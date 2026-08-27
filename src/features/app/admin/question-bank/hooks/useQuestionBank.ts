@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   type AdminSubject,
   fetchSubjectAreas,
@@ -11,6 +12,8 @@ import type { PaesQuestionFormRequest } from "@/features/app/admin/question-bank
 
 export type SubjectAreaFilter = "all" | number;
 
+const EMPTY_SUBJECT_AREAS: AdminSubjectArea[] = [];
+
 const validateAreaName = (areaName: string) => {
   if (!areaName.trim()) return "Area name is required";
   if (areaName.trim().length > 255) {
@@ -21,9 +24,6 @@ const validateAreaName = (areaName: string) => {
 };
 
 export const useQuestionBank = () => {
-  const [subjectAreas, setSubjectAreas] = useState<AdminSubjectArea[]>([]);
-  const [isLoadingSubjectAreas, setIsLoadingSubjectAreas] = useState(true);
-  const [subjectAreasError, setSubjectAreasError] = useState("");
   const [isUpdatingArea, setIsUpdatingArea] = useState(false);
   const [editingAreaId, setEditingAreaId] = useState<number | null>(null);
   const [editingAreaName, setEditingAreaName] = useState("");
@@ -66,19 +66,34 @@ export const useQuestionBank = () => {
     }, 3000);
   };
 
-  const loadSubjectAreas = async () => {
-    const { success, subjectAreas, error } = await fetchSubjectAreas();
+  const subjectAreasQuery = useQuery({
+    gcTime: Infinity,
+    queryFn: async (): Promise<AdminSubjectArea[]> => {
+      const result = await fetchSubjectAreas();
 
-    if (!success) {
-      setSubjectAreas([]);
-      setSubjectAreasError(error ?? "Unable to fetch subject areas");
-    } else {
-      setSubjectAreas(subjectAreas);
-      setSubjectAreasError("");
-    }
+      if (!result.success) {
+        throw new Error(result.error ?? "Unable to fetch subject areas");
+      }
 
-    setIsLoadingSubjectAreas(false);
-  };
+      return result.subjectAreas;
+    },
+    queryKey: ["admin", "question-bank", "subject-areas"],
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    retry: false,
+    staleTime: 0,
+  });
+  const subjectAreas = subjectAreasQuery.data ?? EMPTY_SUBJECT_AREAS;
+  const subjectAreasError =
+    subjectAreasQuery.isError && subjectAreasQuery.data === undefined
+      ? subjectAreasQuery.error instanceof Error
+        ? subjectAreasQuery.error.message
+        : "Unable to fetch subject areas"
+      : "";
+  const { refetch: refetchSubjectAreas } = subjectAreasQuery;
+  const loadSubjectAreas = useCallback(async () => {
+    await refetchSubjectAreas();
+  }, [refetchSubjectAreas]);
 
   const filteredSubjectAreas = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
@@ -101,10 +116,6 @@ export const useQuestionBank = () => {
         return subjectArea.subjects.length > 0;
       });
   }, [activeAreaFilter, searchQuery, subjectAreas]);
-
-  useEffect(() => {
-    void Promise.resolve().then(loadSubjectAreas);
-  }, []);
 
   useEffect(
     () => () => {
@@ -284,7 +295,6 @@ export const useQuestionBank = () => {
       setEditingAreaName("");
 
       showSuccessMessage(message);
-      setIsLoadingSubjectAreas(true);
       await loadSubjectAreas();
 
       return {
@@ -319,7 +329,8 @@ export const useQuestionBank = () => {
     handleSubjectAreaModeChange,
     handleSubjectModeOperationSuccess,
     handleUpdateArea,
-    isLoadingSubjectAreas,
+    isLoadingSubjectAreas: subjectAreasQuery.isPending,
+    isRefreshingSubjectAreas: subjectAreasQuery.isFetching,
     isUpdatingArea,
     searchQuery,
     paesQuestionFormRequest,
@@ -335,6 +346,5 @@ export const useQuestionBank = () => {
     subjectAreasError,
     successBannerMessage,
     loadSubjectAreas,
-    setIsLoadingSubjectAreas,
   };
 };

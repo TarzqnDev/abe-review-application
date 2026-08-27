@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchActivityHistory } from "@/features/app/reviewee/history/actions/fetch-activity-history.action";
 import type {
   ActivityHistoryEntry,
@@ -18,11 +19,6 @@ const EMPTY_OVERVIEW_STATS: ActivityHistoryOverviewStats = {
 };
 
 export const useRevieweeHistory = () => {
-  const [history, setHistory] = useState<ActivityHistoryEntry[]>([]);
-  const [overviewStats, setOverviewStats] =
-    useState<ActivityHistoryOverviewStats>(EMPTY_OVERVIEW_STATS);
-  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
-  const [historyError, setHistoryError] = useState("");
   const [activityTypeFilter, setActivityTypeFilter] =
     useState<ActivityTypeFilter>("all");
   const [statusFilter, setStatusFilter] =
@@ -32,27 +28,27 @@ export const useRevieweeHistory = () => {
   const [selectedHistory, setSelectedHistory] =
     useState<ActivityHistoryEntry | null>(null);
 
-  const loadHistory = useCallback(async (showLoadingState = false) => {
-    if (showLoadingState) setIsLoadingHistory(true);
-
-    const result = await fetchActivityHistory();
-
-    if (result.success) {
-      setHistory(result.history);
-      setOverviewStats(result.overviewStats);
-      setHistoryError("");
-    } else {
-      setHistory([]);
-      setOverviewStats(EMPTY_OVERVIEW_STATS);
-      setHistoryError(result.error ?? "Unable to load your activity history.");
-    }
-
-    setIsLoadingHistory(false);
-  }, []);
-
-  useEffect(() => {
-    void Promise.resolve().then(() => loadHistory(true));
-  }, [loadHistory]);
+  const historyQuery = useQuery({
+    queryKey: ["reviewee", "activity-history"],
+    queryFn: fetchActivityHistory,
+    staleTime: 0,
+    gcTime: Infinity,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const history = useMemo(
+    () => (historyQuery.data?.success ? historyQuery.data.history : []),
+    [historyQuery.data],
+  );
+  const overviewStats = historyQuery.data?.success
+    ? historyQuery.data.overviewStats
+    : EMPTY_OVERVIEW_STATS;
+  const historyError =
+    historyQuery.data && !historyQuery.data.success
+      ? historyQuery.data.error ?? "Unable to load your activity history."
+      : historyQuery.isError
+        ? "Unable to load your activity history."
+        : "";
 
   const filteredHistory = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase();
@@ -114,12 +110,12 @@ export const useRevieweeHistory = () => {
     filteredHistoryCount: filteredHistory.length,
     history,
     historyError,
-    isLoadingHistory,
+    isLoadingHistory: historyQuery.isPending,
     openHistoryDetails: setSelectedHistory,
     overviewStats,
     pageSize: HISTORY_PAGE_SIZE,
     paginatedHistory,
-    retryLoadHistory: () => void loadHistory(true),
+    retryLoadHistory: () => void historyQuery.refetch(),
     searchQuery,
     selectedHistory,
     setActivityTypeFilter: handleActivityTypeFilterChange,

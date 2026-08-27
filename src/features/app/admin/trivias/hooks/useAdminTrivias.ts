@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchTrivias } from "@/features/app/admin/trivias/actions/fetch-trivias.action";
 import { TRIVIAS_PAGE_SIZE } from "@/features/app/admin/trivias/constants/adminTrivias";
 import type {
@@ -14,50 +15,60 @@ import {
 } from "@/features/app/admin/trivias/utils/adminTriviaDates";
 import { createBrowserRequestId } from "@/utils/createBrowserRequestId";
 
+const EMPTY_TRIVIAS: AdminTrivia[] = [];
+
+type TriviaQueryData = {
+  dateRange: ReturnType<typeof getCurrentTriviaMonthRange>;
+  trivias: AdminTrivia[];
+};
+
 export const useAdminTrivias = () => {
   const initialDateRange = getCurrentTriviaMonthRange();
-  const [currentDateRange, setCurrentDateRange] = useState(initialDateRange);
   const [currentPage, setCurrentPage] = useState(1);
   const [formModalRequest, setFormModalRequest] =
     useState<TriviaFormModalRequest | null>(null);
-  const [isLoadingTrivias, setIsLoadingTrivias] = useState(true);
-  const [loadError, setLoadError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [triviaToDelete, setTriviaToDelete] = useState<AdminTrivia | null>(null);
-  const [trivias, setTrivias] = useState<AdminTrivia[]>([]);
   const todayDateRef = useRef(initialDateRange.todayDate);
-
-  const loadTrivias = useCallback(async (showLoadingState = false) => {
-    if (showLoadingState) setIsLoadingTrivias(true);
-
-    try {
+  const triviasQuery = useQuery({
+    gcTime: Infinity,
+    queryFn: async (): Promise<TriviaQueryData> => {
       const result = await fetchTrivias();
 
       if (!result.success) {
-        setLoadError(result.error ?? "Unable to load trivias.");
-        setTrivias([]);
-        return;
+        throw new Error(result.error ?? "Unable to load trivias.");
       }
 
-      if (result.dateRange.todayDate !== todayDateRef.current) {
-        setCurrentPage(1);
-      }
-
-      setCurrentDateRange(result.dateRange);
-      todayDateRef.current = result.dateRange.todayDate;
-      setTrivias(result.trivias ?? []);
-      setLoadError("");
-    } catch {
-      setLoadError("Unable to load trivias. Please try again.");
-      setTrivias([]);
-    } finally {
-      setIsLoadingTrivias(false);
-    }
-  }, []);
+      return {
+        dateRange: result.dateRange,
+        trivias: result.trivias,
+      };
+    },
+    queryKey: ["admin", "trivias"],
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    retry: false,
+    staleTime: 0,
+  });
+  const currentDateRange = triviasQuery.data?.dateRange ?? initialDateRange;
+  const trivias = triviasQuery.data?.trivias ?? EMPTY_TRIVIAS;
+  const loadError =
+    triviasQuery.isError && triviasQuery.data === undefined
+      ? triviasQuery.error instanceof Error
+        ? triviasQuery.error.message
+        : "Unable to load trivias. Please try again."
+      : "";
+  const { refetch: refetchTrivias } = triviasQuery;
+  const loadTrivias = useCallback(async () => {
+    await refetchTrivias();
+  }, [refetchTrivias]);
 
   useEffect(() => {
-    void Promise.resolve().then(() => loadTrivias(true));
-  }, [loadTrivias]);
+    if (currentDateRange.todayDate === todayDateRef.current) return;
+
+    setCurrentPage(1);
+    todayDateRef.current = currentDateRange.todayDate;
+  }, [currentDateRange.todayDate]);
 
   useEffect(() => {
     const dateRolloverInterval = window.setInterval(() => {
@@ -159,7 +170,8 @@ export const useAdminTrivias = () => {
     handleTriviaDeleted,
     hasCurrentMonthDateSlots,
     hideSuccessMessage,
-    isLoadingTrivias,
+    isLoadingTrivias: triviasQuery.isPending,
+    isRefreshingTrivias: triviasQuery.isFetching,
     lastDateNumber: Math.min(
       firstDateIndex + TRIVIAS_PAGE_SIZE,
       dateSlots.length,
@@ -174,7 +186,7 @@ export const useAdminTrivias = () => {
     openDeleteConfirmationModal: setTriviaToDelete,
     openEditTriviaModal,
     paginatedDateSlots,
-    retryLoadTrivias: () => void loadTrivias(true),
+    retryLoadTrivias: () => void loadTrivias(),
     scheduledTriviaCount,
     setCurrentPage,
     showSuccessMessage: setSuccessMessage,

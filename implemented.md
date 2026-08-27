@@ -1,5 +1,7 @@
 # Implemented Features
 
+- Dashboard data queries now share a session-lifetime TanStack Query cache, keeping previously visited sidebar pages visible during background refreshes and clearing cached account data after logout.
+
 - Supabase connections now use the publishable and secret API keys instead of the legacy anon and service-role keys across browser, SSR, server-action, proxy, admin, and password-recovery flows.
 
 - Question Bank: all question types now use the same question form shape.

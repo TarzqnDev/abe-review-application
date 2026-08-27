@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
 import { LoaderCircle } from "lucide-react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -13,7 +12,6 @@ type SubjectFormModalProps = {
   loadSubjectAreas: () => Promise<void>;
   onClose: () => void;
   onEditSuccess: () => void;
-  setIsLoadingSubjectAreas: Dispatch<SetStateAction<boolean>>;
   showSuccessMessage: (message: string) => void;
   subject: AdminSubject | null;
   subjectAreas: AdminSubjectArea[];
@@ -24,7 +22,6 @@ export default function SubjectFormModal({
   loadSubjectAreas,
   onClose,
   onEditSuccess,
-  setIsLoadingSubjectAreas,
   showSuccessMessage,
   subject,
   subjectAreas,
@@ -45,7 +42,6 @@ export default function SubjectFormModal({
     loadSubjectAreas,
     onClose,
     onEditSuccess,
-    setIsLoadingSubjectAreas,
     showSuccessMessage,
     subject,
     subjectAreas,

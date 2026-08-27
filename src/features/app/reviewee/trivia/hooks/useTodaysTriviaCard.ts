@@ -6,17 +6,31 @@ import type {
 } from "@/features/app/reviewee/trivia/types/revieweeTrivia";
 import { getManilaDateValue } from "@/features/app/reviewee/trivia/utils/getManilaDateValue";
 
-export const useTodaysTriviaCard = () => {
+type UseTodaysTriviaCardOptions = {
+  initialTriviaResult?: FetchTodaysTriviaResult;
+};
+
+export const useTodaysTriviaCard = ({
+  initialTriviaResult,
+}: UseTodaysTriviaCardOptions = {}) => {
   const currentDateRef = useRef(getManilaDateValue());
   const latestRequestIdRef = useRef(0);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [trivia, setTrivia] = useState<RevieweeTrivia | null>(null);
+  const [hasLocalRequest, setHasLocalRequest] = useState(false);
+  const [isLoading, setIsLoading] = useState(!initialTriviaResult);
+  const [loadError, setLoadError] = useState(
+    initialTriviaResult && !initialTriviaResult.success
+      ? initialTriviaResult.error
+      : "",
+  );
+  const [trivia, setTrivia] = useState<RevieweeTrivia | null>(
+    initialTriviaResult?.success ? initialTriviaResult.trivia : null,
+  );
 
   const beginTriviaRequest = useCallback((showLoadingState = false) => {
     const requestId = latestRequestIdRef.current + 1;
     latestRequestIdRef.current = requestId;
+    setHasLocalRequest(true);
 
     if (showLoadingState) setIsLoading(true);
 
@@ -75,15 +89,24 @@ export const useTodaysTriviaCard = () => {
     return () => window.clearInterval(dateRolloverInterval);
   }, [loadTrivia]);
 
+  const isUsingPageData = !hasLocalRequest && initialTriviaResult !== undefined;
+  const pageDataLoadError =
+    initialTriviaResult && !initialTriviaResult.success
+      ? initialTriviaResult.error
+      : "";
+  const pageDataTrivia = initialTriviaResult?.success
+    ? initialTriviaResult.trivia
+    : null;
+
   return {
     applyTriviaResult,
     beginTriviaRequest,
     isExpanded,
-    isLoading,
-    loadError,
+    isLoading: isUsingPageData ? false : isLoading,
+    loadError: isUsingPageData ? pageDataLoadError : loadError,
     retryLoadTrivia: () => void loadTrivia(true),
     toggleExpanded: () =>
       setIsExpanded((currentIsExpanded) => !currentIsExpanded),
-    trivia,
+    trivia: isUsingPageData ? pageDataTrivia : trivia,
   };
 };

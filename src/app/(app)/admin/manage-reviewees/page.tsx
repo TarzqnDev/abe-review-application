@@ -47,12 +47,12 @@ export default function AdminRevieweesPage() {
           <button
             type="button"
             onClick={reviewees.refreshUsers}
-            disabled={reviewees.isLoading}
+            disabled={reviewees.isRefreshing}
             aria-label="Refresh reviewees"
             title="Refresh reviewees"
             className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border bg-surface text-secondary-text transition-colors hover:border-slate-300 hover:bg-secondary-bg focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {reviewees.isLoading ? (
+            {reviewees.isRefreshing ? (
               <LoaderCircle
                 className="h-5 w-5 animate-spin"
                 aria-label="Loading reviewees"

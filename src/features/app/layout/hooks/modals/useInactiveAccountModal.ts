@@ -2,11 +2,13 @@
 
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { supabase } from "@/lib/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export const useInactiveAccountModal = (isOpen: boolean) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const dialogRef = useRef<HTMLDivElement>(null);
   const logoutButtonRef = useRef<HTMLButtonElement>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -49,6 +51,7 @@ export const useInactiveAccountModal = (isOpen: boolean) => {
       return;
     }
 
+    queryClient.clear();
     router.replace("/login");
     router.refresh();
   };

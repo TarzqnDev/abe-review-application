@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchUsers } from "@/features/app/admin/manage-reviewees/actions/fetch-users.action";
 import type { Reviewee } from "@/features/app/admin/manage-reviewees/types/reviewee";
 
 const ITEMS_PER_PAGE = 10;
+const EMPTY_REVIEWEES: Reviewee[] = [];
 
 export const useAdminManageReviewees = () => {
-  const [users, setUsers] = useState<Reviewee[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [usersError, setUsersError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isUserFormModalOpen, setIsUserFormModalOpen] = useState(false);
@@ -16,47 +15,34 @@ export const useAdminManageReviewees = () => {
     null,
   );
   const [noticeMessage, setNoticeMessage] = useState("");
-  const requestSequence = useRef(0);
-
-  const loadUsers = useCallback(async () => {
-    const requestId = ++requestSequence.current;
-    setIsLoading(true);
-
-    try {
+  const usersQuery = useQuery({
+    gcTime: Infinity,
+    queryFn: async (): Promise<Reviewee[]> => {
       const result = await fetchUsers();
-      if (requestId !== requestSequence.current) return;
 
       if (!result.success) {
-        setUsers([]);
-        setUsersError(result.error ?? "Unable to fetch reviewees.");
-      } else {
-        setUsers(result.users as Reviewee[]);
-        setUsersError("");
+        throw new Error(result.error ?? "Unable to fetch reviewees.");
       }
-    } catch {
-      if (requestId !== requestSequence.current) return;
-      setUsers([]);
-      setUsersError("Unable to fetch reviewees.");
-    } finally {
-      if (requestId === requestSequence.current) {
-        setIsLoading(false);
-      }
-    }
-  }, []);
 
-  useEffect(() => {
-    let isCurrentEffect = true;
-    void Promise.resolve().then(() => {
-      if (isCurrentEffect) {
-        void loadUsers();
-      }
-    });
-
-    return () => {
-      isCurrentEffect = false;
-      requestSequence.current += 1;
-    };
-  }, [loadUsers]);
+      return result.users as Reviewee[];
+    },
+    queryKey: ["admin", "reviewees"],
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    retry: false,
+    staleTime: 0,
+  });
+  const users = usersQuery.data ?? EMPTY_REVIEWEES;
+  const usersError =
+    usersQuery.isError && usersQuery.data === undefined
+      ? usersQuery.error instanceof Error
+        ? usersQuery.error.message
+        : "Unable to fetch reviewees."
+      : "";
+  const { refetch: refetchUsers } = usersQuery;
+  const loadUsers = useCallback(async () => {
+    await refetchUsers();
+  }, [refetchUsers]);
 
   useEffect(() => {
     if (!noticeMessage) return;
@@ -122,7 +108,8 @@ export const useAdminManageReviewees = () => {
     filteredUsers,
     firstItem: filteredUsers.length ? startIndex + 1 : 0,
     handleUserSaved,
-    isLoading,
+    isLoading: usersQuery.isPending,
+    isRefreshing: usersQuery.isFetching,
     isUserFormModalOpen,
     lastItem: Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length),
     hideNotice: () => setNoticeMessage(""),

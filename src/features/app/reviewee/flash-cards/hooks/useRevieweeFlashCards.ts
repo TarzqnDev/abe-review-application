@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchFlashCardDecks } from "@/features/app/reviewee/flash-cards/actions/fetch-flash-card-decks.action";
 import { fetchRevieweeFlashCardsPageData } from "@/features/app/reviewee/flash-cards/actions/fetch-reviewee-flash-cards-page-data.action";
 import { previewFlashCardSession } from "@/features/app/reviewee/flash-cards/actions/game/preview-flash-card-session.action";
 import type { FlashCardFormModalRequest } from "@/features/app/reviewee/flash-cards/hooks/modals/useFlashCardFormModal";
-import type {
-  FetchFlashCardDecksResult,
-  FlashCardDeck,
-} from "@/features/app/reviewee/flash-cards/types/flashCard";
 import type {
   FlashCardCountdownDetails,
   FlashCardSummary,
@@ -23,15 +20,38 @@ export type RevieweeFlashCardGameStage =
   | "summary";
 
 export const useRevieweeFlashCards = () => {
-  const hasStartedInitialLoadRef = useRef(false);
   const isPreparingGameRef = useRef(false);
-  const todaysTriviaCard = useTodaysTriviaCard();
-  const { applyTriviaResult, beginTriviaRequest } = todaysTriviaCard;
-  const [flashCardDecks, setFlashCardDecks] = useState<FlashCardDeck[]>([]);
-  const [isLoadingInitialPageData, setIsLoadingInitialPageData] =
-    useState(true);
-  const [isLoadingFlashCardDecks, setIsLoadingFlashCardDecks] = useState(true);
-  const [flashCardDecksError, setFlashCardDecksError] = useState("");
+  const queryClient = useQueryClient();
+  const pageDataQuery = useQuery({
+    queryKey: ["reviewee", "flash-cards", "page-data"],
+    queryFn: fetchRevieweeFlashCardsPageData,
+    staleTime: 0,
+    gcTime: Infinity,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const todaysTriviaCard = useTodaysTriviaCard({
+    initialTriviaResult:
+      pageDataQuery.data?.todaysTrivia ??
+      (pageDataQuery.isError
+        ? {
+            success: false,
+            error: "Unable to load today's trivia.",
+            trivia: null,
+          }
+        : undefined),
+  });
+  const flashCardDecksResult = pageDataQuery.data?.flashCardDecks;
+  const flashCardDecks = useMemo(
+    () => (flashCardDecksResult?.success ? flashCardDecksResult.decks : []),
+    [flashCardDecksResult],
+  );
+  const flashCardDecksError =
+    flashCardDecksResult && !flashCardDecksResult.success
+      ? flashCardDecksResult.error ?? "Unable to load your flash card areas."
+      : pageDataQuery.isError
+        ? "Unable to load your flash card areas."
+        : "";
   const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
   const [formModalRequest, setFormModalRequest] =
     useState<FlashCardFormModalRequest | null>(null);
@@ -52,63 +72,24 @@ export const useRevieweeFlashCards = () => {
     message: "There are no flash cards available for this area yet.",
   });
 
-  const applyFlashCardDecksResult = useCallback(
-    (result: FetchFlashCardDecksResult) => {
-      if (result.success) {
-        setFlashCardDecks(result.decks);
-        setFlashCardDecksError("");
-        return;
-      }
+  const loadFlashCardDecks = useCallback(async () => {
+    const flashCardDecksResult = await fetchFlashCardDecks();
 
-      setFlashCardDecks([]);
-      setFlashCardDecksError(
-        result.error ?? "Unable to load your flash card areas.",
-      );
-    },
-    [],
-  );
-
-  const loadFlashCardDecks = useCallback(async (showLoadingState = false) => {
-    if (showLoadingState) setIsLoadingFlashCardDecks(true);
-
-    const result = await fetchFlashCardDecks();
-    applyFlashCardDecksResult(result);
-
-    setIsLoadingFlashCardDecks(false);
-  }, [applyFlashCardDecksResult]);
-
-  useEffect(() => {
-    if (hasStartedInitialLoadRef.current) return;
-
-    hasStartedInitialLoadRef.current = true;
-    const triviaRequestId = beginTriviaRequest(true);
-
-    void Promise.resolve().then(async () => {
-      try {
-        const result = await fetchRevieweeFlashCardsPageData();
-        applyFlashCardDecksResult(result.flashCardDecks);
-        applyTriviaResult(triviaRequestId, result.todaysTrivia);
-      } catch {
-        applyFlashCardDecksResult({
-          success: false,
-          decks: [],
-          error: "Unable to load your flash card areas.",
-        });
-        applyTriviaResult(triviaRequestId, {
-          success: false,
-          error: "Unable to load today's trivia.",
-          trivia: null,
-        });
-      } finally {
-        setIsLoadingFlashCardDecks(false);
-        setIsLoadingInitialPageData(false);
-      }
-    });
-  }, [
-    applyFlashCardDecksResult,
-    applyTriviaResult,
-    beginTriviaRequest,
-  ]);
+    queryClient.setQueryData(
+      ["reviewee", "flash-cards", "page-data"],
+      (currentPageData: Awaited<
+        ReturnType<typeof fetchRevieweeFlashCardsPageData>
+      > | undefined) => ({
+        flashCardDecks: flashCardDecksResult,
+        todaysTrivia:
+          currentPageData?.todaysTrivia ?? {
+            success: false as const,
+            error: "Unable to load today's trivia.",
+            trivia: null,
+          },
+      }),
+    );
+  }, [queryClient]);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -236,8 +217,8 @@ export const useRevieweeFlashCards = () => {
     handleGameStarted,
     handlePlayNow,
     initialTiming,
-    isLoadingFlashCardDecks,
-    isLoadingInitialPageData,
+    isLoadingFlashCardDecks: pageDataQuery.isPending,
+    isLoadingInitialPageData: pageDataQuery.isPending,
     isPreparingGame: preparingAreaId !== null,
     loadFlashCardDecks,
     noFlashCards,
@@ -246,7 +227,7 @@ export const useRevieweeFlashCards = () => {
     preparedSession,
     preparingAreaId,
     resetFlashCardGame,
-    retryLoadFlashCardDecks: () => void loadFlashCardDecks(true),
+    retryLoadFlashCardDecks: () => void loadFlashCardDecks(),
     selectedFlashCardDeck,
     showSuccessMessage: setSuccessMessage,
     successMessage,

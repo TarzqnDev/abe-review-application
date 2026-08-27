@@ -18,7 +18,6 @@ type UseSubjectFormModalProps = {
   loadSubjectAreas: () => Promise<void>;
   onClose: () => void;
   onEditSuccess: () => void;
-  setIsLoadingSubjectAreas: React.Dispatch<React.SetStateAction<boolean>>;
   showSuccessMessage: (message: string) => void;
   subject: AdminSubject | null;
   subjectAreas: AdminSubjectArea[];
@@ -51,7 +50,6 @@ export const useSubjectFormModal = ({
   loadSubjectAreas,
   onClose,
   onEditSuccess,
-  setIsLoadingSubjectAreas,
   showSuccessMessage,
   subject,
   subjectAreas,
@@ -157,7 +155,6 @@ export const useSubjectFormModal = ({
       if (isEditing) {
         onEditSuccess();
       }
-      setIsLoadingSubjectAreas(true);
       await loadSubjectAreas();
       handleCloseSubjectFormModal();
     } finally {
