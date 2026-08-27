@@ -2,6 +2,7 @@
 
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Link from "next/link";
 
 import type { AppRole } from "@/features/app/layout/types/appRole";
 import MobileNavigation from "@/features/app/navbar/components/MobileNavigation";
@@ -25,7 +26,11 @@ export default function Navbar({ role }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 shrink-0 border-b border-border bg-surface">
       <div className="mx-auto flex h-[100px] w-full max-w-[1200px] items-center justify-between px-5">
-        <div className="flex items-center gap-2">
+        <Link
+          href={role === "admin" ? "/admin" : "/reviewee"}
+          className="flex items-center gap-2 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
+          aria-label="Go to dashboard"
+        >
           <div className="flex h-[50px] w-[50px] items-center justify-center rounded bg-teal-50">
             <Image
               src={BrandIcon}
@@ -40,7 +45,7 @@ export default function Navbar({ role }: NavbarProps) {
             className="h-auto w-[105px] object-contain sm:w-[110px]"
             priority
           />
-        </div>
+        </Link>
 
         <div className="relative hidden items-center gap-3 md:flex">
           <button
