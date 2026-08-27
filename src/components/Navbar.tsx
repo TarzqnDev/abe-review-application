@@ -1,6 +1,7 @@
 "use client";
 
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,6 +20,7 @@ export default function Navbar({ role }: NavbarProps) {
     email,
     handleLogout,
     handleToggleAccountMenu,
+    isLoggingOut,
     openAccountMenu,
     roleLabel,
   } = useNavbar(role);
@@ -75,9 +77,13 @@ export default function Navbar({ role }: NavbarProps) {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex h-10 w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-4 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
+                disabled={isLoggingOut}
+                className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded bg-primary-accent px-4 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Logout
+                {isLoggingOut ? (
+                  <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+                ) : null}
+                {isLoggingOut ? "Logging out..." : "Logout"}
               </button>
             </div>
           )}
@@ -85,6 +91,7 @@ export default function Navbar({ role }: NavbarProps) {
 
         <MobileNavigation
           email={email}
+          isLoggingOut={isLoggingOut}
           onLogout={handleLogout}
           role={role}
           roleLabel={roleLabel}

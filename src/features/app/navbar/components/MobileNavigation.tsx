@@ -10,9 +10,11 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { LoaderCircle } from "lucide-react";
 
 type MobileNavigationProps = {
   email: string;
+  isLoggingOut: boolean;
   onLogout: () => Promise<void>;
   role: AppRole | null;
   roleLabel: string;
@@ -20,6 +22,7 @@ type MobileNavigationProps = {
 
 export default function MobileNavigation({
   email,
+  isLoggingOut,
   onLogout,
   role,
   roleLabel,
@@ -99,10 +102,15 @@ export default function MobileNavigation({
           <button
             type="button"
             onClick={onLogout}
-            className="mt-auto flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded bg-primary-accent px-4 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
+            disabled={isLoggingOut}
+            className="mt-auto flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded bg-primary-accent px-4 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
-            Logout
+            {isLoggingOut ? (
+              <LoaderCircle className="h-5 w-5 animate-spin" aria-hidden="true" />
+            ) : (
+              <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
+            )}
+            {isLoggingOut ? "Logging out..." : "Logout"}
           </button>
         </div>
       </div>

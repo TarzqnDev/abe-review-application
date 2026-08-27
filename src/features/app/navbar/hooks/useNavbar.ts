@@ -12,14 +12,21 @@ export const useNavbar = (role: AppRole | null) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [openAccountMenu, setOpenAccountMenu] = useState(false);
-  const email = user?.email ?? "";
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutEmail, setLogoutEmail] = useState("");
   const roleLabel = role === "admin" ? "Administrator" : role === "reviewee" ? "Reviewee" : "User";
+  const email = isLoggingOut ? logoutEmail : user?.email ?? "";
 
   const handleToggleAccountMenu = () => {
     setOpenAccountMenu((isOpen) => !isOpen);
   };
 
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setLogoutEmail(user?.email ?? "");
+    setIsLoggingOut(true);
+
     try {
       const { error } = await supabase.auth.signOut();
 
@@ -27,8 +34,10 @@ export const useNavbar = (role: AppRole | null) => {
 
       queryClient.clear();
       router.replace("/login");
+      router.refresh();
     } catch (error) {
       console.error(error);
+      setIsLoggingOut(false);
     }
   };
 
@@ -36,6 +45,7 @@ export const useNavbar = (role: AppRole | null) => {
     email,
     handleLogout,
     handleToggleAccountMenu,
+    isLoggingOut,
     openAccountMenu,
     roleLabel,
   };
