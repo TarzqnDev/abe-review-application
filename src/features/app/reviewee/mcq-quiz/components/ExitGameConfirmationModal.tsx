@@ -14,16 +14,14 @@ export type ExitGameConfirmationModalProps = {
 export default function ExitGameConfirmationModal(
   props: ExitGameConfirmationModalProps,
 ) {
-  const { cancelButtonRef, error, handleExit, isExiting, modalAccessibility } =
-    useExitGameConfirmationModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const exitGameConfirmationModal = useExitGameConfirmationModal(props);
 
   return (
     <QuizModalShell
       className="max-w-[530px] px-6 py-8 sm:p-10"
-      dialogRef={dialogRef}
+      dialogRef={exitGameConfirmationModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={exitGameConfirmationModal.modalAccessibility.isVisible}
       labelledBy="exit-game-title"
       overlayClassName="bg-slate-950/35"
       zIndexClassName="z-[70]"
@@ -49,21 +47,21 @@ export default function ExitGameConfirmationModal(
         Are you sure you want to end the MCQ quiz now?
       </p>
 
-      {error && (
+      {exitGameConfirmationModal.error && (
         <p role="alert" className="mt-4 text-sm text-red-600">
-          {error}
+          {exitGameConfirmationModal.error}
         </p>
       )}
 
       <div className="mt-[18px] grid gap-2.5 sm:grid-cols-2">
         <button
           type="button"
-          onClick={handleExit}
-          disabled={isExiting}
-          aria-busy={isExiting}
+          onClick={exitGameConfirmationModal.handleExit}
+          disabled={exitGameConfirmationModal.isExiting}
+          aria-busy={exitGameConfirmationModal.isExiting}
           className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isExiting ? (
+          {exitGameConfirmationModal.isExiting ? (
             <>
               <LoaderCircle
                 aria-hidden="true"
@@ -76,10 +74,10 @@ export default function ExitGameConfirmationModal(
           )}
         </button>
         <button
-          ref={cancelButtonRef}
+          ref={exitGameConfirmationModal.cancelButtonRef}
           type="button"
           onClick={props.onCancel}
-          disabled={isExiting}
+          disabled={exitGameConfirmationModal.isExiting}
           className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           No, Cancel

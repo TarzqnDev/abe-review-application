@@ -28,34 +28,19 @@ const statusLabel = {
 } as const;
 
 export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
-  const {
-    closeButtonRef,
-    activeItemPage,
-    details,
-    error,
-    handleClose,
-    isLoading,
-    loadDetails,
-    modalAccessibility,
-    paginatedItems,
-    setCurrentPage,
-    summaryPresentation,
-    totalItemPages,
-    itemPageSize,
-  } = useHistoryDetailsModal(props);
-  const { dialogRef, handleBackdropMouseDown, isVisible } = modalAccessibility;
-  const history = details?.history ?? null;
+  const historyDetailsModal = useHistoryDetailsModal(props);
+  const history = historyDetailsModal.details?.history ?? null;
 
-  if (!props.isOpen && !isVisible) return null;
+  if (!props.isOpen && !historyDetailsModal.modalAccessibility.isVisible) return null;
 
   return (
     <QuizModalShell
       className="flex max-h-[calc(100dvh-2rem)] max-w-[980px] flex-col overflow-hidden sm:max-h-[calc(100vh-3rem)]"
-      dialogRef={dialogRef}
+      dialogRef={historyDetailsModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={historyDetailsModal.modalAccessibility.isVisible}
       labelledBy="history-details-title"
-      onBackdropMouseDown={handleBackdropMouseDown}
+      onBackdropMouseDown={historyDetailsModal.modalAccessibility.handleBackdropMouseDown}
       overlayClassName="bg-slate-950/45"
     >
       <header className="shrink-0 border-b border-border bg-secondary-bg px-5 py-5 sm:px-7">
@@ -106,9 +91,9 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
             )}
           </div>
           <button
-            ref={closeButtonRef}
+            ref={historyDetailsModal.closeButtonRef}
             type="button"
-            onClick={handleClose}
+            onClick={historyDetailsModal.handleClose}
             aria-label="Close activity details"
             className="shrink-0 cursor-pointer rounded p-1 text-secondary-text transition-colors hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
           >
@@ -118,23 +103,23 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
-        {isLoading ? (
+        {historyDetailsModal.isLoading ? (
           <HistoryDetailsSkeleton />
-        ) : error ? (
+        ) : historyDetailsModal.error ? (
           <div className="flex min-h-64 flex-col items-center justify-center rounded border border-red-200 bg-red-50 px-5 py-10 text-center">
-            <p className="text-sm font-medium text-red-700">{error}</p>
+            <p className="text-sm font-medium text-red-700">{historyDetailsModal.error}</p>
             <button
               type="button"
-              onClick={() => void loadDetails()}
+              onClick={() => void historyDetailsModal.loadDetails()}
               className="mt-4 flex cursor-pointer items-center gap-2 rounded border border-red-300 bg-surface px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error"
             >
               <ArrowPathIcon className="h-4 w-4" />
               Try Again
             </button>
           </div>
-        ) : details && history ? (
+        ) : historyDetailsModal.details && history ? (
           <>
-            <HistoryDetailsSummary history={history} {...summaryPresentation} />
+            <HistoryDetailsSummary history={history} {...historyDetailsModal.summaryPresentation} />
 
             <section className="mt-7" aria-labelledby="activity-items-title">
               <div className="flex items-end justify-between gap-3">
@@ -143,14 +128,14 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
                     {history.sessionType === "flash_cards" ? "Flash Cards" : "Questions"}
                   </h3>
                   <p className="mt-1 text-sm text-secondary-text">
-                  {details.items.length} {details.items.length === 1 ? "item" : "items"}
+                  {historyDetailsModal.details.items.length} {historyDetailsModal.details.items.length === 1 ? "item" : "items"}
                   </p>
                 </div>
               </div>
 
-              {details.items.length > 0 ? (
+              {historyDetailsModal.details.items.length > 0 ? (
                 <div className="mt-4 space-y-3">
-                  {paginatedItems.map((item) =>
+                  {historyDetailsModal.paginatedItems.map((item) =>
                     item.sessionType === "mcq_quiz" ? (
                       <McqHistoryDetailsItem key={`${item.sessionType}-${item.id}`} item={item} />
                     ) : (
@@ -167,12 +152,12 @@ export default function HistoryDetailsModal(props: HistoryDetailsModalProps) {
               )}
 
               <ActivityHistoryPagination
-                currentPage={activeItemPage}
+                currentPage={historyDetailsModal.activeItemPage}
                 itemLabel={history.sessionType === "flash_cards" ? "flash cards" : "questions"}
-                onPageChange={setCurrentPage}
-                pageSize={itemPageSize}
-                totalItems={details.items.length}
-                totalPages={totalItemPages}
+                onPageChange={historyDetailsModal.setCurrentPage}
+                pageSize={historyDetailsModal.itemPageSize}
+                totalItems={historyDetailsModal.details.items.length}
+                totalPages={historyDetailsModal.totalItemPages}
               />
             </section>
           </>

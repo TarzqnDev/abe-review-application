@@ -37,32 +37,22 @@ export default function PaesQuestionFormModal({
   showSuccessMessage,
   subjects,
 }: PaesQuestionFormModalProps) {
-  const {
-    handleClosePaesQuestionFormModal,
-    handleQuestionInput,
-    handleSaveQuestion,
-    isSavingQuestion,
-    openPaesQuestionFormModal,
-    questionFormData,
-    questionFormError,
-    questionFormMode,
-    selectedEditQuestion,
-  } = usePaesQuestionFormModal({
+  const paesQuestionFormModal = usePaesQuestionFormModal({
     onClose,
     onSaved,
     request,
     showSuccessMessage,
     subjects,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
-    openPaesQuestionFormModal,
+  const modalAnimation = useModalAnimation(
+    paesQuestionFormModal.openPaesQuestionFormModal,
   );
-  const isEditMode = questionFormMode === "edit";
+  const isEditMode = paesQuestionFormModal.questionFormMode === "edit";
 
   return (
     <div
       className={`fixed inset-0 z-[70] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
@@ -70,13 +60,13 @@ export default function PaesQuestionFormModal({
       <div
         className="absolute inset-0 bg-slate-950/35"
         onClick={() =>
-          closeWithAnimation(handleClosePaesQuestionFormModal)
+          modalAnimation.closeWithAnimation(paesQuestionFormModal.handleClosePaesQuestionFormModal)
         }
       ></div>
 
       <div
         className={`relative max-h-[88vh] w-full max-w-[800px] overflow-hidden rounded-md bg-surface shadow-xl transition-all duration-300 ease-out sm:overflow-y-auto sm:p-10 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
@@ -85,7 +75,7 @@ export default function PaesQuestionFormModal({
           <button
           type="button"
           onClick={() =>
-            closeWithAnimation(handleClosePaesQuestionFormModal)
+            modalAnimation.closeWithAnimation(paesQuestionFormModal.handleClosePaesQuestionFormModal)
           }
           className="absolute top-10 right-9 cursor-pointer"
           aria-label="Close PAES question form"
@@ -101,21 +91,21 @@ export default function PaesQuestionFormModal({
 
         <form
           id="paes-question-form"
-          onSubmit={handleSaveQuestion}
+          onSubmit={paesQuestionFormModal.handleSaveQuestion}
           className="flex flex-col gap-5"
         >
           {isSubjectLocked && (
             <input
               type="hidden"
               name="subjectId"
-              value={questionFormData.subjectId}
+              value={paesQuestionFormModal.questionFormData.subjectId}
             />
           )}
           {isEditMode && (
             <input
               type="hidden"
               name="questionId"
-              value={selectedEditQuestion?.id ?? ""}
+              value={paesQuestionFormModal.selectedEditQuestion?.id ?? ""}
             />
           )}
 
@@ -126,8 +116,8 @@ export default function PaesQuestionFormModal({
             <select
               id="paesSubjectId"
               name={isSubjectLocked ? undefined : "subjectId"}
-              value={questionFormData.subjectId}
-              onChange={handleQuestionInput}
+              value={paesQuestionFormModal.questionFormData.subjectId}
+              onChange={paesQuestionFormModal.handleQuestionInput}
               disabled={isSubjectLocked || subjects.length === 0}
               className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent disabled:cursor-not-allowed disabled:bg-secondary-bg"
             >
@@ -149,8 +139,8 @@ export default function PaesQuestionFormModal({
             <textarea
               id="paesQuestionText"
               name="questionText"
-              value={questionFormData.questionText}
-              onChange={handleQuestionInput}
+              value={paesQuestionFormModal.questionFormData.questionText}
+              onChange={paesQuestionFormModal.handleQuestionInput}
               rows={5}
               maxLength={1000}
               className="resize-none rounded border border-border px-4 py-3 text-sm outline-none focus:border-primary-accent"
@@ -164,7 +154,7 @@ export default function PaesQuestionFormModal({
             <div className="grid gap-5 md:grid-cols-2">
               {[1, 2, 3, 4].map((optionNumber) => {
                 const isSelected =
-                  questionFormData.correctOptionSortOrder ===
+                  paesQuestionFormModal.questionFormData.correctOptionSortOrder ===
                   String(optionNumber);
 
                 return (
@@ -187,7 +177,7 @@ export default function PaesQuestionFormModal({
                         name="correctOptionSortOrder"
                         value={optionNumber}
                         checked={isSelected}
-                        onChange={handleQuestionInput}
+                        onChange={paesQuestionFormModal.handleQuestionInput}
                         className="h-4 w-4 shrink-0 accent-primary-accent"
                       />
                       <input
@@ -195,11 +185,11 @@ export default function PaesQuestionFormModal({
                         type="text"
                         name={`option${optionNumber}`}
                         value={
-                          questionFormData[
+                          paesQuestionFormModal.questionFormData[
                             `option${optionNumber}` as keyof PaesQuestionFormData
                           ]
                         }
-                        onChange={handleQuestionInput}
+                        onChange={paesQuestionFormModal.handleQuestionInput}
                         maxLength={255}
                         className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
                       />
@@ -212,10 +202,10 @@ export default function PaesQuestionFormModal({
 
           <button
             type="submit"
-            disabled={isSavingQuestion || subjects.length === 0}
+            disabled={paesQuestionFormModal.isSavingQuestion || subjects.length === 0}
             className="hidden h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70 sm:flex"
           >
-            {isSavingQuestion ? (
+            {paesQuestionFormModal.isSavingQuestion ? (
               <LoaderCircle className="animate-spin" />
             ) : isEditMode ? (
               "Save Question"
@@ -224,8 +214,8 @@ export default function PaesQuestionFormModal({
             )}
           </button>
 
-          {questionFormError && (
-            <p className="text-sm text-error">{questionFormError}</p>
+          {paesQuestionFormModal.questionFormError && (
+            <p className="text-sm text-error">{paesQuestionFormModal.questionFormError}</p>
           )}
           </form>
         </div>
@@ -234,10 +224,10 @@ export default function PaesQuestionFormModal({
           <button
             type="submit"
             form="paes-question-form"
-            disabled={isSavingQuestion || subjects.length === 0}
+            disabled={paesQuestionFormModal.isSavingQuestion || subjects.length === 0}
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSavingQuestion ? (
+            {paesQuestionFormModal.isSavingQuestion ? (
               <LoaderCircle className="animate-spin" />
             ) : isEditMode ? (
               "Save Question"

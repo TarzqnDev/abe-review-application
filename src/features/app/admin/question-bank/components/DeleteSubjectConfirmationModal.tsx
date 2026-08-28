@@ -19,17 +19,10 @@ export default function DeleteSubjectConfirmationModal({
   showSuccessMessage,
   subject,
 }: DeleteSubjectConfirmationModalProps) {
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
+  const modalAnimation = useModalAnimation(
     subject !== null,
   );
-  const {
-    cancelButtonRef,
-    deleteError,
-    dialogRef,
-    handleCloseDeleteSubjectConfirmation,
-    handleDeleteSubject,
-    isDeleting,
-  } = useDeleteSubjectConfirmationModal({
+  const deleteSubjectConfirmationModal = useDeleteSubjectConfirmationModal({
     loadSubjectAreas,
     onClose,
     onDeleteSuccess,
@@ -40,7 +33,7 @@ export default function DeleteSubjectConfirmationModal({
   return (
     <div
       className={`fixed inset-0 z-[80] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
@@ -48,13 +41,13 @@ export default function DeleteSubjectConfirmationModal({
       aria-modal="true"
       aria-labelledby="delete-subject-modal-title"
       aria-describedby="delete-subject-modal-description"
-      aria-hidden={!isModalVisible}
+      aria-hidden={!modalAnimation.isModalVisible}
     >
       <button
         type="button"
         onClick={() => {
-          if (!isDeleting) {
-            closeWithAnimation(handleCloseDeleteSubjectConfirmation);
+          if (!deleteSubjectConfirmationModal.isDeleting) {
+            modalAnimation.closeWithAnimation(deleteSubjectConfirmationModal.handleCloseDeleteSubjectConfirmation);
           }
         }}
         className="absolute inset-0 cursor-default bg-slate-950/45"
@@ -63,10 +56,10 @@ export default function DeleteSubjectConfirmationModal({
       />
 
       <form
-        ref={dialogRef}
-        onSubmit={handleDeleteSubject}
+        ref={deleteSubjectConfirmationModal.dialogRef}
+        onSubmit={deleteSubjectConfirmationModal.handleDeleteSubject}
         className={`relative w-full max-w-[580px] rounded-md bg-surface p-10 shadow-xl transition-all duration-300 ease-out ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
@@ -103,19 +96,19 @@ export default function DeleteSubjectConfirmationModal({
           </p>
         )}
 
-        {deleteError && (
+        {deleteSubjectConfirmationModal.deleteError && (
           <p role="alert" className="mt-4 text-sm text-error">
-            {deleteError}
+            {deleteSubjectConfirmationModal.deleteError}
           </p>
         )}
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <button
             type="submit"
-            disabled={isDeleting}
+            disabled={deleteSubjectConfirmationModal.isDeleting}
             className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isDeleting ? (
+            {deleteSubjectConfirmationModal.isDeleting ? (
               <LoaderCircle
                 className="h-5 w-5 animate-spin"
                 aria-label="Deleting"
@@ -125,12 +118,12 @@ export default function DeleteSubjectConfirmationModal({
             )}
           </button>
           <button
-            ref={cancelButtonRef}
+            ref={deleteSubjectConfirmationModal.cancelButtonRef}
             type="button"
             onClick={() =>
-              closeWithAnimation(handleCloseDeleteSubjectConfirmation)
+              modalAnimation.closeWithAnimation(deleteSubjectConfirmationModal.handleCloseDeleteSubjectConfirmation)
             }
-            disabled={isDeleting}
+            disabled={deleteSubjectConfirmationModal.isDeleting}
             className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-secondary-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
           >
             No, Cancel

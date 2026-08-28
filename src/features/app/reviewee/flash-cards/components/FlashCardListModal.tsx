@@ -27,31 +27,11 @@ export default function FlashCardListModal({
   onClose,
   showSuccessMessage,
 }: FlashCardListModalProps) {
-  const {
-    currentPage,
-    dialogRef,
-    filteredFlashCards,
-    firstFlashCardNumber,
-    flashCardFormRequest,
-    handleAddFlashCard,
-    handleCloseDeleteConfirmation,
-    handleCloseFlashCardForm,
-    handleCloseFlashCardListModal,
-    handleEditFlashCard,
-    handleOpenDeleteConfirmation,
-    handlePageChange,
-    handleSearchQueryChange,
-    isNestedModalOpen,
-    lastFlashCardNumber,
-    paginatedFlashCards,
-    searchQuery,
-    selectedDeleteFlashCard,
-    totalPages,
-  } = useFlashCardListModal({
+  const flashCardListModal = useFlashCardListModal({
     flashCardDeck,
     onClose,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
+  const modalAnimation = useModalAnimation(
     flashCardDeck !== null,
   );
   const flashCardCount = flashCardDeck?.cards.length ?? 0;
@@ -62,28 +42,32 @@ export default function FlashCardListModal({
     <>
       <div
         className={`fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto px-4 py-4 transition-opacity duration-300 sm:py-6 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
         role="dialog"
-        aria-modal={!isNestedModalOpen}
+        aria-modal={!flashCardListModal.isNestedModalOpen}
         aria-labelledby="flash-card-list-modal-title"
-        aria-hidden={!isModalVisible || isNestedModalOpen}
-        inert={isNestedModalOpen}
+        aria-hidden={
+          !modalAnimation.isModalVisible || flashCardListModal.isNestedModalOpen
+        }
+        inert={flashCardListModal.isNestedModalOpen}
       >
         <div
           className="absolute inset-0 bg-slate-950/35"
           onClick={() =>
-            closeWithAnimation(handleCloseFlashCardListModal)
+            modalAnimation.closeWithAnimation(
+              flashCardListModal.handleCloseFlashCardListModal,
+            )
           }
         ></div>
 
         <div
-          ref={dialogRef}
+          ref={flashCardListModal.dialogRef}
           tabIndex={-1}
           className={`relative flex max-h-[calc(100dvh-2rem)] w-full max-w-[935px] flex-col rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[calc(100vh-3rem)] sm:p-9 ${
-            isModalVisible
+            modalAnimation.isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
           }`}
@@ -107,8 +91,8 @@ export default function FlashCardListModal({
                 <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
                   type="search"
-                  value={searchQuery}
-                  onChange={handleSearchQueryChange}
+                  value={flashCardListModal.searchQuery}
+                  onChange={flashCardListModal.handleSearchQueryChange}
                   placeholder="Search a flash card"
                   className="h-10 w-full rounded-full border border-border bg-surface pr-4 pl-10 text-sm text-primary-text outline-none placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-teal-100"
                 />
@@ -116,7 +100,9 @@ export default function FlashCardListModal({
               <button
                 type="button"
                 onClick={() =>
-                  closeWithAnimation(handleCloseFlashCardListModal)
+                  modalAnimation.closeWithAnimation(
+                    flashCardListModal.handleCloseFlashCardListModal,
+                  )
                 }
                 className="shrink-0 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                 aria-label="Close flash card list"
@@ -129,7 +115,7 @@ export default function FlashCardListModal({
           <div className="min-h-0 overflow-y-auto pt-5">
             <button
               type="button"
-              onClick={handleAddFlashCard}
+              onClick={flashCardListModal.handleAddFlashCard}
               disabled={hasReachedCardLimit}
               className="flex h-10 w-full cursor-pointer items-center justify-center rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-slate-400"
             >
@@ -137,8 +123,8 @@ export default function FlashCardListModal({
             </button>
 
             <div className="mt-5 flex flex-col gap-3">
-              {paginatedFlashCards.length > 0 ? (
-                paginatedFlashCards.map((flashCard) => {
+              {flashCardListModal.paginatedFlashCards.length > 0 ? (
+                flashCardListModal.paginatedFlashCards.map((flashCard) => {
                   const flashCardNumber =
                     (flashCardDeck?.cards.findIndex(
                       (deckFlashCard) => deckFlashCard.id === flashCard.id,
@@ -156,7 +142,9 @@ export default function FlashCardListModal({
                         <div className="flex shrink-0 items-center gap-3">
                           <button
                             type="button"
-                            onClick={() => handleEditFlashCard(flashCard)}
+                            onClick={() =>
+                              flashCardListModal.handleEditFlashCard(flashCard)
+                            }
                             className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text transition-colors hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                             aria-label={`Edit flash card ${flashCardNumber}`}
                           >
@@ -166,7 +154,9 @@ export default function FlashCardListModal({
                           <button
                             type="button"
                             onClick={() =>
-                              handleOpenDeleteConfirmation(flashCard)
+                              flashCardListModal.handleOpenDeleteConfirmation(
+                                flashCard,
+                              )
                             }
                             className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error"
                             aria-label={`Delete flash card ${flashCardNumber}`}
@@ -194,7 +184,7 @@ export default function FlashCardListModal({
                 })
               ) : (
                 <div className="rounded border border-border bg-secondary-bg p-5 text-center text-sm text-secondary-text">
-                  {searchQuery.trim()
+                  {flashCardListModal.searchQuery.trim()
                     ? "No flash cards match your search."
                     : "No flash cards yet."}
                 </div>
@@ -202,12 +192,12 @@ export default function FlashCardListModal({
             </div>
 
             <FlashCardListPagination
-              currentPage={currentPage}
-              firstFlashCardNumber={firstFlashCardNumber}
-              lastFlashCardNumber={lastFlashCardNumber}
-              onPageChange={handlePageChange}
-              totalFlashCards={filteredFlashCards.length}
-              totalPages={totalPages}
+              currentPage={flashCardListModal.currentPage}
+              firstFlashCardNumber={flashCardListModal.firstFlashCardNumber}
+              lastFlashCardNumber={flashCardListModal.lastFlashCardNumber}
+              onPageChange={flashCardListModal.handlePageChange}
+              totalFlashCards={flashCardListModal.filteredFlashCards.length}
+              totalPages={flashCardListModal.totalPages}
             />
           </div>
         </div>
@@ -216,19 +206,23 @@ export default function FlashCardListModal({
       {/* Modals Section */}
       <FlashCardFormModal
         key={
-          flashCardFormRequest?.requestId ?? "nested-flash-card-form-modal"
+          flashCardListModal.flashCardFormRequest?.requestId ??
+          "nested-flash-card-form-modal"
         }
-        request={flashCardFormRequest}
+        request={flashCardListModal.flashCardFormRequest}
         flashCardDecks={flashCardDeck ? [flashCardDeck] : []}
         loadFlashCardDecks={loadFlashCardDecks}
-        onClose={handleCloseFlashCardForm}
+        onClose={flashCardListModal.handleCloseFlashCardForm}
         showSuccessMessage={showSuccessMessage}
       />
       <DeleteFlashCardConfirmationModal
-        key={selectedDeleteFlashCard?.id ?? "delete-flash-card-confirmation"}
-        flashCard={selectedDeleteFlashCard}
+        key={
+          flashCardListModal.selectedDeleteFlashCard?.id ??
+          "delete-flash-card-confirmation"
+        }
+        flashCard={flashCardListModal.selectedDeleteFlashCard}
         loadFlashCardDecks={loadFlashCardDecks}
-        onClose={handleCloseDeleteConfirmation}
+        onClose={flashCardListModal.handleCloseDeleteConfirmation}
         showSuccessMessage={showSuccessMessage}
       />
     </>

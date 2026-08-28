@@ -14,16 +14,19 @@ export type FlashCardExitGameConfirmationModalProps = {
 export default function FlashCardExitGameConfirmationModal(
   props: FlashCardExitGameConfirmationModalProps,
 ) {
-  const { cancelButtonRef, error, handleExit, isExiting, modalAccessibility } =
+  const flashCardExitGameConfirmationModal =
     useFlashCardExitGameConfirmationModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
 
   return (
     <QuizModalShell
       className="max-w-[530px] px-6 py-8 sm:p-10"
-      dialogRef={dialogRef}
+      dialogRef={
+        flashCardExitGameConfirmationModal.modalAccessibility.dialogRef
+      }
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={
+        flashCardExitGameConfirmationModal.modalAccessibility.isVisible
+      }
       labelledBy="exit-flash-card-game-title"
       overlayClassName="bg-slate-950/35"
       zIndexClassName="z-[70]"
@@ -49,21 +52,21 @@ export default function FlashCardExitGameConfirmationModal(
         Are you sure you want to end the flash card game now?
       </p>
 
-      {error && (
+      {flashCardExitGameConfirmationModal.error && (
         <p role="alert" className="mt-4 text-sm text-red-600">
-          {error}
+          {flashCardExitGameConfirmationModal.error}
         </p>
       )}
 
       <div className="mt-[18px] grid gap-2.5 sm:grid-cols-2">
         <button
           type="button"
-          onClick={handleExit}
-          disabled={isExiting}
-          aria-busy={isExiting}
+          onClick={flashCardExitGameConfirmationModal.handleExit}
+          disabled={flashCardExitGameConfirmationModal.isExiting}
+          aria-busy={flashCardExitGameConfirmationModal.isExiting}
           className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isExiting ? (
+          {flashCardExitGameConfirmationModal.isExiting ? (
             <>
               <LoaderCircle
                 aria-hidden="true"
@@ -76,10 +79,10 @@ export default function FlashCardExitGameConfirmationModal(
           )}
         </button>
         <button
-          ref={cancelButtonRef}
+          ref={flashCardExitGameConfirmationModal.cancelButtonRef}
           type="button"
           onClick={props.onCancel}
-          disabled={isExiting}
+          disabled={flashCardExitGameConfirmationModal.isExiting}
           className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-medium text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           No, Cancel

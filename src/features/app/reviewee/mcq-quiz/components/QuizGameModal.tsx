@@ -20,51 +20,41 @@ export type QuizGameModalProps = {
 const OPTION_LABELS = ["A", "B", "C", "D"];
 
 export default function QuizGameModal(props: QuizGameModalProps) {
-  const {
-    answerReveal,
-    currentQuestion,
-    currentTiming,
-    error,
-    handleCancelExitConfirmation,
-    handleExited,
-    handleOpenExitConfirmation,
-    handleRetry,
-    handleSelectOption,
-    handleSubmitAnswer,
-    isExitConfirmationOpen,
-    isQuestionVisible,
-    modalAccessibility,
-    phase,
-    remainingSeconds,
-    selectedOptionId,
-  } = useQuizGameModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const quizGameModal = useQuizGameModal(props);
 
-  if (!props.preparedSession || !currentTiming || !currentQuestion) {
+  if (
+    !props.preparedSession ||
+    !quizGameModal.currentTiming ||
+    !quizGameModal.currentQuestion
+  ) {
     return null;
   }
 
-  const isAnswerLocked = phase !== "answering";
+  const isAnswerLocked = quizGameModal.phase !== "answering";
   const showResult =
-    (phase === "result" || phase === "transitioning") && answerReveal !== null;
-  const showTimer = phase !== "result" && phase !== "transitioning";
-  const resultIsCorrect = answerReveal?.isCorrect === true;
-  const timerIsCritical = remainingSeconds <= 3;
+    (quizGameModal.phase === "result" ||
+      quizGameModal.phase === "transitioning") &&
+    quizGameModal.answerReveal !== null;
+  const showTimer =
+    quizGameModal.phase !== "result" &&
+    quizGameModal.phase !== "transitioning";
+  const resultIsCorrect = quizGameModal.answerReveal?.isCorrect === true;
+  const timerIsCritical = quizGameModal.remainingSeconds <= 3;
 
   return (
     <>
       <QuizModalShell
         className="h-dvh max-h-dvh max-w-none overflow-hidden rounded-none md:h-auto md:max-h-[calc(100dvh-2rem)] md:max-w-[935px] md:rounded-lg sm:overflow-y-auto sm:p-8 lg:p-10"
-        dialogRef={dialogRef}
-        isInert={isExitConfirmationOpen}
+        dialogRef={quizGameModal.modalAccessibility.dialogRef}
+        isInert={quizGameModal.isExitConfirmationOpen}
         isOpen={props.isOpen}
-        isVisible={isVisible}
+        isVisible={quizGameModal.modalAccessibility.isVisible}
         labelledBy="quiz-game-title"
         overlayClassName="bg-slate-950/45 !px-0 !py-0 md:!px-4 md:!py-4"
       >
         <button
           type="button"
-          onClick={handleOpenExitConfirmation}
+          onClick={quizGameModal.handleOpenExitConfirmation}
           className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light sm:top-8 sm:right-8"
           aria-label="End game"
         >
@@ -73,7 +63,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
 
         <div
           className={`flex h-full flex-col overflow-hidden p-5 sm:contents ${
-            error ? "pb-[158px]" : "pb-[82px]"
+            quizGameModal.error ? "pb-[158px]" : "pb-[82px]"
           }`}
         >
           <div className="shrink-0 bg-surface">
@@ -107,7 +97,7 @@ export default function QuizGameModal(props: QuizGameModalProps) {
                 >
                   <div
                     className="flex h-10 items-center gap-1.5 rounded border border-border bg-secondary-bg px-3 text-sm text-secondary-text transition-opacity duration-300 sm:h-[46px] sm:gap-2 sm:px-4 sm:text-base"
-                    aria-label={`${remainingSeconds} seconds remaining`}
+                    aria-label={`${quizGameModal.remainingSeconds} seconds remaining`}
                   >
                     <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                     <span>Timer:</span>
@@ -116,8 +106,10 @@ export default function QuizGameModal(props: QuizGameModalProps) {
                         timerIsCritical ? "text-error" : "text-primary-accent"
                       }`}
                     >
-                      {remainingSeconds}{" "}
-                      {remainingSeconds === 1 ? "second" : "seconds"}
+                      {quizGameModal.remainingSeconds}{" "}
+                      {quizGameModal.remainingSeconds === 1
+                        ? "second"
+                        : "seconds"}
                     </span>
                   </div>
                 </div>
@@ -136,14 +128,14 @@ export default function QuizGameModal(props: QuizGameModalProps) {
               </div>
 
               <span className="ml-auto shrink-0 rounded-full bg-teal-50 px-3 py-1.5 text-xs font-semibold text-primary-accent sm:px-4 sm:py-2 sm:text-sm md:absolute md:top-1/2 md:right-0 md:-translate-y-1/2">
-                {currentTiming.questionOrder}/
+                {quizGameModal.currentTiming.questionOrder}/
                 {props.preparedSession.totalQuestions} Questions
               </span>
             </div>
 
             <div
               className={`mt-6 shrink-0 transition-opacity duration-300 motion-reduce:transition-none ${
-                isQuestionVisible ? "opacity-100" : "opacity-0"
+                quizGameModal.isQuestionVisible ? "opacity-100" : "opacity-0"
               }`}
             >
               <div>
@@ -151,14 +143,14 @@ export default function QuizGameModal(props: QuizGameModalProps) {
                   Question
                 </h3>
                 <div className="min-h-[125px] whitespace-pre-wrap rounded border border-border bg-secondary-bg p-4 text-sm leading-6 text-primary-text sm:p-5">
-                  {currentQuestion.questionText}
+                  {quizGameModal.currentQuestion.questionText}
                 </div>
               </div>
             </div>
 
             <p
               className={`mt-4 text-sm font-medium text-secondary-text sm:mt-5 ${
-                isQuestionVisible ? "opacity-100" : "opacity-0"
+                quizGameModal.isQuestionVisible ? "opacity-100" : "opacity-0"
               }`}
             >
               Fill out the options and select the correct answer
@@ -167,36 +159,36 @@ export default function QuizGameModal(props: QuizGameModalProps) {
 
           <div
             className={`mt-4 min-h-0 flex-1 overflow-y-auto pb-3 transition-opacity duration-300 motion-reduce:transition-none sm:mt-5 sm:overflow-visible sm:pb-0 ${
-              isQuestionVisible ? "opacity-100" : "opacity-0"
+              quizGameModal.isQuestionVisible ? "opacity-100" : "opacity-0"
             }`}
           >
             <div className="grid gap-4 sm:grid-cols-2">
-              {currentQuestion.options.map((option, optionIndex) => (
+              {quizGameModal.currentQuestion.options.map((option, optionIndex) => (
                 <QuizAnswerOption
                   key={option.id}
-                  answerReveal={answerReveal}
+                  answerReveal={quizGameModal.answerReveal}
                   disabled={isAnswerLocked}
-                  isSelected={selectedOptionId === option.id}
+                  isSelected={quizGameModal.selectedOptionId === option.id}
                   label={
                     OPTION_LABELS[option.sortOrder - 1] ??
                     OPTION_LABELS[optionIndex] ??
                     String(option.sortOrder)
                   }
-                  onSelect={handleSelectOption}
+                  onSelect={quizGameModal.handleSelectOption}
                   option={option}
                 />
               ))}
             </div>
 
-            {error && (
+            {quizGameModal.error && (
               <div className="mt-5 hidden flex-col items-start gap-3 rounded border border-red-200 bg-red-50 p-4 sm:flex sm:flex-row sm:items-center sm:justify-between">
                 <p role="alert" className="text-sm text-red-600">
-                  {error}
+                  {quizGameModal.error}
                 </p>
-                {phase !== "answering" && (
+                {quizGameModal.phase !== "answering" && (
                   <button
                     type="button"
-                    onClick={handleRetry}
+                    onClick={quizGameModal.handleRetry}
                     className="shrink-0 cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-2"
                   >
                     Try Again
@@ -207,16 +199,19 @@ export default function QuizGameModal(props: QuizGameModalProps) {
 
             <button
               type="button"
-              onClick={handleSubmitAnswer}
-              disabled={selectedOptionId === null || phase !== "answering"}
+              onClick={quizGameModal.handleSubmitAnswer}
+              disabled={
+                quizGameModal.selectedOptionId === null ||
+                quizGameModal.phase !== "answering"
+              }
               className="mt-5 hidden h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:flex"
             >
-              {phase === "checking" ? (
+              {quizGameModal.phase === "checking" ? (
                 <>
                   <span>Checking answer &nbsp;</span>
                   <LoaderCircle className="h-5 w-5 animate-spin" />
                 </>
-              ) : phase === "transitioning" ? (
+              ) : quizGameModal.phase === "transitioning" ? (
                 "Loading Next Question..."
               ) : (
                 "Submit Answer"
@@ -226,15 +221,15 @@ export default function QuizGameModal(props: QuizGameModalProps) {
         </div>
 
         <div className="absolute inset-x-0 bottom-0 z-10 bg-surface px-5 pt-3 pb-5 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:hidden">
-          {error && (
+          {quizGameModal.error && (
             <div className="mb-3 flex flex-col items-start gap-2 rounded border border-red-200 bg-red-50 p-3">
               <p role="alert" className="text-sm text-red-600">
-                {error}
+                {quizGameModal.error}
               </p>
-              {phase !== "answering" && (
+              {quizGameModal.phase !== "answering" && (
                 <button
                   type="button"
-                  onClick={handleRetry}
+                  onClick={quizGameModal.handleRetry}
                   className="shrink-0 cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-2"
                 >
                   Try Again
@@ -244,16 +239,19 @@ export default function QuizGameModal(props: QuizGameModalProps) {
           )}
           <button
             type="button"
-            onClick={handleSubmitAnswer}
-            disabled={selectedOptionId === null || phase !== "answering"}
+            onClick={quizGameModal.handleSubmitAnswer}
+            disabled={
+              quizGameModal.selectedOptionId === null ||
+              quizGameModal.phase !== "answering"
+            }
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {phase === "checking" ? (
+            {quizGameModal.phase === "checking" ? (
               <>
                 <span>Checking answer &nbsp;</span>
                 <LoaderCircle className="h-5 w-5 animate-spin" />
               </>
-            ) : phase === "transitioning" ? (
+            ) : quizGameModal.phase === "transitioning" ? (
               "Loading Next Question..."
             ) : (
               "Submit Answer"
@@ -263,9 +261,9 @@ export default function QuizGameModal(props: QuizGameModalProps) {
       </QuizModalShell>
 
       <ExitGameConfirmationModal
-        isOpen={isExitConfirmationOpen}
-        onCancel={handleCancelExitConfirmation}
-        onExited={handleExited}
+        isOpen={quizGameModal.isExitConfirmationOpen}
+        onCancel={quizGameModal.handleCancelExitConfirmation}
+        onExited={quizGameModal.handleExited}
         sessionId={props.preparedSession.sessionId}
       />
     </>

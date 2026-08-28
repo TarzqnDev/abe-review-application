@@ -17,26 +17,20 @@ export default function DeleteFlashCardConfirmationModal({
   onClose,
   showSuccessMessage,
 }: DeleteFlashCardConfirmationModalProps) {
-  const {
-    cancelButtonRef,
-    deleteError,
-    dialogRef,
-    handleDeleteFlashCard,
-    isDeleting,
-  } = useDeleteFlashCardConfirmationModal({
+  const deleteFlashCardConfirmationModal = useDeleteFlashCardConfirmationModal({
     flashCard,
     loadFlashCardDecks,
     onClose,
     showSuccessMessage,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
+  const modalAnimation = useModalAnimation(
     flashCard !== null,
   );
 
   return (
     <div
       className={`fixed inset-0 z-[80] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
@@ -44,20 +38,22 @@ export default function DeleteFlashCardConfirmationModal({
       aria-modal="true"
       aria-labelledby="delete-flash-card-modal-title"
       aria-describedby="delete-flash-card-modal-description"
-      aria-hidden={!isModalVisible}
+      aria-hidden={!modalAnimation.isModalVisible}
     >
       <div
         className="absolute inset-0 bg-slate-950/40"
         onClick={() => {
-          if (!isDeleting) closeWithAnimation(onClose);
+          if (!deleteFlashCardConfirmationModal.isDeleting) {
+            modalAnimation.closeWithAnimation(onClose);
+          }
         }}
       ></div>
 
       <form
-        ref={dialogRef}
-        onSubmit={handleDeleteFlashCard}
+        ref={deleteFlashCardConfirmationModal.dialogRef}
+        onSubmit={deleteFlashCardConfirmationModal.handleDeleteFlashCard}
         className={`relative w-full max-w-[580px] rounded-md bg-surface px-6 py-9 shadow-xl transition-all duration-300 ease-out sm:px-10 sm:py-10 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
@@ -100,29 +96,29 @@ export default function DeleteFlashCardConfirmationModal({
           </div>
         )}
 
-        {deleteError && (
+        {deleteFlashCardConfirmationModal.deleteError && (
           <p role="alert" className="mt-4 text-sm text-error">
-            {deleteError}
+            {deleteFlashCardConfirmationModal.deleteError}
           </p>
         )}
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <button
             type="submit"
-            disabled={isDeleting}
+            disabled={deleteFlashCardConfirmationModal.isDeleting}
             className="flex h-12 cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isDeleting ? (
+            {deleteFlashCardConfirmationModal.isDeleting ? (
               <LoaderCircle className="h-5 w-5 animate-spin" />
             ) : (
               "Yes, Continue"
             )}
           </button>
           <button
-            ref={cancelButtonRef}
+            ref={deleteFlashCardConfirmationModal.cancelButtonRef}
             type="button"
-            onClick={() => closeWithAnimation(onClose)}
-            disabled={isDeleting}
+            onClick={() => modalAnimation.closeWithAnimation(onClose)}
+            disabled={deleteFlashCardConfirmationModal.isDeleting}
             className="h-12 cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
           >
             No, Cancel

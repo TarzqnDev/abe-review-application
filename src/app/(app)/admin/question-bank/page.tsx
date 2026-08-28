@@ -14,45 +14,14 @@ import { useQuestionBank } from "@/features/app/admin/question-bank/hooks/useQue
 import { isPaesSubjectArea } from "@/features/app/admin/question-bank/constants/questionBank";
 
 export default function AdminSubjectPage() {
-  const {
-    activeAreaFilter,
-    filteredSubjectAreas,
-    handleAreaFilterChange,
-    handleCloseDeleteSubjectConfirmation,
-    handleClosePaesQuestionFormModal,
-    handleClosePaesQuestionList,
-    handleCloseSubjectDetails,
-    handleCloseSubjectFormModal,
-    handleHideSuccessBanner,
-    handleOpenAddSubjectModal,
-    handleOpenAddPaesQuestionModal,
-    handleSearchQueryChange,
-    handleSelectSubject,
-    handleSubjectAreaModeChange,
-    handleSubjectModeOperationSuccess,
-    isLoadingSubjectAreas,
-    loadSubjectAreas,
-    paesQuestionFormRequest,
-    searchQuery,
-    selectedAddSubjectAreaId,
-    selectedEditSubject,
-    selectedSubject,
-    selectedPaesSubject,
-    selectedSubjectToDelete,
-    showSuccessBanner,
-    showSuccessMessage,
-    subjectAreas,
-    subjectAreaModes,
-    subjectAreasError,
-    successBannerMessage,
-  } = useQuestionBank();
+  const questionBankPage = useQuestionBank();
 
   return (
     <section>
       <SubjectSuccessBanner
-        message={successBannerMessage}
-        onDismiss={handleHideSuccessBanner}
-        show={showSuccessBanner}
+        message={questionBankPage.successBannerMessage}
+        onDismiss={questionBankPage.handleHideSuccessBanner}
+        show={questionBankPage.showSuccessBanner}
       />
 
       <div className="mb-8">
@@ -63,43 +32,43 @@ export default function AdminSubjectPage() {
         </p>
       </div>
 
-      {isLoadingSubjectAreas ? (
+      {questionBankPage.isLoadingSubjectAreas ? (
         <QuestionBankLoadingSkeleton />
-      ) : subjectAreasError ? (
+      ) : questionBankPage.subjectAreasError ? (
         <div className="rounded-md border border-red-200 bg-red-50 p-5 text-sm text-red-600">
-          {subjectAreasError}
+          {questionBankPage.subjectAreasError}
         </div>
       ) : (
         <>
           <div className="mb-12">
             <SubjectIntroCard
-              onAddPaesQuestion={handleOpenAddPaesQuestionModal}
-              onAddSubject={handleOpenAddSubjectModal}
-              subjectAreas={subjectAreas}
+              onAddPaesQuestion={questionBankPage.handleOpenAddPaesQuestionModal}
+              onAddSubject={questionBankPage.handleOpenAddSubjectModal}
+              subjectAreas={questionBankPage.subjectAreas}
             />
           </div>
 
           <SubjectFilters
-            activeAreaFilter={activeAreaFilter}
-            onAreaFilterChange={handleAreaFilterChange}
-            onSearchQueryChange={handleSearchQueryChange}
-            searchQuery={searchQuery}
-            subjectAreas={subjectAreas}
+            activeAreaFilter={questionBankPage.activeAreaFilter}
+            onAreaFilterChange={questionBankPage.handleAreaFilterChange}
+            onSearchQueryChange={questionBankPage.handleSearchQueryChange}
+            searchQuery={questionBankPage.searchQuery}
+            subjectAreas={questionBankPage.subjectAreas}
           />
 
-          {filteredSubjectAreas.length > 0 ? (
-            filteredSubjectAreas.map((subjectArea) => (
+          {questionBankPage.filteredSubjectAreas.length > 0 ? (
+            questionBankPage.filteredSubjectAreas.map((subjectArea) => (
               <SubjectAreaSection
                 key={subjectArea.id}
                 isPredefined={isPaesSubjectArea(subjectArea.name)}
-                mode={subjectAreaModes[subjectArea.id] ?? null}
+                mode={questionBankPage.subjectAreaModes[subjectArea.id] ?? null}
                 onModeChange={(mode) =>
-                  handleSubjectAreaModeChange(subjectArea.id, mode)
+                  questionBankPage.handleSubjectAreaModeChange(subjectArea.id, mode)
                 }
                 onSelectSubject={(subject) =>
-                  handleSelectSubject(
+                  questionBankPage.handleSelectSubject(
                     subject,
-                    subjectAreaModes[subjectArea.id] ?? null,
+                    questionBankPage.subjectAreaModes[subjectArea.id] ?? null,
                   )
                 }
                 subjectArea={subjectArea}
@@ -116,27 +85,27 @@ export default function AdminSubjectPage() {
       {/* Modals Section */}
       <PaesQuestionFormModal
         key={
-          paesQuestionFormRequest?.requestId ??
+          questionBankPage.paesQuestionFormRequest?.requestId ??
           "standalone-paes-question-form-modal"
         }
-        onClose={handleClosePaesQuestionFormModal}
-        request={paesQuestionFormRequest}
-        showSuccessMessage={showSuccessMessage}
+        onClose={questionBankPage.handleClosePaesQuestionFormModal}
+        request={questionBankPage.paesQuestionFormRequest}
+        showSuccessMessage={questionBankPage.showSuccessMessage}
         subjects={
-          subjectAreas.find((subjectArea) =>
+          questionBankPage.subjectAreas.find((subjectArea) =>
             isPaesSubjectArea(subjectArea.name),
           )?.subjects ?? []
         }
       />
 
       <PaesQuestionListModal
-        key={selectedPaesSubject?.id ?? "paes-question-list-modal"}
-        onClose={handleClosePaesQuestionList}
-        open={selectedPaesSubject !== null}
-        showSuccessMessage={showSuccessMessage}
-        subject={selectedPaesSubject}
+        key={questionBankPage.selectedPaesSubject?.id ?? "paes-question-list-modal"}
+        onClose={questionBankPage.handleClosePaesQuestionList}
+        open={questionBankPage.selectedPaesSubject !== null}
+        showSuccessMessage={questionBankPage.showSuccessMessage}
+        subject={questionBankPage.selectedPaesSubject}
         subjects={
-          subjectAreas.find((subjectArea) =>
+          questionBankPage.subjectAreas.find((subjectArea) =>
             isPaesSubjectArea(subjectArea.name),
           )?.subjects ?? []
         }
@@ -144,36 +113,36 @@ export default function AdminSubjectPage() {
 
       <SubjectFormModal
         key={
-          selectedEditSubject
-            ? `edit-subject-${selectedEditSubject.id}`
-            : selectedAddSubjectAreaId
-              ? `add-subject-${selectedAddSubjectAreaId}`
+          questionBankPage.selectedEditSubject
+            ? `edit-subject-${questionBankPage.selectedEditSubject.id}`
+            : questionBankPage.selectedAddSubjectAreaId
+              ? `add-subject-${questionBankPage.selectedAddSubjectAreaId}`
               : "subject-form-modal"
         }
-        areaId={selectedEditSubject?.area_id ?? selectedAddSubjectAreaId}
-        loadSubjectAreas={loadSubjectAreas}
-        onClose={handleCloseSubjectFormModal}
-        onEditSuccess={handleSubjectModeOperationSuccess}
-        showSuccessMessage={showSuccessMessage}
-        subject={selectedEditSubject}
-        subjectAreas={subjectAreas}
+        areaId={questionBankPage.selectedEditSubject?.area_id ?? questionBankPage.selectedAddSubjectAreaId}
+        loadSubjectAreas={questionBankPage.loadSubjectAreas}
+        onClose={questionBankPage.handleCloseSubjectFormModal}
+        onEditSuccess={questionBankPage.handleSubjectModeOperationSuccess}
+        showSuccessMessage={questionBankPage.showSuccessMessage}
+        subject={questionBankPage.selectedEditSubject}
+        subjectAreas={questionBankPage.subjectAreas}
       />
 
       <DeleteSubjectConfirmationModal
-        key={selectedSubjectToDelete?.id ?? "delete-subject-modal"}
-        loadSubjectAreas={loadSubjectAreas}
-        onClose={handleCloseDeleteSubjectConfirmation}
-        onDeleteSuccess={handleSubjectModeOperationSuccess}
-        showSuccessMessage={showSuccessMessage}
-        subject={selectedSubjectToDelete}
+        key={questionBankPage.selectedSubjectToDelete?.id ?? "delete-subject-modal"}
+        loadSubjectAreas={questionBankPage.loadSubjectAreas}
+        onClose={questionBankPage.handleCloseDeleteSubjectConfirmation}
+        onDeleteSuccess={questionBankPage.handleSubjectModeOperationSuccess}
+        showSuccessMessage={questionBankPage.showSuccessMessage}
+        subject={questionBankPage.selectedSubjectToDelete}
       />
 
       <SubjectDetailsModal
-        key={selectedSubject?.id ?? "subject-details-modal"}
-        onClose={handleCloseSubjectDetails}
-        open={selectedSubject !== null}
-        showSuccessMessage={showSuccessMessage}
-        subject={selectedSubject}
+        key={questionBankPage.selectedSubject?.id ?? "subject-details-modal"}
+        onClose={questionBankPage.handleCloseSubjectDetails}
+        open={questionBankPage.selectedSubject !== null}
+        showSuccessMessage={questionBankPage.showSuccessMessage}
+        subject={questionBankPage.selectedSubject}
       />
     </section>
   );

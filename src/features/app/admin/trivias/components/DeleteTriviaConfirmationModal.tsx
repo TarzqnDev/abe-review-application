@@ -20,16 +20,10 @@ export default function DeleteTriviaConfirmationModal({
   showSuccessMessage,
   trivia,
 }: DeleteTriviaConfirmationModalProps) {
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
+  const modalAnimation = useModalAnimation(
     trivia !== null,
   );
-  const {
-    cancelButtonRef,
-    deleteError,
-    dialogRef,
-    handleDeleteTrivia,
-    isDeleting,
-  } = useDeleteTriviaConfirmationModal({
+  const deleteTriviaConfirmationModal = useDeleteTriviaConfirmationModal({
     loadTrivias,
     onClose,
     onDeleted,
@@ -40,7 +34,7 @@ export default function DeleteTriviaConfirmationModal({
   return (
     <div
       className={`fixed inset-0 z-[80] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
@@ -48,12 +42,12 @@ export default function DeleteTriviaConfirmationModal({
       aria-modal="true"
       aria-labelledby="delete-trivia-modal-title"
       aria-describedby="delete-trivia-modal-description"
-      aria-hidden={!isModalVisible}
+      aria-hidden={!modalAnimation.isModalVisible}
     >
       <button
         type="button"
         onClick={() => {
-          if (!isDeleting) closeWithAnimation(onClose);
+          if (!deleteTriviaConfirmationModal.isDeleting) modalAnimation.closeWithAnimation(onClose);
         }}
         className="absolute inset-0 cursor-default bg-slate-950/45"
         aria-label="Close delete trivia confirmation"
@@ -61,18 +55,18 @@ export default function DeleteTriviaConfirmationModal({
       />
 
       <form
-        ref={dialogRef}
-        onSubmit={handleDeleteTrivia}
+        ref={deleteTriviaConfirmationModal.dialogRef}
+        onSubmit={deleteTriviaConfirmationModal.handleDeleteTrivia}
         className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
       >
         <button
           type="button"
-          onClick={() => closeWithAnimation(onClose)}
-          disabled={isDeleting}
+          onClick={() => modalAnimation.closeWithAnimation(onClose)}
+          disabled={deleteTriviaConfirmationModal.isDeleting}
           className="absolute top-6 right-6 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="Close delete trivia confirmation"
         >
@@ -110,19 +104,19 @@ export default function DeleteTriviaConfirmationModal({
           </p>
         )}
 
-        {deleteError && (
+        {deleteTriviaConfirmationModal.deleteError && (
           <p role="alert" className="mt-4 text-sm text-red-600">
-            {deleteError}
+            {deleteTriviaConfirmationModal.deleteError}
           </p>
         )}
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <button
             type="submit"
-            disabled={isDeleting}
+            disabled={deleteTriviaConfirmationModal.isDeleting}
             className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isDeleting ? (
+            {deleteTriviaConfirmationModal.isDeleting ? (
               <LoaderCircle
                 className="h-5 w-5 animate-spin"
                 aria-label="Deleting"
@@ -132,10 +126,10 @@ export default function DeleteTriviaConfirmationModal({
             )}
           </button>
           <button
-            ref={cancelButtonRef}
+            ref={deleteTriviaConfirmationModal.cancelButtonRef}
             type="button"
-            onClick={() => closeWithAnimation(onClose)}
-            disabled={isDeleting}
+            onClick={() => modalAnimation.closeWithAnimation(onClose)}
+            disabled={deleteTriviaConfirmationModal.isDeleting}
             className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-secondary-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50"
           >
             No, Cancel

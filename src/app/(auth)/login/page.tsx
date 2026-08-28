@@ -9,15 +9,7 @@ import MobileLoginHero from "@/features/auth/login/components/MobileLoginHero";
 import { useLogin } from "@/features/auth/login/hooks/useLogin";
 
 export default function LoginPage() {
-  const {
-    error,
-    formData,
-    handleLogin,
-    handlePasswordVisibility,
-    handleUserInput,
-    isLoggingin,
-    showPassword,
-  } = useLogin();
+  const loginPage = useLogin();
 
   return (
     <main className="flex h-dvh flex-col overflow-hidden bg-surface lg:h-auto lg:min-h-screen lg:flex-row lg:overflow-visible">
@@ -41,7 +33,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="flex flex-col gap-4 sm:gap-5 lg:gap-5">
+            <form onSubmit={loginPage.handleLogin} className="flex flex-col gap-4 sm:gap-5 lg:gap-5">
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="font-medium">
                   Email Address
@@ -50,8 +42,8 @@ export default function LoginPage() {
                   type="email"
                   id="email"
                   name="email"
-                  defaultValue={formData.email}
-                  onChange={handleUserInput}
+                  defaultValue={loginPage.formData.email}
+                  onChange={loginPage.handleUserInput}
                   autoComplete="email"
                   className="h-13 w-full rounded-sm border border-border px-4 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15 lg:h-12"
                 />
@@ -63,23 +55,23 @@ export default function LoginPage() {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={loginPage.showPassword ? "text" : "password"}
                     id="password"
                     name="password"
-                    defaultValue={formData.password}
-                    onChange={handleUserInput}
+                    defaultValue={loginPage.formData.password}
+                    onChange={loginPage.handleUserInput}
                     autoComplete="current-password"
                     className="h-13 w-full rounded-sm border border-border px-4 pr-12 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15 lg:h-12"
                   />
                   <button
                     type="button"
-                    onClick={handlePasswordVisibility}
+                    onClick={loginPage.handlePasswordVisibility}
                     aria-label={
-                      showPassword ? "Hide password" : "Show password"
+                      loginPage.showPassword ? "Hide password" : "Show password"
                     }
                     className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center text-secondary-text"
                   >
-                    {showPassword ? (
+                    {loginPage.showPassword ? (
                       <EyeSlashIcon className="size-5" />
                     ) : (
                       <EyeIcon className="size-5" />
@@ -98,16 +90,16 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={isLoggingin}
+                disabled={loginPage.isLoggingin}
                 className="mt-1 flex h-13 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70 lg:h-12"
               >
-                {isLoggingin ? (
+                {loginPage.isLoggingin ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (
                   "Login"
                 )}
               </button>
-              {error && <p className="text-sm text-error">{error}</p>}
+              {loginPage.error && <p className="text-sm text-error">{loginPage.error}</p>}
             </form>
           </div>
         </div>

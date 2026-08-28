@@ -12,34 +12,23 @@ import EmailNotRegistered from "@/features/auth/forgot-password/components/Email
 import { useForgotPassword } from "@/features/auth/forgot-password/hooks/useForgotPassword";
 
 export default function ForgotPasswordPage() {
-  const {
-    email,
-    error,
-    handleEmailChange,
-    handleResend,
-    handleSubmission,
-    handleUseDifferentEmail,
-    isEmailNotRegistered,
-    isEmailSent,
-    isSubmitting,
-    resendCooldownSeconds,
-    resendSuccessMessage,
-    submittedEmail,
-  } = useForgotPassword();
+  const forgotPasswordPage = useForgotPassword();
 
-  const resendCooldownMinutes = Math.floor(resendCooldownSeconds / 60);
+  const resendCooldownMinutes = Math.floor(
+    forgotPasswordPage.resendCooldownSeconds / 60,
+  );
   const resendCooldownRemainingSeconds = String(
-    resendCooldownSeconds % 60,
+    forgotPasswordPage.resendCooldownSeconds % 60,
   ).padStart(2, "0");
 
   return (
     <AuthPageShell>
-          {isEmailNotRegistered ? (
+          {forgotPasswordPage.isEmailNotRegistered ? (
             <EmailNotRegistered
-              email={submittedEmail}
-              onUseDifferentEmail={handleUseDifferentEmail}
+              email={forgotPasswordPage.submittedEmail}
+              onUseDifferentEmail={forgotPasswordPage.handleUseDifferentEmail}
             />
-          ) : isEmailSent ? (
+          ) : forgotPasswordPage.isEmailSent ? (
             <div className="flex flex-col items-center text-center">
               <div className="relative flex size-16 items-center justify-center rounded-full bg-teal-50">
                 <EnvelopeIcon className="size-8 text-primary-accent" />
@@ -53,7 +42,7 @@ export default function ForgotPasswordPage() {
                 <p className="mt-3 text-sm leading-6 text-secondary-text sm:text-base">
                   We sent a password reset link to{" "}
                   <span className="font-medium text-primary-text">
-                    {submittedEmail}
+                    {forgotPasswordPage.submittedEmail}
                   </span>
                   .
                 </p>
@@ -68,13 +57,16 @@ export default function ForgotPasswordPage() {
 
               <button
                 type="button"
-                onClick={handleResend}
-                disabled={isSubmitting || resendCooldownSeconds > 0}
+                onClick={forgotPasswordPage.handleResend}
+                disabled={
+                  forgotPasswordPage.isSubmitting ||
+                  forgotPasswordPage.resendCooldownSeconds > 0
+                }
                 className="mt-8 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isSubmitting ? (
+                {forgotPasswordPage.isSubmitting ? (
                   <LoaderCircle className="animate-spin" />
-                ) : resendCooldownSeconds > 0 ? (
+                ) : forgotPasswordPage.resendCooldownSeconds > 0 ? (
                   <span>
                     Resend available in {resendCooldownMinutes}m{" "}
                     {resendCooldownRemainingSeconds}s
@@ -86,30 +78,30 @@ export default function ForgotPasswordPage() {
 
               <button
                 type="button"
-                onClick={handleUseDifferentEmail}
-                disabled={isSubmitting}
+                onClick={forgotPasswordPage.handleUseDifferentEmail}
+                disabled={forgotPasswordPage.isSubmitting}
                 className="mt-4 cursor-pointer font-medium text-primary-accent transition hover:text-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
               >
                 Use a different email
               </button>
 
-              {error && (
+              {forgotPasswordPage.error && (
                 <p
                   className="mt-4 text-sm text-error"
                   role="alert"
                   aria-live="assertive"
                 >
-                  {error}
+                  {forgotPasswordPage.error}
                 </p>
               )}
 
-              {resendSuccessMessage && (
+              {forgotPasswordPage.resendSuccessMessage && (
                 <p
                   className="mt-4 text-sm font-medium text-primary-accent"
                   role="status"
                   aria-live="polite"
                 >
-                  {resendSuccessMessage}
+                  {forgotPasswordPage.resendSuccessMessage}
                 </p>
               )}
 
@@ -133,7 +125,7 @@ export default function ForgotPasswordPage() {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmission} className="flex flex-col gap-5">
+              <form onSubmit={forgotPasswordPage.handleSubmission} className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="email" className="font-medium">
                     Email Address
@@ -142,37 +134,39 @@ export default function ForgotPasswordPage() {
                     type="email"
                     id="email"
                     name="email"
-                    value={email}
-                    onChange={handleEmailChange}
+                    value={forgotPasswordPage.email}
+                    onChange={forgotPasswordPage.handleEmailChange}
                     autoComplete="email"
                     aria-describedby={
-                      error ? "forgot-password-error" : undefined
+                      forgotPasswordPage.error
+                        ? "forgot-password-error"
+                        : undefined
                     }
-                    aria-invalid={Boolean(error)}
+                    aria-invalid={Boolean(forgotPasswordPage.error)}
                     className="h-12 w-full rounded-sm border border-border px-4 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={forgotPasswordPage.isSubmitting}
                   className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {isSubmitting ? (
+                  {forgotPasswordPage.isSubmitting ? (
                     <LoaderCircle className="animate-spin" />
                   ) : (
                     "Send Reset Link"
                   )}
                 </button>
 
-                {error && (
+                {forgotPasswordPage.error && (
                   <p
                     id="forgot-password-error"
                     className="text-sm text-error"
                     role="alert"
                     aria-live="assertive"
                   >
-                    {error}
+                    {forgotPasswordPage.error}
                   </p>
                 )}
               </form>

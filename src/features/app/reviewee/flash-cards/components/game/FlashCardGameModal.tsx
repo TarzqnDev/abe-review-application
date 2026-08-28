@@ -17,38 +17,28 @@ export type FlashCardGameModalProps = {
 };
 
 export default function FlashCardGameModal(props: FlashCardGameModalProps) {
-  const {
-    answer,
-    answerInputRef,
-    answerReveal,
-    currentFlashCard,
-    currentTiming,
-    error,
-    handleAnswerChange,
-    handleCancelExitConfirmation,
-    handleExited,
-    handleOpenExitConfirmation,
-    handleRetry,
-    handleSubmitAnswer,
-    isExitConfirmationOpen,
-    isFlashCardVisible,
-    modalAccessibility,
-    phase,
-    remainingSeconds,
-  } = useFlashCardGameModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const flashCardGameModal = useFlashCardGameModal(props);
 
-  if (!props.preparedSession || !currentTiming || !currentFlashCard) {
+  if (
+    !props.preparedSession ||
+    !flashCardGameModal.currentTiming ||
+    !flashCardGameModal.currentFlashCard
+  ) {
     return null;
   }
 
-  const isAnswerLocked = phase !== "answering";
+  const isAnswerLocked = flashCardGameModal.phase !== "answering";
   const showResult =
-    (phase === "result" || phase === "transitioning") && answerReveal !== null;
-  const showTimer = phase !== "result" && phase !== "transitioning";
-  const resultIsCorrect = answerReveal?.isCorrect === true;
-  const resultIsIncorrect = answerReveal?.isCorrect === false;
-  const timerIsCritical = remainingSeconds <= 3;
+    (flashCardGameModal.phase === "result" ||
+      flashCardGameModal.phase === "transitioning") &&
+    flashCardGameModal.answerReveal !== null;
+  const showTimer =
+    flashCardGameModal.phase !== "result" &&
+    flashCardGameModal.phase !== "transitioning";
+  const resultIsCorrect = flashCardGameModal.answerReveal?.isCorrect === true;
+  const resultIsIncorrect =
+    flashCardGameModal.answerReveal?.isCorrect === false;
+  const timerIsCritical = flashCardGameModal.remainingSeconds <= 3;
 
   const answerFieldClassName = resultIsCorrect
     ? "border-primary-light bg-teal-50 text-primary-dark"
@@ -60,16 +50,16 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
     <>
       <QuizModalShell
         className="h-dvh max-h-dvh max-w-none overflow-hidden rounded-none md:h-auto md:max-h-[calc(100dvh-2rem)] md:max-w-[795px] md:rounded-lg sm:overflow-y-auto sm:p-8 lg:px-9 lg:py-10"
-        dialogRef={dialogRef}
-        isInert={isExitConfirmationOpen}
+        dialogRef={flashCardGameModal.modalAccessibility.dialogRef}
+        isInert={flashCardGameModal.isExitConfirmationOpen}
         isOpen={props.isOpen}
-        isVisible={isVisible}
+        isVisible={flashCardGameModal.modalAccessibility.isVisible}
         labelledBy="flash-card-game-title"
         overlayClassName="bg-slate-950/45 !px-0 !py-0 md:!px-4 md:!py-4"
       >
         <button
           type="button"
-          onClick={handleOpenExitConfirmation}
+          onClick={flashCardGameModal.handleOpenExitConfirmation}
           className="absolute top-5 right-5 cursor-pointer rounded text-secondary-text transition-colors hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light sm:top-8 sm:right-8"
           aria-label="End flash card game"
         >
@@ -78,7 +68,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
 
         <div
           className={`flex h-full flex-col overflow-hidden p-5 sm:contents ${
-            error ? "pb-[158px]" : "pb-[82px]"
+            flashCardGameModal.error ? "pb-[158px]" : "pb-[82px]"
           }`}
         >
           <div className="shrink-0 bg-surface">
@@ -109,7 +99,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
                 >
                   <div
                     className="flex h-10 items-center gap-1.5 rounded border border-border bg-secondary-bg px-3 text-sm text-secondary-text transition-opacity duration-300 sm:h-[46px] sm:gap-2 sm:px-4 sm:text-base"
-                    aria-label={`${remainingSeconds} seconds remaining`}
+                    aria-label={`${flashCardGameModal.remainingSeconds} seconds remaining`}
                   >
                     <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                     <span>Timer:</span>
@@ -118,8 +108,10 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
                         timerIsCritical ? "text-error" : "text-primary-accent"
                       }`}
                     >
-                      {remainingSeconds}{" "}
-                      {remainingSeconds === 1 ? "second" : "seconds"}
+                      {flashCardGameModal.remainingSeconds}{" "}
+                      {flashCardGameModal.remainingSeconds === 1
+                        ? "second"
+                        : "seconds"}
                     </span>
                   </div>
                 </div>
@@ -138,14 +130,16 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
               </div>
 
               <span className="ml-auto shrink-0 rounded-full bg-teal-50 px-3 py-1.5 text-xs font-semibold text-primary-accent sm:px-4 sm:py-2 sm:text-sm md:absolute md:top-1/2 md:right-0 md:-translate-y-1/2">
-                {currentTiming.cardOrder}/
+                {flashCardGameModal.currentTiming.cardOrder}/
                 {props.preparedSession.totalFlashCards} Flash Cards
               </span>
             </div>
 
             <div
               className={`mt-6 shrink-0 transition-opacity duration-300 motion-reduce:transition-none ${
-                isFlashCardVisible ? "opacity-100" : "opacity-0"
+                flashCardGameModal.isFlashCardVisible
+                  ? "opacity-100"
+                  : "opacity-0"
               }`}
             >
               <div>
@@ -153,7 +147,7 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
                   Question
                 </h3>
                 <div className="min-h-[125px] whitespace-pre-wrap rounded border border-border bg-secondary-bg p-4 text-sm leading-6 text-primary-text sm:p-5">
-                  {currentFlashCard.questionText}
+                  {flashCardGameModal.currentFlashCard.questionText}
                 </div>
               </div>
             </div>
@@ -161,7 +155,9 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
 
           <div
             className={`mt-5 min-h-0 flex-1 overflow-y-auto pb-3 transition-opacity duration-300 motion-reduce:transition-none sm:overflow-visible sm:pb-0 ${
-              isFlashCardVisible ? "opacity-100" : "opacity-0"
+              flashCardGameModal.isFlashCardVisible
+                ? "opacity-100"
+                : "opacity-0"
             }`}
           >
             <div>
@@ -172,38 +168,40 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
                 Answer
               </label>
               <textarea
-                ref={answerInputRef}
+                ref={flashCardGameModal.answerInputRef}
                 id="flash-card-game-answer"
-                value={answer}
-                onChange={(event) => handleAnswerChange(event.target.value)}
+                value={flashCardGameModal.answer}
+                onChange={(event) =>
+                  flashCardGameModal.handleAnswerChange(event.target.value)
+                }
                 disabled={isAnswerLocked}
                 maxLength={2000}
                 rows={3}
                 className={`min-h-[75px] w-full resize-y rounded border p-4 text-sm leading-6 outline-none transition-colors focus:border-primary-light focus:ring-2 focus:ring-primary-light/20 disabled:resize-none disabled:opacity-100 ${answerFieldClassName}`}
               />
 
-              {resultIsIncorrect && answerReveal && (
+              {resultIsIncorrect && flashCardGameModal.answerReveal && (
                 <p
                   className="mt-3 rounded border border-teal-400 bg-teal-50 px-4 py-3 text-sm leading-6 text-primary-dark"
                   role="status"
                 >
                   <span className="font-semibold">Correct:</span>{" "}
                   <span className="whitespace-pre-wrap">
-                    {answerReveal.correctAnswer}
+                    {flashCardGameModal.answerReveal.correctAnswer}
                   </span>
                 </p>
               )}
             </div>
 
-            {error && (
+            {flashCardGameModal.error && (
               <div className="mt-5 hidden flex-col items-start gap-3 rounded border border-red-200 bg-red-50 p-4 sm:flex sm:flex-row sm:items-center sm:justify-between">
                 <p role="alert" className="text-sm text-red-600">
-                  {error}
+                  {flashCardGameModal.error}
                 </p>
-                {phase !== "answering" && (
+                {flashCardGameModal.phase !== "answering" && (
                   <button
                     type="button"
-                    onClick={handleRetry}
+                    onClick={flashCardGameModal.handleRetry}
                     className="shrink-0 cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-2"
                   >
                     Try Again
@@ -214,16 +212,19 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
 
             <button
               type="button"
-              onClick={handleSubmitAnswer}
-              disabled={!answer.trim() || phase !== "answering"}
+              onClick={flashCardGameModal.handleSubmitAnswer}
+              disabled={
+                !flashCardGameModal.answer.trim() ||
+                flashCardGameModal.phase !== "answering"
+              }
               className="mt-5 hidden h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:flex"
             >
-              {phase === "checking" ? (
+              {flashCardGameModal.phase === "checking" ? (
                 <>
                   <span>Checking answer &nbsp;</span>
                   <LoaderCircle className="h-5 w-5 animate-spin" />
                 </>
-              ) : phase === "transitioning" ? (
+              ) : flashCardGameModal.phase === "transitioning" ? (
                 "Loading Next Flash Card..."
               ) : (
                 "Submit Answer"
@@ -233,15 +234,15 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
         </div>
 
         <div className="absolute inset-x-0 bottom-0 z-10 bg-surface px-5 pt-3 pb-5 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:hidden">
-          {error && (
+          {flashCardGameModal.error && (
             <div className="mb-3 flex flex-col items-start gap-2 rounded border border-red-200 bg-red-50 p-3">
               <p role="alert" className="text-sm text-red-600">
-                {error}
+                {flashCardGameModal.error}
               </p>
-              {phase !== "answering" && (
+              {flashCardGameModal.phase !== "answering" && (
                 <button
                   type="button"
-                  onClick={handleRetry}
+                  onClick={flashCardGameModal.handleRetry}
                   className="shrink-0 cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-2"
                 >
                   Try Again
@@ -251,16 +252,19 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
           )}
           <button
             type="button"
-            onClick={handleSubmitAnswer}
-            disabled={!answer.trim() || phase !== "answering"}
+            onClick={flashCardGameModal.handleSubmitAnswer}
+            disabled={
+              !flashCardGameModal.answer.trim() ||
+              flashCardGameModal.phase !== "answering"
+            }
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {phase === "checking" ? (
+            {flashCardGameModal.phase === "checking" ? (
               <>
                 <span>Checking answer &nbsp;</span>
                 <LoaderCircle className="h-5 w-5 animate-spin" />
               </>
-            ) : phase === "transitioning" ? (
+            ) : flashCardGameModal.phase === "transitioning" ? (
               "Loading Next Flash Card..."
             ) : (
               "Submit Answer"
@@ -270,9 +274,9 @@ export default function FlashCardGameModal(props: FlashCardGameModalProps) {
       </QuizModalShell>
 
       <FlashCardExitGameConfirmationModal
-        isOpen={isExitConfirmationOpen}
-        onCancel={handleCancelExitConfirmation}
-        onExited={handleExited}
+        isOpen={flashCardGameModal.isExitConfirmationOpen}
+        onCancel={flashCardGameModal.handleCancelExitConfirmation}
+        onExited={flashCardGameModal.handleExited}
         sessionId={props.preparedSession.sessionId}
       />
     </>

@@ -23,42 +23,41 @@ export default function DeleteQuestionConfirmationModal({
   selectedSubject,
   showSuccessMessage,
 }: DeleteQuestionConfirmationModalProps) {
-  const { deleteQuestionError, handleDeleteQuestion, isDeletingQuestion } =
-    useDeleteQuestionConfirmationModal({
+  const deleteQuestionConfirmationModal = useDeleteQuestionConfirmationModal({
       loadSubjectQuestions,
       onClose,
       question,
       selectedSubject,
       showSuccessMessage,
     });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
+  const modalAnimation = useModalAnimation(
     question !== null,
   );
 
   return (
     <div
       className={`fixed inset-0 z-[80] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
     >
       <div
         className="absolute inset-0 bg-slate-950/35"
-        onClick={() => closeWithAnimation(onClose)}
+        onClick={() => modalAnimation.closeWithAnimation(onClose)}
       ></div>
 
       <form
-        onSubmit={handleDeleteQuestion}
+        onSubmit={deleteQuestionConfirmationModal.handleDeleteQuestion}
         className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
       >
         <button
           type="button"
-          onClick={() => closeWithAnimation(onClose)}
+          onClick={() => modalAnimation.closeWithAnimation(onClose)}
           className="absolute top-6 right-6 cursor-pointer rounded text-secondary-text transition-colors hover:text-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
           aria-label="Close question deletion notice"
         >
@@ -107,17 +106,17 @@ export default function DeleteQuestionConfirmationModal({
           </div>
         )}
 
-        {deleteQuestionError && (
-          <p className="mt-4 text-sm text-error">{deleteQuestionError}</p>
+        {deleteQuestionConfirmationModal.deleteQuestionError && (
+          <p className="mt-4 text-sm text-error">{deleteQuestionConfirmationModal.deleteQuestionError}</p>
         )}
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <button
             type="submit"
-            disabled={isDeletingQuestion}
+            disabled={deleteQuestionConfirmationModal.isDeletingQuestion}
             className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isDeletingQuestion ? (
+            {deleteQuestionConfirmationModal.isDeletingQuestion ? (
               <LoaderCircle className="animate-spin" />
             ) : (
               "Yes, Continue"
@@ -125,7 +124,7 @@ export default function DeleteQuestionConfirmationModal({
           </button>
           <button
             type="button"
-            onClick={() => closeWithAnimation(onClose)}
+            onClick={() => modalAnimation.closeWithAnimation(onClose)}
             className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-medium text-primary-accent transition-colors hover:bg-teal-50"
           >
             No, Cancel

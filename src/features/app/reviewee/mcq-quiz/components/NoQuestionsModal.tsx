@@ -9,22 +9,16 @@ export type NoQuestionsModalProps = {
 };
 
 export default function NoQuestionsModal(props: NoQuestionsModalProps) {
-  const { closeButtonRef, modalAccessibility } =
-    useNoQuestionsModal(props);
-  const {
-    dialogRef,
-    handleBackdropMouseDown,
-    isVisible,
-  } = modalAccessibility;
+  const noQuestionsModal = useNoQuestionsModal(props);
 
   return (
     <QuizModalShell
       className="max-w-[530px] px-6 py-9 sm:px-10 sm:py-10"
-      dialogRef={dialogRef}
+      dialogRef={noQuestionsModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={noQuestionsModal.modalAccessibility.isVisible}
       labelledBy="no-questions-title"
-      onBackdropMouseDown={handleBackdropMouseDown}
+      onBackdropMouseDown={noQuestionsModal.modalAccessibility.handleBackdropMouseDown}
       overlayClassName="bg-slate-950/30"
       zIndexClassName="z-[70]"
     >
@@ -46,7 +40,7 @@ export default function NoQuestionsModal(props: NoQuestionsModalProps) {
           {props.message}
         </p>
         <button
-          ref={closeButtonRef}
+          ref={noQuestionsModal.closeButtonRef}
           type="button"
           onClick={props.onClose}
           className="mt-5 h-12 w-full cursor-pointer rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"

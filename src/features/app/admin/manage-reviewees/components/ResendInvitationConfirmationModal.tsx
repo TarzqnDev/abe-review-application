@@ -13,8 +13,7 @@ type ResendInvitationConfirmationModalProps = {
 export const ResendInvitationConfirmationModal = (
   props: ResendInvitationConfirmationModalProps,
 ) => {
-  const { cancelButtonRef, dialogRef, ...modal } =
-    useResendInvitationConfirmationModal(props);
+  const modal = useResendInvitationConfirmationModal(props);
   const isOpen = props.reviewee !== null;
 
   return (
@@ -39,7 +38,7 @@ export const ResendInvitationConfirmationModal = (
       />
 
       <form
-        ref={dialogRef}
+        ref={modal.dialogRef}
         inert={!isOpen}
         onSubmit={modal.handleResend}
         className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
@@ -116,7 +115,7 @@ export const ResendInvitationConfirmationModal = (
             )}
           </button>
           <button
-            ref={cancelButtonRef}
+            ref={modal.cancelButtonRef}
             type="button"
             onClick={modal.handleClose}
             disabled={modal.isResending}

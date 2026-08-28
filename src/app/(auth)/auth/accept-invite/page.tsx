@@ -13,36 +13,19 @@ import { useAuth } from "@/providers/AuthProvider";
 import SuccessBanner from "@/components/ui/SuccessBanner";
 
 export default function AcceptInvitePage() {
-  const { user } = useAuth();
-  const {
-    accountSetupStatusError,
-    accountSetupSuccessBannerMessage,
-    error,
-    formData,
-    handleCompleteAccountSetup,
-    handleConfirmPasswordVisibility,
-    hideAccountSetupSuccessBanner,
-    handleGoToDashboard,
-    handlePasswordVisibility,
-    handleUserInput,
-    hasInviteSession,
-    isAccountSetupCompleted,
-    isCompletingAccountSetup,
-    showAccountSetupSuccessBanner,
-    showConfirmPassword,
-    showPassword,
-  } = useAcceptInvite();
+  const acceptInviteAuth = useAuth();
+  const acceptInvitePage = useAcceptInvite();
 
   return (
     <>
       <SuccessBanner
-        message={`${accountSetupSuccessBannerMessage} You can now go to your dashboard.`}
-        onDismiss={hideAccountSetupSuccessBanner}
-        show={showAccountSetupSuccessBanner}
+        message={`${acceptInvitePage.accountSetupSuccessBannerMessage} You can now go to your dashboard.`}
+        onDismiss={acceptInvitePage.hideAccountSetupSuccessBanner}
+        show={acceptInvitePage.showAccountSetupSuccessBanner}
       />
 
       <AuthPageShell>
-            {hasInviteSession === null ? (
+            {acceptInvitePage.hasInviteSession === null ? (
               <div className="flex flex-col items-center py-10 text-center">
                 <LoaderCircle className="size-8 animate-spin text-primary-accent" />
                 <h1 className="mt-5 text-2xl font-semibold tracking-tight text-primary-text">
@@ -52,7 +35,7 @@ export default function AcceptInvitePage() {
                   Please wait while we verify your invite link.
                 </p>
               </div>
-            ) : !hasInviteSession ? (
+            ) : !acceptInvitePage.hasInviteSession ? (
               <div className="flex flex-col items-center text-center">
                 <div className="flex size-16 items-center justify-center rounded-full bg-red-50">
                   <ExclamationTriangleIcon className="size-9 text-error" />
@@ -66,7 +49,7 @@ export default function AcceptInvitePage() {
                   send a new email invitation.
                 </p>
               </div>
-            ) : accountSetupStatusError ? (
+            ) : acceptInvitePage.accountSetupStatusError ? (
               <div className="flex flex-col gap-5 text-center">
                 <div>
                   <h1 className="text-3xl font-semibold tracking-tight text-primary-text">
@@ -77,10 +60,10 @@ export default function AcceptInvitePage() {
                   </p>
                 </div>
                 <div className="rounded-sm border border-red-200 bg-red-50 p-4 text-red-700">
-                  {accountSetupStatusError}
+                  {acceptInvitePage.accountSetupStatusError}
                 </div>
               </div>
-            ) : isAccountSetupCompleted === null ? (
+            ) : acceptInvitePage.isAccountSetupCompleted === null ? (
               <div className="flex flex-col items-center py-10 text-center">
                 <LoaderCircle className="size-8 animate-spin text-primary-accent" />
                 <h1 className="mt-5 text-2xl font-semibold tracking-tight text-primary-text">
@@ -90,7 +73,7 @@ export default function AcceptInvitePage() {
                   Please wait while we confirm your account status.
                 </p>
               </div>
-            ) : isAccountSetupCompleted ? (
+            ) : acceptInvitePage.isAccountSetupCompleted ? (
               <div className="flex flex-col items-center text-center">
                 <div className="flex size-16 items-center justify-center rounded-full bg-teal-50">
                   <CheckCircleIcon className="size-9 text-primary-accent" />
@@ -104,7 +87,7 @@ export default function AcceptInvitePage() {
                 </p>
                 <button
                   type="button"
-                  onClick={handleGoToDashboard}
+                  onClick={acceptInvitePage.handleGoToDashboard}
                   className="mt-8 h-12 w-full cursor-pointer rounded-sm bg-primary-accent px-4 font-medium text-surface transition hover:bg-primary-dark"
                 >
                   Go to Dashboard
@@ -123,7 +106,7 @@ export default function AcceptInvitePage() {
                 </div>
 
                 <form
-                  onSubmit={handleCompleteAccountSetup}
+                  onSubmit={acceptInvitePage.handleCompleteAccountSetup}
                   className="flex flex-col gap-5"
                 >
                   <div className="flex flex-col gap-2">
@@ -134,7 +117,7 @@ export default function AcceptInvitePage() {
                       type="email"
                       id="email"
                       name="email"
-                      value={user?.email ?? ""}
+                      value={acceptInviteAuth.user?.email ?? ""}
                       disabled
                       className="h-12 w-full rounded-sm border border-border bg-secondary-bg px-4 text-secondary-text"
                     />
@@ -146,23 +129,23 @@ export default function AcceptInvitePage() {
                     </label>
                     <div className="relative">
                       <input
-                        type={showPassword ? "text" : "password"}
+                        type={acceptInvitePage.showPassword ? "text" : "password"}
                         id="password"
                         name="password"
-                        value={formData.password}
-                        onChange={handleUserInput}
+                        value={acceptInvitePage.formData.password}
+                        onChange={acceptInvitePage.handleUserInput}
                         autoComplete="new-password"
                         className="h-12 w-full rounded-sm border border-border px-4 pr-12 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
                       />
                       <button
                         type="button"
-                        onClick={handlePasswordVisibility}
+                        onClick={acceptInvitePage.handlePasswordVisibility}
                         aria-label={
-                          showPassword ? "Hide password" : "Show password"
+                          acceptInvitePage.showPassword ? "Hide password" : "Show password"
                         }
                         className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center text-secondary-text"
                       >
-                        {showPassword ? (
+                        {acceptInvitePage.showPassword ? (
                           <EyeSlashIcon className="size-5" />
                         ) : (
                           <EyeIcon className="size-5" />
@@ -177,25 +160,25 @@ export default function AcceptInvitePage() {
                     </label>
                     <div className="relative">
                       <input
-                        type={showConfirmPassword ? "text" : "password"}
+                        type={acceptInvitePage.showConfirmPassword ? "text" : "password"}
                         id="confirmPassword"
                         name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleUserInput}
+                        value={acceptInvitePage.formData.confirmPassword}
+                        onChange={acceptInvitePage.handleUserInput}
                         autoComplete="new-password"
                         className="h-12 w-full rounded-sm border border-border px-4 pr-12 outline-none transition focus:border-primary-accent focus:ring-2 focus:ring-primary-accent/15"
                       />
                       <button
                         type="button"
-                        onClick={handleConfirmPasswordVisibility}
+                        onClick={acceptInvitePage.handleConfirmPasswordVisibility}
                         aria-label={
-                          showConfirmPassword
+                          acceptInvitePage.showConfirmPassword
                             ? "Hide confirm password"
                             : "Show confirm password"
                         }
                         className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center text-secondary-text"
                       >
-                        {showConfirmPassword ? (
+                        {acceptInvitePage.showConfirmPassword ? (
                           <EyeSlashIcon className="size-5" />
                         ) : (
                           <EyeIcon className="size-5" />
@@ -206,16 +189,16 @@ export default function AcceptInvitePage() {
 
                   <button
                     type="submit"
-                    disabled={isCompletingAccountSetup}
+                    disabled={acceptInvitePage.isCompletingAccountSetup}
                     className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center rounded-sm bg-primary-accent font-medium text-surface transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    {isCompletingAccountSetup ? (
+                    {acceptInvitePage.isCompletingAccountSetup ? (
                       <LoaderCircle className="animate-spin" />
                     ) : (
                       "Complete Account"
                     )}
                   </button>
-                  {error && <p className="text-sm text-error">{error}</p>}
+                  {acceptInvitePage.error && <p className="text-sm text-error">{acceptInvitePage.error}</p>}
                 </form>
               </div>
             )}

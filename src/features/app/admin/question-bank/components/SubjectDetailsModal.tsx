@@ -19,56 +19,42 @@ export default function SubjectDetailsModal({
   showSuccessMessage,
   subject,
 }: SubjectDetailsModalProps) {
-  const {
-    activeSubjectQuestionSets,
-    handleCloseQuestionFormModal,
-    handleCloseQuestionListModal,
-    handleCloseSubjectDetails,
-    handleOpenCreateQuestionFromListModal,
-    handleOpenCreateQuestionModal,
-    handleOpenEditQuestionModal,
-    handleOpenQuestionListModal,
-    isLoadingQuestionSets,
-    loadSubjectQuestions,
-    questionFormRequest,
-    questionListRequest,
-    questionSetsError,
-    questionSummaries,
-    selectedSubjectSummariesByDifficulty,
-    selectedSubjectTotalQuestions,
-  } = useSubjectDetailsModal({
+  const subjectDetailsModal = useSubjectDetailsModal({
     onClose,
     subject,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(open);
-  const isChildModalOpen = Boolean(questionFormRequest || questionListRequest);
+  const modalAnimation = useModalAnimation(open);
+  const isChildModalOpen = Boolean(
+    subjectDetailsModal.questionFormRequest ||
+      subjectDetailsModal.questionListRequest,
+  );
 
   return (
     <>
       <div
         className={`fixed inset-0 z-50 flex items-center justify-center overflow-y-auto px-4 py-4 transition-opacity duration-300 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
-        aria-hidden={!isModalVisible || isChildModalOpen}
+        aria-hidden={!modalAnimation.isModalVisible || isChildModalOpen}
         inert={isChildModalOpen}
       >
         <div
           className="absolute inset-0 bg-slate-950/30"
-          onClick={() => closeWithAnimation(handleCloseSubjectDetails)}
+          onClick={() => modalAnimation.closeWithAnimation(subjectDetailsModal.handleCloseSubjectDetails)}
         ></div>
 
         <div
           className={`relative max-h-[calc(100dvh-2rem)] w-full max-w-[935px] overflow-y-auto rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[88vh] sm:p-10 ${
-            isModalVisible
+            modalAnimation.isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
           }`}
         >
           <button
             type="button"
-            onClick={() => closeWithAnimation(handleCloseSubjectDetails)}
+            onClick={() => modalAnimation.closeWithAnimation(subjectDetailsModal.handleCloseSubjectDetails)}
             className="absolute top-5 right-5 cursor-pointer sm:top-10 sm:right-9"
             aria-label="Close subject details"
           >
@@ -80,28 +66,28 @@ export default function SubjectDetailsModal({
               {subject?.name}
             </h2>
             <p className="mt-3 text-base text-secondary-text">
-              {selectedSubjectTotalQuestions}{" "}
-              {selectedSubjectTotalQuestions === 1 ? "Question" : "Questions"}
+              {subjectDetailsModal.selectedSubjectTotalQuestions}{" "}
+              {subjectDetailsModal.selectedSubjectTotalQuestions === 1 ? "Question" : "Questions"}
             </p>
           </div>
 
           <button
             type="button"
-            onClick={() => handleOpenCreateQuestionModal(null)}
+            onClick={() => subjectDetailsModal.handleOpenCreateQuestionModal(null)}
             className="mb-5 h-10 w-full cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent"
           >
             + Add Question
           </button>
 
-          {isLoadingQuestionSets ? (
+          {subjectDetailsModal.isLoadingQuestionSets ? (
             <SubjectDetailsSkeleton />
-          ) : questionSetsError ? (
+          ) : subjectDetailsModal.questionSetsError ? (
             <div className="rounded border border-red-200 bg-red-50 p-5 text-sm text-red-600">
-              {questionSetsError}
+              {subjectDetailsModal.questionSetsError}
             </div>
           ) : (
             <div className="flex flex-col gap-6">
-              {selectedSubjectSummariesByDifficulty.map((summaryGroup) => (
+              {subjectDetailsModal.selectedSubjectSummariesByDifficulty.map((summaryGroup) => (
                 <section key={summaryGroup.difficulty}>
                   <h3 className="mb-2 text-sm font-semibold text-primary-text">
                     {summaryGroup.difficulty}
@@ -125,7 +111,7 @@ export default function SubjectDetailsModal({
                             <button
                               type="button"
                               onClick={() =>
-                                handleOpenQuestionListModal(summary)
+                                subjectDetailsModal.handleOpenQuestionListModal(summary)
                               }
                               className="h-[30px] w-full cursor-pointer rounded bg-primary-accent text-xs font-medium text-surface transition-colors hover:bg-primary-dark"
                             >
@@ -145,25 +131,25 @@ export default function SubjectDetailsModal({
 
       {/* Modals Section */}
       <QuestionFormModal
-        key={questionFormRequest?.requestId ?? "question-form-modal"}
-        loadSubjectQuestions={loadSubjectQuestions}
-        onClose={handleCloseQuestionFormModal}
-        questionSets={activeSubjectQuestionSets}
-        questionSummaries={questionSummaries}
-        request={questionFormRequest}
+        key={subjectDetailsModal.questionFormRequest?.requestId ?? "question-form-modal"}
+        loadSubjectQuestions={subjectDetailsModal.loadSubjectQuestions}
+        onClose={subjectDetailsModal.handleCloseQuestionFormModal}
+        questionSets={subjectDetailsModal.activeSubjectQuestionSets}
+        questionSummaries={subjectDetailsModal.questionSummaries}
+        request={subjectDetailsModal.questionFormRequest}
         selectedSubject={subject}
         showSuccessMessage={showSuccessMessage}
       />
 
       <QuestionListModal
-        key={questionListRequest?.requestId ?? "question-list-modal"}
-        isSuspended={questionFormRequest !== null}
-        loadSubjectQuestions={loadSubjectQuestions}
-        onAddQuestion={handleOpenCreateQuestionFromListModal}
-        onClose={handleCloseQuestionListModal}
-        onEditQuestion={handleOpenEditQuestionModal}
-        questionSets={activeSubjectQuestionSets}
-        request={questionListRequest}
+        key={subjectDetailsModal.questionListRequest?.requestId ?? "question-list-modal"}
+        isSuspended={subjectDetailsModal.questionFormRequest !== null}
+        loadSubjectQuestions={subjectDetailsModal.loadSubjectQuestions}
+        onAddQuestion={subjectDetailsModal.handleOpenCreateQuestionFromListModal}
+        onClose={subjectDetailsModal.handleCloseQuestionListModal}
+        onEditQuestion={subjectDetailsModal.handleOpenEditQuestionModal}
+        questionSets={subjectDetailsModal.activeSubjectQuestionSets}
+        request={subjectDetailsModal.questionListRequest}
         selectedSubject={subject}
         showSuccessMessage={showSuccessMessage}
       />

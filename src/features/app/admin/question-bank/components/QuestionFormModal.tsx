@@ -42,17 +42,7 @@ export default function QuestionFormModal({
   selectedSubject,
   showSuccessMessage,
 }: QuestionFormModalProps) {
-  const {
-    handleCloseQuestionFormModal,
-    handleQuestionInput,
-    handleSaveQuestion,
-    isSavingQuestion,
-    openQuestionFormModal,
-    questionFormData,
-    questionFormError,
-    questionFormMode,
-    selectedEditQuestionId,
-  } = useQuestionFormModal({
+  const questionFormModal = useQuestionFormModal({
     loadSubjectQuestions,
     onClose,
     questionSets,
@@ -61,28 +51,28 @@ export default function QuestionFormModal({
     selectedSubject,
     showSuccessMessage,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
-    openQuestionFormModal,
+  const modalAnimation = useModalAnimation(
+    questionFormModal.openQuestionFormModal,
   );
-  const isEditMode = questionFormMode === "edit";
+  const isEditMode = questionFormModal.questionFormMode === "edit";
   const isQuestionSetLocked = request?.isQuestionSetLocked === true;
 
   return (
     <div
       className={`fixed inset-0 z-[70] flex items-center justify-center px-4 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
     >
       <div
         className="absolute inset-0 bg-slate-950/35"
-        onClick={() => closeWithAnimation(handleCloseQuestionFormModal)}
+        onClick={() => modalAnimation.closeWithAnimation(questionFormModal.handleCloseQuestionFormModal)}
       ></div>
 
       <div
         className={`relative max-h-[88vh] w-full max-w-[760px] overflow-hidden rounded-md bg-surface shadow-xl transition-all duration-300 ease-out sm:overflow-y-auto sm:p-9 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
@@ -90,7 +80,7 @@ export default function QuestionFormModal({
         <div className="max-h-[88vh] overflow-y-auto p-6 pb-28 sm:contents">
           <button
           type="button"
-          onClick={() => closeWithAnimation(handleCloseQuestionFormModal)}
+          onClick={() => modalAnimation.closeWithAnimation(questionFormModal.handleCloseQuestionFormModal)}
           className="absolute top-9 right-9 cursor-pointer"
           aria-label="Close question form"
         >
@@ -108,7 +98,7 @@ export default function QuestionFormModal({
 
         <form
           id="question-form"
-          onSubmit={handleSaveQuestion}
+          onSubmit={questionFormModal.handleSaveQuestion}
           className="flex flex-col gap-5"
         >
           <input
@@ -120,7 +110,7 @@ export default function QuestionFormModal({
             <input
               type="hidden"
               name="questionId"
-              value={selectedEditQuestionId ?? ""}
+              value={questionFormModal.selectedEditQuestionId ?? ""}
             />
           )}
           {isQuestionSetLocked && (
@@ -128,12 +118,12 @@ export default function QuestionFormModal({
               <input
                 type="hidden"
                 name="gameType"
-                value={questionFormData.gameType}
+                value={questionFormModal.questionFormData.gameType}
               />
               <input
                 type="hidden"
                 name="difficulty"
-                value={questionFormData.difficulty}
+                value={questionFormModal.questionFormData.difficulty}
               />
             </>
           )}
@@ -146,8 +136,8 @@ export default function QuestionFormModal({
               <select
                 id="gameType"
                 name={isQuestionSetLocked ? undefined : "gameType"}
-                value={questionFormData.gameType}
-                onChange={handleQuestionInput}
+                value={questionFormModal.questionFormData.gameType}
+                onChange={questionFormModal.handleQuestionInput}
                 disabled={isQuestionSetLocked}
                 className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-secondary-text"
               >
@@ -166,8 +156,8 @@ export default function QuestionFormModal({
               <select
                 id="difficulty"
                 name={isQuestionSetLocked ? undefined : "difficulty"}
-                value={questionFormData.difficulty}
-                onChange={handleQuestionInput}
+                value={questionFormModal.questionFormData.difficulty}
+                onChange={questionFormModal.handleQuestionInput}
                 disabled={isQuestionSetLocked}
                 className="h-[50px] rounded border border-border bg-surface px-5 text-base outline-none focus:border-primary-accent disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-secondary-text"
               >
@@ -187,8 +177,8 @@ export default function QuestionFormModal({
             <textarea
               id="questionText"
               name="questionText"
-              value={questionFormData.questionText}
-              onChange={handleQuestionInput}
+              value={questionFormModal.questionFormData.questionText}
+              onChange={questionFormModal.handleQuestionInput}
               rows={5}
               maxLength={1000}
               className="resize-none rounded border border-border px-4 py-3 text-sm outline-none focus:border-primary-accent"
@@ -202,7 +192,7 @@ export default function QuestionFormModal({
             <div className="grid gap-5 md:grid-cols-2">
               {[1, 2, 3, 4].map((optionNumber) => {
                 const isSelected =
-                  questionFormData.correctOptionSortOrder ===
+                  questionFormModal.questionFormData.correctOptionSortOrder ===
                   String(optionNumber);
 
                 return (
@@ -225,7 +215,7 @@ export default function QuestionFormModal({
                         name="correctOptionSortOrder"
                         value={optionNumber}
                         checked={isSelected}
-                        onChange={handleQuestionInput}
+                        onChange={questionFormModal.handleQuestionInput}
                         className="h-4 w-4 shrink-0 accent-primary-accent"
                       />
                       <input
@@ -233,11 +223,11 @@ export default function QuestionFormModal({
                         type="text"
                         name={`option${optionNumber}`}
                         value={
-                          questionFormData[
+                          questionFormModal.questionFormData[
                             `option${optionNumber}` as keyof QuestionFormData
                           ]
                         }
-                        onChange={handleQuestionInput}
+                        onChange={questionFormModal.handleQuestionInput}
                         maxLength={255}
                         className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
                       />
@@ -250,10 +240,10 @@ export default function QuestionFormModal({
 
           <button
             type="submit"
-            disabled={isSavingQuestion}
+            disabled={questionFormModal.isSavingQuestion}
             className="hidden h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70 sm:flex"
           >
-            {isSavingQuestion ? (
+            {questionFormModal.isSavingQuestion ? (
               <LoaderCircle className="animate-spin" />
             ) : isEditMode ? (
               "Save Question"
@@ -262,8 +252,8 @@ export default function QuestionFormModal({
             )}
           </button>
 
-          {questionFormError && (
-            <p className="text-sm text-error">{questionFormError}</p>
+          {questionFormModal.questionFormError && (
+            <p className="text-sm text-error">{questionFormModal.questionFormError}</p>
           )}
           </form>
         </div>
@@ -272,10 +262,10 @@ export default function QuestionFormModal({
           <button
             type="submit"
             form="question-form"
-            disabled={isSavingQuestion}
+            disabled={questionFormModal.isSavingQuestion}
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSavingQuestion ? (
+            {questionFormModal.isSavingQuestion ? (
               <LoaderCircle className="animate-spin" />
             ) : isEditMode ? (
               "Save Question"

@@ -28,55 +28,34 @@ export default function PaesQuestionListModal({
   subject,
   subjects,
 }: PaesQuestionListModalProps) {
-  const {
-    currentPage,
-    filteredQuestionCount,
-    firstQuestionNumber,
-    handleCloseDeleteConfirmation,
-    handleCloseQuestionFormModal,
-    handleCloseQuestionListModal,
-    handleOpenCreateQuestionModal,
-    handleOpenDeleteConfirmation,
-    handleOpenEditQuestionModal,
-    handlePageChange,
-    handleSearchQueryChange,
-    isLoadingQuestions,
-    lastQuestionNumber,
-    loadPaesSubjectQuestions,
-    paginatedQuestions,
-    questionFormRequest,
-    questions,
-    questionsError,
-    searchQuery,
-    selectedDeleteQuestion,
-    totalPages,
-  } = usePaesQuestionListModal({
+  const paesQuestionListModal = usePaesQuestionListModal({
     onClose,
     subject,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(open);
+  const modalAnimation = useModalAnimation(open);
   const isChildModalOpen =
-    questionFormRequest !== null || selectedDeleteQuestion !== null;
+    paesQuestionListModal.questionFormRequest !== null ||
+    paesQuestionListModal.selectedDeleteQuestion !== null;
 
   return (
     <>
       <div
         className={`fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto px-4 py-4 transition-opacity duration-300 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
-        aria-hidden={!isModalVisible || isChildModalOpen}
+        aria-hidden={!modalAnimation.isModalVisible || isChildModalOpen}
         inert={isChildModalOpen}
       >
         <div
           className="absolute inset-0 bg-slate-950/35"
-          onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
+          onClick={() => modalAnimation.closeWithAnimation(paesQuestionListModal.handleCloseQuestionListModal)}
         ></div>
 
         <div
           className={`relative max-h-[calc(100dvh-2rem)] w-full max-w-[940px] overflow-y-auto rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[88vh] sm:p-10 ${
-            isModalVisible
+            modalAnimation.isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
           }`}
@@ -87,8 +66,8 @@ export default function PaesQuestionListModal({
                 {subject?.name}
               </h2>
               <p className="mt-2 text-base font-medium text-secondary-text">
-                {questions.length}{" "}
-                {questions.length === 1 ? "Question" : "Questions"}
+                {paesQuestionListModal.questions.length}{" "}
+                {paesQuestionListModal.questions.length === 1 ? "Question" : "Questions"}
               </p>
             </div>
 
@@ -98,15 +77,15 @@ export default function PaesQuestionListModal({
                 <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
                   type="search"
-                  value={searchQuery}
-                  onChange={handleSearchQueryChange}
+                  value={paesQuestionListModal.searchQuery}
+                  onChange={paesQuestionListModal.handleSearchQueryChange}
                   placeholder="Search a question"
                   className="h-10 w-full rounded-full border border-border bg-surface pr-4 pl-10 text-sm text-primary-text outline-none placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-[#E0F2F1]"
                 />
               </label>
               <button
                 type="button"
-                onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
+                onClick={() => modalAnimation.closeWithAnimation(paesQuestionListModal.handleCloseQuestionListModal)}
                 className="cursor-pointer text-secondary-text"
                 aria-label="Close PAES question list"
               >
@@ -117,24 +96,24 @@ export default function PaesQuestionListModal({
 
           <button
             type="button"
-            onClick={handleOpenCreateQuestionModal}
+            onClick={paesQuestionListModal.handleOpenCreateQuestionModal}
             className="mb-5 h-10 w-full cursor-pointer rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent"
           >
             + Add Question
           </button>
 
-          {isLoadingQuestions ? (
+          {paesQuestionListModal.isLoadingQuestions ? (
             <SubjectDetailsSkeleton />
-          ) : questionsError ? (
+          ) : paesQuestionListModal.questionsError ? (
             <div className="rounded border border-red-200 bg-red-50 p-5 text-sm text-red-600">
-              {questionsError}
+              {paesQuestionListModal.questionsError}
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {paginatedQuestions.length > 0 ? (
-                paginatedQuestions.map((question) => {
+              {paesQuestionListModal.paginatedQuestions.length > 0 ? (
+                paesQuestionListModal.paginatedQuestions.map((question) => {
                   const questionNumber =
-                    questions.findIndex(
+                    paesQuestionListModal.questions.findIndex(
                       (activeQuestion) => activeQuestion.id === question.id,
                     ) + 1;
                   const correctOption = question.question_options.find(
@@ -154,7 +133,7 @@ export default function PaesQuestionListModal({
                           <button
                             type="button"
                             onClick={() =>
-                              handleOpenEditQuestionModal(question)
+                              paesQuestionListModal.handleOpenEditQuestionModal(question)
                             }
                             className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text hover:text-primary-accent"
                           >
@@ -164,7 +143,7 @@ export default function PaesQuestionListModal({
                           <button
                             type="button"
                             onClick={() =>
-                              handleOpenDeleteConfirmation(question)
+                              paesQuestionListModal.handleOpenDeleteConfirmation(question)
                             }
                             className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text hover:text-error"
                           >
@@ -205,7 +184,7 @@ export default function PaesQuestionListModal({
                 })
               ) : (
                 <div className="rounded border border-border bg-secondary-bg p-5 text-sm text-secondary-text">
-                  {searchQuery.trim()
+                  {paesQuestionListModal.searchQuery.trim()
                     ? "No questions match your search."
                     : "No questions yet."}
                 </div>
@@ -213,14 +192,14 @@ export default function PaesQuestionListModal({
             </div>
           )}
 
-          {!isLoadingQuestions && !questionsError && (
+          {!paesQuestionListModal.isLoadingQuestions && !paesQuestionListModal.questionsError && (
             <QuestionListPagination
-              currentPage={currentPage}
-              firstQuestionNumber={firstQuestionNumber}
-              lastQuestionNumber={lastQuestionNumber}
-              onPageChange={handlePageChange}
-              totalQuestions={filteredQuestionCount}
-              totalPages={totalPages}
+              currentPage={paesQuestionListModal.currentPage}
+              firstQuestionNumber={paesQuestionListModal.firstQuestionNumber}
+              lastQuestionNumber={paesQuestionListModal.lastQuestionNumber}
+              onPageChange={paesQuestionListModal.handlePageChange}
+              totalQuestions={paesQuestionListModal.filteredQuestionCount}
+              totalPages={paesQuestionListModal.totalPages}
             />
           )}
         </div>
@@ -228,31 +207,33 @@ export default function PaesQuestionListModal({
 
       {/* Modals Section */}
       <PaesQuestionFormModal
-        key={questionFormRequest?.requestId ?? "paes-question-form-modal"}
+        key={paesQuestionListModal.questionFormRequest?.requestId ?? "paes-question-form-modal"}
         isSubjectLocked
-        onClose={handleCloseQuestionFormModal}
+        onClose={paesQuestionListModal.handleCloseQuestionFormModal}
         onSaved={async () => {
           if (subject) {
-            await loadPaesSubjectQuestions(subject.id);
+            await paesQuestionListModal.loadPaesSubjectQuestions(subject.id);
           }
         }}
-        request={questionFormRequest}
+        request={paesQuestionListModal.questionFormRequest}
         showSuccessMessage={showSuccessMessage}
         subjects={subjects}
       />
 
       <DeleteQuestionConfirmationModal
         key={
-          selectedDeleteQuestion?.id ??
+          paesQuestionListModal.selectedDeleteQuestion?.id ??
           "delete-paes-question-confirmation-modal"
         }
-        loadSubjectQuestions={loadPaesSubjectQuestions}
-        onClose={handleCloseDeleteConfirmation}
-        question={selectedDeleteQuestion}
+        loadSubjectQuestions={paesQuestionListModal.loadPaesSubjectQuestions}
+        onClose={paesQuestionListModal.handleCloseDeleteConfirmation}
+        question={paesQuestionListModal.selectedDeleteQuestion}
         questionNumber={
-          selectedDeleteQuestion
-            ? questions.findIndex(
-                (question) => question.id === selectedDeleteQuestion.id,
+          paesQuestionListModal.selectedDeleteQuestion
+            ? paesQuestionListModal.questions.findIndex(
+                (question) =>
+                  question.id ===
+                  paesQuestionListModal.selectedDeleteQuestion!.id,
               ) + 1
             : 0
         }

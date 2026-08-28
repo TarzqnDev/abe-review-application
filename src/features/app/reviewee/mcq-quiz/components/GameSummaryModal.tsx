@@ -11,29 +11,19 @@ export type GameSummaryModalProps = {
 };
 
 export default function GameSummaryModal(props: GameSummaryModalProps) {
-  const {
-    closeButtonRef,
-    donutBackground,
-    duration,
-    gameProgress,
-    isPerfectResult,
-    modalAccessibility,
-    performanceMessage,
-    scorePercentage,
-  } = useGameSummaryModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const gameSummaryModal = useGameSummaryModal(props);
 
   if (!props.summary) return null;
 
   return (
     <QuizModalShell
       className="flex max-h-[calc(100dvh-2rem)] max-w-[475px] flex-col overflow-hidden"
-      dialogRef={dialogRef}
+      dialogRef={gameSummaryModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={gameSummaryModal.modalAccessibility.isVisible}
       labelledBy="game-summary-title"
       overlayClassName="bg-slate-950/45"
-      underlay={isPerfectResult ? <GameConfetti /> : undefined}
+      underlay={gameSummaryModal.isPerfectResult ? <GameConfetti /> : undefined}
     >
       <div className="min-h-0 flex-1 overflow-y-auto pb-4 sm:overflow-visible sm:pb-0">
         <GameSummaryHeader
@@ -58,21 +48,21 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
         </p>
 
         <div
-          aria-label={`${scorePercentage}% correct across ${gameProgress} played questions. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, and ${props.summary.timedOut} timed out.`}
+          aria-label={`${gameSummaryModal.scorePercentage}% correct across ${gameSummaryModal.gameProgress} played questions. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, and ${props.summary.timedOut} timed out.`}
           className="mx-auto mt-5 flex h-28 w-28 items-center justify-center rounded-full"
           role="img"
-          style={{ background: donutBackground }}
+          style={{ background: gameSummaryModal.donutBackground }}
         >
           <div className="flex h-[88px] w-[88px] flex-col items-center justify-center rounded-full bg-surface">
             <span className="text-xl font-semibold leading-5 text-primary-text">
-              {scorePercentage}%
+              {gameSummaryModal.scorePercentage}%
             </span>
             <span className="text-xs text-secondary-text">Correct</span>
           </div>
         </div>
 
         <p className="mt-3 text-center text-sm font-medium text-primary-accent">
-          {performanceMessage}
+          {gameSummaryModal.performanceMessage}
         </p>
 
         <section className="mt-6" aria-labelledby="score-summary-heading">
@@ -89,7 +79,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
                 Game Progress
               </dt>
               <dd className="order-1 text-xl font-semibold text-secondary-text">
-                {gameProgress}/{props.summary.totalQuestions}
+                {gameSummaryModal.gameProgress}/{props.summary.totalQuestions}
               </dd>
             </div>
             <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-border bg-secondary-bg px-2 text-center">
@@ -97,7 +87,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
                 Game Duration
               </dt>
               <dd className="order-1 text-xl font-semibold text-secondary-text">
-                {duration}
+                {gameSummaryModal.duration}
               </dd>
             </div>
           </dl>
@@ -132,7 +122,7 @@ export default function GameSummaryModal(props: GameSummaryModalProps) {
 
       <div className="shrink-0 bg-surface px-6 pb-6 pt-3 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:px-10 sm:pb-10 sm:pt-0 sm:shadow-none">
         <button
-          ref={closeButtonRef}
+          ref={gameSummaryModal.closeButtonRef}
           type="button"
           onClick={props.onClose}
           className="h-[50px] w-full cursor-pointer rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"

@@ -13,7 +13,7 @@ type DeactivateRevieweeConfirmationModalProps = {
 export const DeactivateRevieweeConfirmationModal = (
   props: DeactivateRevieweeConfirmationModalProps,
 ) => {
-  const { cancelButtonRef, dialogRef, handleClose, handleConfirm } =
+  const deactivateRevieweeConfirmationModal =
     useDeactivateRevieweeConfirmationModal(props);
 
   return (
@@ -31,14 +31,14 @@ export const DeactivateRevieweeConfirmationModal = (
     >
       <button
         type="button"
-        onClick={handleClose}
+        onClick={deactivateRevieweeConfirmationModal.handleClose}
         className="absolute inset-0 cursor-default bg-slate-950/45"
         aria-label="Close deactivation confirmation"
         tabIndex={-1}
       />
 
       <div
-        ref={dialogRef}
+        ref={deactivateRevieweeConfirmationModal.dialogRef}
         inert={!props.isOpen}
         className={`relative w-full max-w-[580px] rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-10 ${
           props.isOpen
@@ -48,7 +48,7 @@ export const DeactivateRevieweeConfirmationModal = (
       >
         <button
           type="button"
-          onClick={handleClose}
+          onClick={deactivateRevieweeConfirmationModal.handleClose}
           className="absolute top-6 right-6 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
           aria-label="Close deactivation confirmation"
         >
@@ -83,15 +83,15 @@ export const DeactivateRevieweeConfirmationModal = (
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <button
             type="button"
-            onClick={handleConfirm}
+            onClick={deactivateRevieweeConfirmationModal.handleConfirm}
             className="h-[50px] cursor-pointer rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark"
           >
             Yes, Continue
           </button>
           <button
-            ref={cancelButtonRef}
+            ref={deactivateRevieweeConfirmationModal.cancelButtonRef}
             type="button"
-            onClick={handleClose}
+            onClick={deactivateRevieweeConfirmationModal.handleClose}
             className="h-[50px] cursor-pointer rounded border border-primary-accent bg-surface text-base font-semibold text-primary-accent transition-colors hover:bg-secondary-bg"
           >
             No, Cancel

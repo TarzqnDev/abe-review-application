@@ -24,65 +24,53 @@ export default function TriviaFormModal({
   request,
   showSuccessMessage,
 }: TriviaFormModalProps) {
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
+  const modalAnimation = useModalAnimation(
     request !== null,
   );
-  const {
-    content,
-    dialogRef,
-    formError,
-    handleClose,
-    handleSaveTrivia,
-    isEditMode,
-    isSaving,
-    publishDate,
-    setContent,
-    setPublishDate,
-    todayDate,
-  } = useTriviaFormModal({
-    closeWithAnimation,
+  const triviaFormModal = useTriviaFormModal({
+    closeWithAnimation: modalAnimation.closeWithAnimation,
     isDeleteConfirmationOpen,
     loadTrivias,
     onClose,
     request,
     showSuccessMessage,
   });
-  const modalTitle = isEditMode ? "Edit Trivia" : "Create Trivia";
+  const modalTitle = triviaFormModal.isEditMode ? "Edit Trivia" : "Create Trivia";
 
   return (
     <div
       className={`fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto px-4 py-6 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="trivia-form-modal-title"
-      aria-hidden={!isModalVisible || isDeleteConfirmationOpen}
-      inert={!isModalVisible || isDeleteConfirmationOpen}
+      aria-hidden={!modalAnimation.isModalVisible || isDeleteConfirmationOpen}
+      inert={!modalAnimation.isModalVisible || isDeleteConfirmationOpen}
     >
       <button
         type="button"
-        onClick={handleClose}
+        onClick={triviaFormModal.handleClose}
         className="absolute inset-0 cursor-default bg-slate-950/35"
         aria-label={`Close ${modalTitle.toLowerCase()} modal`}
         tabIndex={-1}
       />
 
       <div
-        ref={dialogRef}
+        ref={triviaFormModal.dialogRef}
         tabIndex={-1}
         className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[560px] overflow-y-auto rounded-md bg-surface p-7 shadow-xl transition-all duration-300 ease-out sm:p-9 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
       >
         <button
           type="button"
-          onClick={handleClose}
-          disabled={isSaving}
+          onClick={triviaFormModal.handleClose}
+          disabled={triviaFormModal.isSaving}
           className="absolute top-7 right-7 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-50 sm:top-9 sm:right-9"
           aria-label={`Close ${modalTitle.toLowerCase()} modal`}
         >
@@ -96,7 +84,7 @@ export default function TriviaFormModal({
           {modalTitle}
         </h2>
 
-        <form onSubmit={handleSaveTrivia} className="flex flex-col gap-5">
+        <form onSubmit={triviaFormModal.handleSaveTrivia} className="flex flex-col gap-5">
           <label
             htmlFor="trivia-content"
             className="text-sm font-semibold text-primary-text"
@@ -104,9 +92,9 @@ export default function TriviaFormModal({
             Trivia Content
             <textarea
               id="trivia-content"
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
-              disabled={isSaving}
+              value={triviaFormModal.content}
+              onChange={(event) => triviaFormModal.setContent(event.target.value)}
+              disabled={triviaFormModal.isSaving}
               rows={7}
               maxLength={1000}
               required
@@ -123,41 +111,41 @@ export default function TriviaFormModal({
             <input
               id="trivia-publish-date"
               type="date"
-              value={publishDate}
-              min={todayDate}
-              onChange={(event) => setPublishDate(event.target.value)}
-              disabled={request?.isPublishDateLocked === true || isSaving}
+              value={triviaFormModal.publishDate}
+              min={triviaFormModal.todayDate}
+              onChange={(event) => triviaFormModal.setPublishDate(event.target.value)}
+              disabled={request?.isPublishDateLocked === true || triviaFormModal.isSaving}
               required
               className="mt-2 h-[50px] w-full rounded border border-border bg-surface px-4 text-base font-normal text-slate-700 outline-none transition-colors focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg"
             />
           </label>
 
-          {formError && (
+          {triviaFormModal.formError && (
             <p role="alert" className="text-sm text-red-600">
-              {formError}
+              {triviaFormModal.formError}
             </p>
           )}
 
-          <div className={`grid gap-3 ${isEditMode ? "sm:grid-cols-2" : ""}`}>
+          <div className={`grid gap-3 ${triviaFormModal.isEditMode ? "sm:grid-cols-2" : ""}`}>
             <button
               type="submit"
-              disabled={isSaving}
+              disabled={triviaFormModal.isSaving}
               className="flex h-[50px] cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {isSaving ? (
+              {triviaFormModal.isSaving ? (
                 <LoaderCircle className="h-5 w-5 animate-spin" aria-label="Saving" />
-              ) : isEditMode ? (
+              ) : triviaFormModal.isEditMode ? (
                 "Save Edit"
               ) : (
                 "Create Trivia"
               )}
             </button>
 
-            {isEditMode && request?.trivia && (
+            {triviaFormModal.isEditMode && request?.trivia && (
               <button
                 type="button"
                 onClick={() => onRequestDelete(request.trivia as AdminTrivia)}
-                disabled={isSaving}
+                disabled={triviaFormModal.isSaving}
                 className="flex h-[50px] cursor-pointer items-center justify-center rounded border border-primary-accent bg-surface px-5 text-base font-semibold text-primary-accent transition-colors hover:bg-teal-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Delete Trivia

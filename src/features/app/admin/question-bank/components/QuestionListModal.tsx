@@ -45,56 +45,37 @@ export default function QuestionListModal({
   selectedSubject,
   showSuccessMessage,
 }: QuestionListModalProps) {
-  const {
-    activeQuestionSetQuestions,
-    activeQuestionSummary,
-    currentPage,
-    filteredQuestionCount,
-    firstQuestionNumber,
-    handleAddQuestion,
-    handleCloseDeleteConfirmation,
-    handleCloseQuestionListModal,
-    handleOpenDeleteConfirmation,
-    handleOpenEditQuestion,
-    handlePageChange,
-    handleSearchQueryChange,
-    lastQuestionNumber,
-    openQuestionListModal,
-    paginatedQuestions,
-    searchQuery,
-    selectedDeleteQuestion,
-    totalPages,
-  } = useQuestionListModal({
+  const questionListModal = useQuestionListModal({
     onAddQuestion,
     onClose,
     onEditQuestion,
     questionSets,
     request,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(
-    openQuestionListModal,
+  const modalAnimation = useModalAnimation(
+    questionListModal.openQuestionListModal,
   );
-  const isChildModalOpen = isSuspended || selectedDeleteQuestion !== null;
+  const isChildModalOpen = isSuspended || questionListModal.selectedDeleteQuestion !== null;
 
   return (
     <>
       <div
         className={`fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto px-4 py-4 transition-opacity duration-300 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
-        aria-hidden={!isModalVisible || isChildModalOpen}
+        aria-hidden={!modalAnimation.isModalVisible || isChildModalOpen}
         inert={isChildModalOpen}
       >
         <div
           className="absolute inset-0 bg-slate-950/35"
-          onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
+          onClick={() => modalAnimation.closeWithAnimation(questionListModal.handleCloseQuestionListModal)}
         ></div>
 
         <div
           className={`relative max-h-[calc(100dvh-2rem)] w-full max-w-[935px] overflow-y-auto rounded-md bg-surface p-5 shadow-xl transition-all duration-300 ease-out sm:max-h-[88vh] sm:p-10 ${
-            isModalVisible
+            modalAnimation.isModalVisible
               ? "translate-y-0 scale-100 opacity-100"
               : "-translate-y-4 scale-95 opacity-0"
           }`}
@@ -105,9 +86,9 @@ export default function QuestionListModal({
                 {selectedSubject?.name}
               </h2>
               <p className="mt-2 text-base font-medium text-secondary-text">
-                {activeQuestionSummary?.gameType} ({activeQuestionSummary?.difficulty}){" "}
-                • {activeQuestionSetQuestions.length}{" "}
-                {activeQuestionSetQuestions.length === 1
+                {questionListModal.activeQuestionSummary?.gameType} ({questionListModal.activeQuestionSummary?.difficulty}){" "}
+                • {questionListModal.activeQuestionSetQuestions.length}{" "}
+                {questionListModal.activeQuestionSetQuestions.length === 1
                   ? "Question"
                   : "Questions"}
               </p>
@@ -119,15 +100,15 @@ export default function QuestionListModal({
                 <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400" />
                 <input
                   type="search"
-                  value={searchQuery}
-                  onChange={handleSearchQueryChange}
+                  value={questionListModal.searchQuery}
+                  onChange={questionListModal.handleSearchQueryChange}
                   placeholder="Search a question"
                   className="h-10 w-full rounded-full border border-border bg-surface pr-4 pl-10 text-sm text-primary-text outline-none placeholder:text-slate-400 focus:border-primary-accent focus:ring-2 focus:ring-[#E0F2F1]"
                 />
               </label>
               <button
                 type="button"
-                onClick={() => closeWithAnimation(handleCloseQuestionListModal)}
+                onClick={() => modalAnimation.closeWithAnimation(questionListModal.handleCloseQuestionListModal)}
                 className="shrink-0 cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent"
                 aria-label="Close question list"
               >
@@ -138,20 +119,20 @@ export default function QuestionListModal({
 
           <button
             type="button"
-            onClick={handleAddQuestion}
+            onClick={questionListModal.handleAddQuestion}
             className="mb-5 flex h-10 w-full cursor-pointer items-center justify-center rounded border border-border bg-surface text-sm font-semibold text-primary-text transition-colors hover:border-primary-accent hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent"
           >
             + Add Question
           </button>
 
           <div className="flex flex-col gap-3">
-            {paginatedQuestions.length > 0 ? (
-              paginatedQuestions.map((question) => {
+            {questionListModal.paginatedQuestions.length > 0 ? (
+              questionListModal.paginatedQuestions.map((question) => {
               const correctOption = question.question_options.find(
                 (option) => option.is_correct,
               );
               const questionNumber =
-                activeQuestionSetQuestions.findIndex(
+                questionListModal.activeQuestionSetQuestions.findIndex(
                   (activeQuestion) => activeQuestion.id === question.id,
                 ) + 1;
 
@@ -167,7 +148,7 @@ export default function QuestionListModal({
                     <div className="flex shrink-0 items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => handleOpenEditQuestion(question)}
+                        onClick={() => questionListModal.handleOpenEditQuestion(question)}
                         className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text transition-colors hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-accent"
                         aria-label={`Edit question ${questionNumber}`}
                       >
@@ -176,7 +157,7 @@ export default function QuestionListModal({
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleOpenDeleteConfirmation(question)}
+                        onClick={() => questionListModal.handleOpenDeleteConfirmation(question)}
                         className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-secondary-text transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error"
                         aria-label={`Delete question ${questionNumber}`}
                       >
@@ -217,7 +198,7 @@ export default function QuestionListModal({
               })
             ) : (
               <div className="rounded border border-border bg-secondary-bg p-5 text-sm text-secondary-text">
-                {searchQuery.trim()
+                {questionListModal.searchQuery.trim()
                   ? "No questions match your search."
                   : "No questions yet."}
               </div>
@@ -225,26 +206,28 @@ export default function QuestionListModal({
           </div>
 
           <QuestionListPagination
-            currentPage={currentPage}
-            firstQuestionNumber={firstQuestionNumber}
-            lastQuestionNumber={lastQuestionNumber}
-            onPageChange={handlePageChange}
-            totalQuestions={filteredQuestionCount}
-            totalPages={totalPages}
+            currentPage={questionListModal.currentPage}
+            firstQuestionNumber={questionListModal.firstQuestionNumber}
+            lastQuestionNumber={questionListModal.lastQuestionNumber}
+            onPageChange={questionListModal.handlePageChange}
+            totalQuestions={questionListModal.filteredQuestionCount}
+            totalPages={questionListModal.totalPages}
           />
         </div>
       </div>
 
       {/* Modals Section */}
       <DeleteQuestionConfirmationModal
-        key={selectedDeleteQuestion?.id ?? "delete-question-confirmation-modal"}
+        key={questionListModal.selectedDeleteQuestion?.id ?? "delete-question-confirmation-modal"}
         loadSubjectQuestions={loadSubjectQuestions}
-        onClose={handleCloseDeleteConfirmation}
-        question={selectedDeleteQuestion}
+        onClose={questionListModal.handleCloseDeleteConfirmation}
+        question={questionListModal.selectedDeleteQuestion}
         questionNumber={
-          selectedDeleteQuestion
-            ? activeQuestionSetQuestions.findIndex(
-                (question) => question.id === selectedDeleteQuestion.id,
+          questionListModal.selectedDeleteQuestion
+            ? questionListModal.activeQuestionSetQuestions.findIndex(
+                (question) =>
+                  question.id ===
+                  questionListModal.selectedDeleteQuestion!.id,
               ) + 1
             : 0
         }

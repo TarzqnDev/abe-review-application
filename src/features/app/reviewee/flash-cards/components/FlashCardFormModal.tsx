@@ -22,52 +22,40 @@ export default function FlashCardFormModal({
   request,
   showSuccessMessage,
 }: FlashCardFormModalProps) {
-  const {
-    answer,
-    areaId,
-    dialogRef,
-    formError,
-    handleAreaChange,
-    handleClose,
-    handleSaveFlashCard,
-    isEditMode,
-    isOpen,
-    isSaving,
-    question,
-    setAnswer,
-    setQuestion,
-  } = useFlashCardFormModal({
+  const flashCardFormModal = useFlashCardFormModal({
     flashCardDecks,
     loadFlashCardDecks,
     onClose,
     request,
     showSuccessMessage,
   });
-  const { closeWithAnimation, isModalVisible } = useModalAnimation(isOpen);
-  const modalTitle = isEditMode ? "Edit Flash Card" : "Create Flash Card";
+  const modalAnimation = useModalAnimation(flashCardFormModal.isOpen);
+  const modalTitle = flashCardFormModal.isEditMode
+    ? "Edit Flash Card"
+    : "Create Flash Card";
 
   return (
     <div
       className={`fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto px-4 py-6 transition-opacity duration-300 ${
-        isModalVisible
+        modalAnimation.isModalVisible
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
       }`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="flash-card-form-modal-title"
-      aria-hidden={!isModalVisible}
+      aria-hidden={!modalAnimation.isModalVisible}
     >
       <div
         className="absolute inset-0 bg-slate-950/35"
-        onClick={() => closeWithAnimation(handleClose)}
+        onClick={() => modalAnimation.closeWithAnimation(flashCardFormModal.handleClose)}
       ></div>
 
       <div
-        ref={dialogRef}
+        ref={flashCardFormModal.dialogRef}
         tabIndex={-1}
         className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-y-auto rounded-md bg-surface px-6 py-8 shadow-xl transition-all duration-300 ease-out sm:px-9 sm:py-10 ${
-          isModalVisible
+          modalAnimation.isModalVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "-translate-y-4 scale-95 opacity-0"
         }`}
@@ -81,8 +69,8 @@ export default function FlashCardFormModal({
           </h2>
           <button
             type="button"
-            onClick={() => closeWithAnimation(handleClose)}
-            disabled={isSaving}
+            onClick={() => modalAnimation.closeWithAnimation(flashCardFormModal.handleClose)}
+            disabled={flashCardFormModal.isSaving}
             className="cursor-pointer rounded text-secondary-text transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light disabled:cursor-not-allowed disabled:opacity-50"
             aria-label={`Close ${modalTitle.toLowerCase()} modal`}
           >
@@ -90,7 +78,7 @@ export default function FlashCardFormModal({
           </button>
         </div>
 
-        <form onSubmit={handleSaveFlashCard} className="space-y-5">
+        <form onSubmit={flashCardFormModal.handleSaveFlashCard} className="space-y-5">
           <label
             htmlFor="flash-card-area"
             className="block text-sm font-semibold text-primary-text"
@@ -99,9 +87,9 @@ export default function FlashCardFormModal({
             <span className="relative mt-2 block">
               <select
                 id="flash-card-area"
-                value={areaId ?? ""}
-                onChange={handleAreaChange}
-                disabled={request?.lockArea || isEditMode || isSaving}
+                value={flashCardFormModal.areaId ?? ""}
+                onChange={flashCardFormModal.handleAreaChange}
+                disabled={request?.lockArea || flashCardFormModal.isEditMode || flashCardFormModal.isSaving}
                 required
                 className="h-[50px] w-full appearance-none rounded border border-border bg-surface px-4 pr-11 text-base font-medium text-slate-800 outline-none focus:border-primary-accent focus:ring-2 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-secondary-bg disabled:text-secondary-text"
               >
@@ -128,9 +116,9 @@ export default function FlashCardFormModal({
             Question
             <textarea
               id="flash-card-question"
-              value={question}
-              onChange={(event) => setQuestion(event.target.value)}
-              disabled={isSaving}
+              value={flashCardFormModal.question}
+              onChange={(event) => flashCardFormModal.setQuestion(event.target.value)}
+              disabled={flashCardFormModal.isSaving}
               required
               rows={4}
               maxLength={2000}
@@ -146,9 +134,9 @@ export default function FlashCardFormModal({
             Answer
             <textarea
               id="flash-card-answer"
-              value={answer}
-              onChange={(event) => setAnswer(event.target.value)}
-              disabled={isSaving}
+              value={flashCardFormModal.answer}
+              onChange={(event) => flashCardFormModal.setAnswer(event.target.value)}
+              disabled={flashCardFormModal.isSaving}
               required
               rows={4}
               maxLength={1000}
@@ -157,20 +145,20 @@ export default function FlashCardFormModal({
             />
           </label>
 
-          {formError && (
+          {flashCardFormModal.formError && (
             <p role="alert" className="text-sm text-error">
-              {formError}
+              {flashCardFormModal.formError}
             </p>
           )}
 
           <button
             type="submit"
-            disabled={isSaving || flashCardDecks.length === 0}
+            disabled={flashCardFormModal.isSaving || flashCardDecks.length === 0}
             className="flex h-[50px] w-full cursor-pointer items-center justify-center rounded bg-primary-accent px-5 text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving ? (
+            {flashCardFormModal.isSaving ? (
               <LoaderCircle className="h-5 w-5 animate-spin" />
-            ) : isEditMode ? (
+            ) : flashCardFormModal.isEditMode ? (
               "Save Flash Card"
             ) : (
               "Create Flash Card"

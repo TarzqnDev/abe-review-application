@@ -9,19 +9,18 @@ export type NoFlashCardsModalProps = {
 };
 
 export default function NoFlashCardsModal(props: NoFlashCardsModalProps) {
-  const { closeButtonRef, modalAccessibility } =
-    useNoFlashCardsModal(props);
-  const { dialogRef, handleBackdropMouseDown, isVisible } =
-    modalAccessibility;
+  const noFlashCardsModal = useNoFlashCardsModal(props);
 
   return (
     <QuizModalShell
       className="max-w-[530px] px-6 py-9 sm:px-10 sm:py-10"
-      dialogRef={dialogRef}
+      dialogRef={noFlashCardsModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={noFlashCardsModal.modalAccessibility.isVisible}
       labelledBy="no-flash-cards-title"
-      onBackdropMouseDown={handleBackdropMouseDown}
+      onBackdropMouseDown={
+        noFlashCardsModal.modalAccessibility.handleBackdropMouseDown
+      }
       overlayClassName="bg-slate-950/30"
       zIndexClassName="z-[70]"
     >
@@ -43,7 +42,7 @@ export default function NoFlashCardsModal(props: NoFlashCardsModalProps) {
           {props.message}
         </p>
         <button
-          ref={closeButtonRef}
+          ref={noFlashCardsModal.closeButtonRef}
           type="button"
           onClick={props.onClose}
           className="mt-5 h-12 w-full cursor-pointer rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"

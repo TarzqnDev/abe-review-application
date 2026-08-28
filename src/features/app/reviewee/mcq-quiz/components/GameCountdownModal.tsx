@@ -19,23 +19,16 @@ export type GameCountdownModalProps = {
 };
 
 export default function GameCountdownModal(props: GameCountdownModalProps) {
-  const {
-    countdown,
-    error,
-    handleCancel,
-    isStarting,
-    modalAccessibility,
-  } = useGameCountdownModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const gameCountdownModal = useGameCountdownModal(props);
 
   if (!props.sessionPreview) return null;
 
   return (
     <QuizModalShell
       className="max-w-[560px] overflow-hidden text-center"
-      dialogRef={dialogRef}
+      dialogRef={gameCountdownModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={gameCountdownModal.modalAccessibility.isVisible}
       labelledBy="game-countdown-title"
     >
       <div className="bg-primary-accent px-6 py-7 text-surface sm:py-8">
@@ -70,28 +63,28 @@ export default function GameCountdownModal(props: GameCountdownModalProps) {
           aria-live="assertive"
           aria-atomic="true"
         >
-          {countdown > 0 ? (
-            countdown
-          ) : isStarting ? (
+          {gameCountdownModal.countdown > 0 ? (
+            gameCountdownModal.countdown
+          ) : gameCountdownModal.isStarting ? (
             <LoaderCircle className="mx-auto h-14 w-14 animate-spin" />
           ) : (
             ""
           )}
         </div>
 
-        {error && (
+        {gameCountdownModal.error && (
           <p role="alert" className="mb-5 text-sm text-error">
-            {error}
+            {gameCountdownModal.error}
           </p>
         )}
 
         <button
           type="button"
-          onClick={handleCancel}
-          disabled={isStarting}
+          onClick={gameCountdownModal.handleCancel}
+          disabled={gameCountdownModal.isStarting}
           className="flex h-12 w-full cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isStarting ? (
+          {gameCountdownModal.isStarting ? (
             <LoaderCircle className="h-5 w-5 animate-spin" />
           ) : (
             "Cancel Game"

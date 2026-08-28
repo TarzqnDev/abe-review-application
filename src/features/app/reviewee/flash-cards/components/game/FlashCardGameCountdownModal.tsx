@@ -21,23 +21,16 @@ export type FlashCardGameCountdownModalProps = {
 export default function FlashCardGameCountdownModal(
   props: FlashCardGameCountdownModalProps,
 ) {
-  const {
-    countdown,
-    error,
-    handleCancel,
-    isStarting,
-    modalAccessibility,
-  } = useFlashCardGameCountdownModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const flashCardGameCountdownModal = useFlashCardGameCountdownModal(props);
 
   if (!props.countdownDetails) return null;
 
   return (
     <QuizModalShell
       className="max-w-[560px] overflow-hidden text-center"
-      dialogRef={dialogRef}
+      dialogRef={flashCardGameCountdownModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={flashCardGameCountdownModal.modalAccessibility.isVisible}
       labelledBy="flash-card-game-countdown-title"
     >
       <div className="bg-primary-accent px-6 py-7 text-surface sm:py-8">
@@ -67,28 +60,28 @@ export default function FlashCardGameCountdownModal(
           aria-live="assertive"
           aria-atomic="true"
         >
-          {countdown > 0 ? (
-            countdown
-          ) : isStarting ? (
+          {flashCardGameCountdownModal.countdown > 0 ? (
+            flashCardGameCountdownModal.countdown
+          ) : flashCardGameCountdownModal.isStarting ? (
             <LoaderCircle className="mx-auto h-14 w-14 animate-spin" />
           ) : (
             ""
           )}
         </div>
 
-        {error && (
+        {flashCardGameCountdownModal.error && (
           <p role="alert" className="mb-5 text-sm text-error">
-            {error}
+            {flashCardGameCountdownModal.error}
           </p>
         )}
 
         <button
           type="button"
-          onClick={handleCancel}
-          disabled={isStarting}
+          onClick={flashCardGameCountdownModal.handleCancel}
+          disabled={flashCardGameCountdownModal.isStarting}
           className="flex h-12 w-full cursor-pointer items-center justify-center rounded bg-primary-accent text-base font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isStarting ? (
+          {flashCardGameCountdownModal.isStarting ? (
             <LoaderCircle className="h-5 w-5 animate-spin" />
           ) : (
             "Cancel Game"

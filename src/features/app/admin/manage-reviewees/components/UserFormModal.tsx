@@ -15,12 +15,7 @@ const formatStatus = (status: string) =>
   status.charAt(0).toUpperCase() + status.slice(1);
 
 export const UserFormModal = (props: UserFormModalProps) => {
-  const {
-    deactivationReturnFocusRef,
-    dialogRef,
-    statusSwitchRef,
-    ...modal
-  } = useUserFormModal(props);
+  const modal = useUserFormModal(props);
   const modalTitle = modal.isEditing ? "Edit Reviewee" : "Register User";
 
   return (
@@ -45,7 +40,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
         inert={!props.isOpen || modal.isDeactivationConfirmationOpen}
       >
         <div
-          ref={dialogRef}
+          ref={modal.dialogRef}
           tabIndex={-1}
           className={`relative max-h-[calc(100vh-3rem)] w-full max-w-[525px] overflow-hidden rounded-lg bg-surface shadow-xl transition-all duration-300 sm:overflow-y-auto sm:px-9 sm:py-10 ${
             props.isOpen ? "translate-y-0 scale-100" : "-translate-y-3 scale-95"
@@ -115,7 +110,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
                       props.reviewee.status.toLowerCase(),
                     ) && (
                       <button
-                        ref={statusSwitchRef}
+                        ref={modal.statusSwitchRef}
                         type="button"
                         role="switch"
                         aria-checked={modal.status === "active"}
@@ -217,7 +212,7 @@ export const UserFormModal = (props: UserFormModalProps) => {
         isOpen={modal.isDeactivationConfirmationOpen}
         onClose={modal.cancelDeactivation}
         onConfirm={modal.confirmDeactivation}
-        returnFocusRef={deactivationReturnFocusRef}
+        returnFocusRef={modal.deactivationReturnFocusRef}
       />
     </>
   );

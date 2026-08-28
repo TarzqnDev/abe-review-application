@@ -13,20 +13,14 @@ type InactiveAccountModalProps = {
 export default function InactiveAccountModal({
   isOpen,
 }: InactiveAccountModalProps) {
-  const {
-    dialogRef,
-    handleLogout,
-    isLoggingOut,
-    logoutButtonRef,
-    logoutError,
-  } = useInactiveAccountModal(isOpen);
+  const inactiveAccountModal = useInactiveAccountModal(isOpen);
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/45 px-5 py-8 backdrop-blur-md">
       <div
-        ref={dialogRef}
+        ref={inactiveAccountModal.dialogRef}
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="inactive-account-title"
@@ -58,21 +52,21 @@ export default function InactiveAccountModal({
           </p>
         </div>
 
-        {logoutError ? (
+        {inactiveAccountModal.logoutError ? (
           <p role="alert" className="mt-4 text-sm text-error">
-            {logoutError}
+            {inactiveAccountModal.logoutError}
           </p>
         ) : null}
 
         <button
-          ref={logoutButtonRef}
+          ref={inactiveAccountModal.logoutButtonRef}
           type="button"
-          onClick={handleLogout}
-          disabled={isLoggingOut}
+          onClick={inactiveAccountModal.handleLogout}
+          disabled={inactiveAccountModal.isLoggingOut}
           className="mt-6 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded bg-primary-accent px-4 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent disabled:cursor-not-allowed disabled:opacity-60"
         >
           <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
-          {isLoggingOut ? "Logging out..." : "Log out"}
+          {inactiveAccountModal.isLoggingOut ? "Logging out..." : "Log out"}
         </button>
       </div>
     </div>

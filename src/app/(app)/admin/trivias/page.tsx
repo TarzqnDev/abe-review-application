@@ -11,41 +11,13 @@ import TriviaSuccessBanner from "@/features/app/admin/trivias/components/TriviaS
 import { useAdminTrivias } from "@/features/app/admin/trivias/hooks/useAdminTrivias";
 
 export default function AdminTriviasPage() {
-  const {
-    closeDeleteConfirmationModal,
-    closeTriviaFormModal,
-    currentPage,
-    currentMonthLabel,
-    firstDateNumber,
-    formModalRequest,
-    handleTriviaDeleted,
-    hasCurrentMonthDateSlots,
-    hideSuccessMessage,
-    isLoadingTrivias,
-    lastDateNumber,
-    loadError,
-    loadTrivias,
-    nextMonthLabel,
-    nextMonthStartDate,
-    openCreateTriviaModal,
-    openDeleteConfirmationModal,
-    openEditTriviaModal,
-    paginatedDateSlots,
-    retryLoadTrivias,
-    scheduledTriviaCount,
-    setCurrentPage,
-    showSuccessMessage,
-    successMessage,
-    totalDateSlots,
-    totalPages,
-    triviaToDelete,
-  } = useAdminTrivias();
+  const adminTriviasPage = useAdminTrivias();
 
   return (
     <section className="w-full max-w-5xl">
       <TriviaSuccessBanner
-        message={successMessage}
-        onDismiss={hideSuccessMessage}
+        message={adminTriviasPage.successMessage}
+        onDismiss={adminTriviasPage.hideSuccessMessage}
       />
 
       <div>
@@ -56,7 +28,7 @@ export default function AdminTriviasPage() {
 
         <button
           type="button"
-          onClick={() => openCreateTriviaModal()}
+          onClick={() => adminTriviasPage.openCreateTriviaModal()}
           className="mt-7 inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded bg-primary-accent px-5 text-sm font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
         >
           <PlusIcon className="h-4 w-4" aria-hidden="true" />
@@ -65,14 +37,14 @@ export default function AdminTriviasPage() {
       </div>
 
       <div className="mt-8">
-        {isLoadingTrivias ? (
+        {adminTriviasPage.isLoadingTrivias ? (
           <TriviaListSkeleton />
-        ) : loadError ? (
+        ) : adminTriviasPage.loadError ? (
           <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-8 text-center">
-            <p className="text-sm text-red-700">{loadError}</p>
+            <p className="text-sm text-red-700">{adminTriviasPage.loadError}</p>
             <button
               type="button"
-              onClick={retryLoadTrivias}
+              onClick={adminTriviasPage.retryLoadTrivias}
               className="mt-4 cursor-pointer rounded bg-primary-accent px-4 py-2 text-sm font-semibold text-surface transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-accent"
             >
               Try Again
@@ -81,45 +53,45 @@ export default function AdminTriviasPage() {
         ) : (
           <>
             <section>
-              {hasCurrentMonthDateSlots && (
+              {adminTriviasPage.hasCurrentMonthDateSlots && (
                 <div className="flex items-center gap-2 border-b border-border pb-4">
                   <h2 className="text-lg font-semibold text-primary-text">
-                    Month of {currentMonthLabel}
+                    Month of {adminTriviasPage.currentMonthLabel}
                   </h2>
                   <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-primary-dark">
-                    {scheduledTriviaCount}{" "}
-                    {scheduledTriviaCount === 1 ? "Trivia" : "Trivias"}
+                    {adminTriviasPage.scheduledTriviaCount}{" "}
+                    {adminTriviasPage.scheduledTriviaCount === 1 ? "Trivia" : "Trivias"}
                   </span>
                 </div>
               )}
 
               <div
                 className={
-                  hasCurrentMonthDateSlots ? "mt-5 space-y-2" : "space-y-2"
+                  adminTriviasPage.hasCurrentMonthDateSlots ? "mt-5 space-y-2" : "space-y-2"
                 }
               >
-                {paginatedDateSlots.map((dateSlot) => {
+                {adminTriviasPage.paginatedDateSlots.map((dateSlot) => {
                   const isNextMonthStart =
-                    dateSlot.date === nextMonthStartDate;
+                    dateSlot.date === adminTriviasPage.nextMonthStartDate;
 
                   return (
                     <Fragment key={dateSlot.date}>
                       {isNextMonthStart && (
                         <div
                           className={`border-b border-border pb-4 ${
-                            hasCurrentMonthDateSlots ? "pt-6" : ""
+                            adminTriviasPage.hasCurrentMonthDateSlots ? "pt-6" : ""
                           }`}
                         >
                           <h2 className="text-lg font-semibold text-primary-text">
-                            Month of {nextMonthLabel}
+                            Month of {adminTriviasPage.nextMonthLabel}
                           </h2>
                         </div>
                       )}
                       <TriviaCard
                         date={dateSlot.date}
                         trivia={dateSlot.trivia}
-                        onCreate={openCreateTriviaModal}
-                        onEdit={openEditTriviaModal}
+                        onCreate={adminTriviasPage.openCreateTriviaModal}
+                        onEdit={adminTriviasPage.openEditTriviaModal}
                       />
                     </Fragment>
                   );
@@ -128,12 +100,12 @@ export default function AdminTriviasPage() {
             </section>
 
             <TriviaPagination
-              currentPage={currentPage}
-              firstDateNumber={firstDateNumber}
-              lastDateNumber={lastDateNumber}
-              onPageChange={setCurrentPage}
-              totalDates={totalDateSlots}
-              totalPages={totalPages}
+              currentPage={adminTriviasPage.currentPage}
+              firstDateNumber={adminTriviasPage.firstDateNumber}
+              lastDateNumber={adminTriviasPage.lastDateNumber}
+              onPageChange={adminTriviasPage.setCurrentPage}
+              totalDates={adminTriviasPage.totalDateSlots}
+              totalPages={adminTriviasPage.totalPages}
             />
           </>
         )}
@@ -141,21 +113,21 @@ export default function AdminTriviasPage() {
 
       {/* Modals Section */}
       <TriviaFormModal
-        key={formModalRequest?.requestId ?? "closed-trivia-form"}
-        isDeleteConfirmationOpen={triviaToDelete !== null}
-        loadTrivias={loadTrivias}
-        onClose={closeTriviaFormModal}
-        onRequestDelete={openDeleteConfirmationModal}
-        request={formModalRequest}
-        showSuccessMessage={showSuccessMessage}
+        key={adminTriviasPage.formModalRequest?.requestId ?? "closed-trivia-form"}
+        isDeleteConfirmationOpen={adminTriviasPage.triviaToDelete !== null}
+        loadTrivias={adminTriviasPage.loadTrivias}
+        onClose={adminTriviasPage.closeTriviaFormModal}
+        onRequestDelete={adminTriviasPage.openDeleteConfirmationModal}
+        request={adminTriviasPage.formModalRequest}
+        showSuccessMessage={adminTriviasPage.showSuccessMessage}
       />
       <DeleteTriviaConfirmationModal
-        key={triviaToDelete?.id ?? "closed-delete-trivia"}
-        loadTrivias={loadTrivias}
-        onClose={closeDeleteConfirmationModal}
-        onDeleted={handleTriviaDeleted}
-        showSuccessMessage={showSuccessMessage}
-        trivia={triviaToDelete}
+        key={adminTriviasPage.triviaToDelete?.id ?? "closed-delete-trivia"}
+        loadTrivias={adminTriviasPage.loadTrivias}
+        onClose={adminTriviasPage.closeDeleteConfirmationModal}
+        onDeleted={adminTriviasPage.handleTriviaDeleted}
+        showSuccessMessage={adminTriviasPage.showSuccessMessage}
+        trivia={adminTriviasPage.triviaToDelete}
       />
     </section>
   );

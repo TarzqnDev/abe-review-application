@@ -13,29 +13,21 @@ export type FlashCardGameSummaryModalProps = {
 export default function FlashCardGameSummaryModal(
   props: FlashCardGameSummaryModalProps,
 ) {
-  const {
-    closeButtonRef,
-    donutBackground,
-    duration,
-    gameProgress,
-    isPerfectResult,
-    modalAccessibility,
-    performanceMessage,
-    scorePercentage,
-  } = useFlashCardGameSummaryModal(props);
-  const { dialogRef, isVisible } = modalAccessibility;
+  const flashCardGameSummaryModal = useFlashCardGameSummaryModal(props);
 
   if (!props.summary) return null;
 
   return (
     <QuizModalShell
       className="flex max-h-[calc(100dvh-2rem)] max-w-[475px] flex-col overflow-hidden"
-      dialogRef={dialogRef}
+      dialogRef={flashCardGameSummaryModal.modalAccessibility.dialogRef}
       isOpen={props.isOpen}
-      isVisible={isVisible}
+      isVisible={flashCardGameSummaryModal.modalAccessibility.isVisible}
       labelledBy="flash-card-game-summary-title"
       overlayClassName="bg-slate-950/45"
-      underlay={isPerfectResult ? <GameConfetti /> : undefined}
+      underlay={
+        flashCardGameSummaryModal.isPerfectResult ? <GameConfetti /> : undefined
+      }
     >
       <div className="min-h-0 flex-1 overflow-y-auto pb-4 sm:overflow-visible sm:pb-0">
         <GameSummaryHeader
@@ -54,21 +46,21 @@ export default function FlashCardGameSummaryModal(
         </p>
 
         <div
-          aria-label={`${scorePercentage}% correct across ${gameProgress} played questions. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, and ${props.summary.timedOut} timed out.`}
+          aria-label={`${flashCardGameSummaryModal.scorePercentage}% correct across ${flashCardGameSummaryModal.gameProgress} played questions. ${props.summary.correct} correct, ${props.summary.incorrect} wrong, and ${props.summary.timedOut} timed out.`}
           className="mx-auto mt-5 flex h-28 w-28 items-center justify-center rounded-full"
           role="img"
-          style={{ background: donutBackground }}
+          style={{ background: flashCardGameSummaryModal.donutBackground }}
         >
           <div className="flex h-[88px] w-[88px] flex-col items-center justify-center rounded-full bg-surface">
             <span className="text-xl font-semibold leading-5 text-primary-text">
-              {scorePercentage}%
+              {flashCardGameSummaryModal.scorePercentage}%
             </span>
             <span className="text-xs text-secondary-text">Correct</span>
           </div>
         </div>
 
         <p className="mt-3 text-center text-sm font-medium text-primary-accent">
-          {performanceMessage}
+          {flashCardGameSummaryModal.performanceMessage}
         </p>
 
         <section className="mt-6" aria-labelledby="flash-card-score-summary-heading">
@@ -85,7 +77,8 @@ export default function FlashCardGameSummaryModal(
                 Game Progress
               </dt>
               <dd className="order-1 text-xl font-semibold text-secondary-text">
-                {gameProgress}/{props.summary.totalQuestions}
+                {flashCardGameSummaryModal.gameProgress}/
+                {props.summary.totalQuestions}
               </dd>
             </div>
             <div className="flex min-h-[100px] flex-col items-center justify-center rounded border border-border bg-secondary-bg px-2 text-center">
@@ -93,7 +86,7 @@ export default function FlashCardGameSummaryModal(
                 Game Duration
               </dt>
               <dd className="order-1 text-xl font-semibold text-secondary-text">
-                {duration}
+                {flashCardGameSummaryModal.duration}
               </dd>
             </div>
           </dl>
@@ -128,7 +121,7 @@ export default function FlashCardGameSummaryModal(
 
       <div className="shrink-0 bg-surface px-6 pb-6 pt-3 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] sm:px-10 sm:pb-10 sm:pt-0 sm:shadow-none">
         <button
-          ref={closeButtonRef}
+          ref={flashCardGameSummaryModal.closeButtonRef}
           type="button"
           onClick={props.onClose}
           className="h-[50px] w-full cursor-pointer rounded bg-primary-accent text-base font-medium text-surface transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
