@@ -5,11 +5,13 @@ import type {
   ActivityHistoryOverviewStats,
 } from "@/features/app/reviewee/history/types/activityHistory";
 import type { Database } from "@/types/database.types";
+import { getManilaDateValue } from "@/utils/getManilaDateValue";
 
 type GameSessionRow = Database["public"]["Tables"]["game_sessions"]["Row"];
 type RevieweeActivityStatsRow = Pick<
   Database["public"]["Tables"]["reviewee_activity_stats"]["Row"],
   | "completed_sessions"
+  | "last_review_activity_date"
   | "review_streak_days"
   | "total_answered_items"
   | "total_correct_answers"
@@ -28,6 +30,23 @@ export type ActivityHistoryGameSessionRow = GameSessionRow & {
 
 const calculatePercentage = (value: number, total: number) =>
   total === 0 ? 0 : Math.round((value / total) * 10_000) / 100;
+
+const getEffectiveReviewStreakDays = (
+  reviewStreakDays: number,
+  lastReviewActivityDate: string | null,
+) => {
+  if (reviewStreakDays === 0 || !lastReviewActivityDate) return 0;
+
+  const todayDateValue = getManilaDateValue(new Date());
+  const yesterdayDate = new Date(`${todayDateValue}T00:00:00Z`);
+  yesterdayDate.setUTCDate(yesterdayDate.getUTCDate() - 1);
+  const yesterdayDateValue = yesterdayDate.toISOString().slice(0, 10);
+
+  return lastReviewActivityDate === todayDateValue ||
+    lastReviewActivityDate === yesterdayDateValue
+    ? reviewStreakDays
+    : 0;
+};
 
 const calculateDurationSeconds = (
   startedAt: string | null,
@@ -108,7 +127,10 @@ export const mapActivityHistoryOverviewStats = (
       stats.total_answered_items,
     ),
     completedSessions: stats.completed_sessions,
-    reviewStreakDays: stats.review_streak_days,
+    reviewStreakDays: getEffectiveReviewStreakDays(
+      stats.review_streak_days,
+      stats.last_review_activity_date,
+    ),
     totalSessions: stats.total_sessions,
     totalStudySeconds: stats.total_study_seconds,
   };

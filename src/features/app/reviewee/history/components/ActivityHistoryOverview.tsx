@@ -17,6 +17,20 @@ const formatStudyTime = (totalSeconds: number) => {
   return `${hours}h ${minutes}m`;
 };
 
+const formatReviewStreak = (reviewStreakDays: number) => {
+  if (reviewStreakDays >= 28) {
+    const reviewStreakMonths = Math.floor(reviewStreakDays / 28);
+    return `${reviewStreakMonths.toLocaleString()} ${reviewStreakMonths === 1 ? "Month" : "Months"}`;
+  }
+
+  if (reviewStreakDays >= 7) {
+    const reviewStreakWeeks = Math.floor(reviewStreakDays / 7);
+    return `${reviewStreakWeeks.toLocaleString()} ${reviewStreakWeeks === 1 ? "Week" : "Weeks"}`;
+  }
+
+  return `${reviewStreakDays.toLocaleString()} ${reviewStreakDays === 1 ? "Day" : "Days"}`;
+};
+
 export default function ActivityHistoryOverview({
   averageAccuracy,
   reviewStreakDays,
@@ -42,7 +56,7 @@ export default function ActivityHistoryOverview({
     {
       iconSrc: "/history-streak.png",
       label: "Review Streak",
-      value: `${reviewStreakDays.toLocaleString()} ${reviewStreakDays === 1 ? "Day" : "Days"}`,
+      value: formatReviewStreak(reviewStreakDays),
     },
   ];
 

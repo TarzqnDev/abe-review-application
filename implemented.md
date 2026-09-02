@@ -123,3 +123,4 @@
 - Activity History: desktop detail summaries reserve a balanced two-fifths column for the score donut and feedback, with the remaining three-fifths for session stats; the matching loading skeleton uses the same proportions.
 - Success Banners: all shared transient success banners use Motion and can be dragged on touch devices only between their original position and the top of the screen; an upward throw dismisses immediately, while a regular release returns the banner to its original position until its existing timeout finishes.
 - Modal inputs, textareas, search fields, and selects do not receive initial programmatic focus; modals focus their non-editable dialog container instead so Android browsers do not open the keyboard on launch.
+- Activity History: review streaks now stay active through the following Asia/Manila day only, reset to zero after two missed days, and display in weeks after seven days or months after four weeks.

@@ -30,6 +30,7 @@ export const fetchActivityHistory = async (): Promise<FetchActivityHistoryResult
           total_sessions,
           completed_sessions,
           review_streak_days,
+          last_review_activity_date,
           total_correct_answers,
           total_answered_items,
           total_study_seconds,
