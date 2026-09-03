@@ -54,7 +54,10 @@ export default function ActivityHistoryOverview({
       value: formatStudyTime(totalStudySeconds),
     },
     {
-      iconSrc: "/history-streak.png",
+      iconSrc:
+        reviewStreakDays === 0
+          ? "/history-streak-empty.png"
+          : "/history-streak.png",
       label: "Review Streak",
       value: formatReviewStreak(reviewStreakDays),
     },

@@ -124,3 +124,4 @@
 - Success Banners: all shared transient success banners use Motion and can be dragged on touch devices only between their original position and the top of the screen; an upward throw dismisses immediately, while a regular release returns the banner to its original position until its existing timeout finishes.
 - Modal inputs, textareas, search fields, and selects do not receive initial programmatic focus; modals focus their non-editable dialog container instead so Android browsers do not open the keyboard on launch.
 - Activity History: review streaks now stay active through the following Asia/Manila day only, reset to zero after two missed days, and display in weeks after seven days or months after four weeks.
+- Activity History: review streak uses a friendly sad-face illustration when the effective streak is zero and the fire illustration for every active streak.
